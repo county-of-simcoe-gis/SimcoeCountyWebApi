@@ -1,0 +1,15 @@
+{
+  "postgresConnection": {
+    "user": "userName",
+    "host": "hostname",
+    "database": "dbname",
+    "password": "password",
+    "port": 5432
+  },
+  "emailSMTPServer": "smtp.xxx",
+  "fromEmail": "a@a.com",
+  "toEmail": "a@a.com",
+  "mapUrl": "https://##.##.##/?",
+  "feedbackUrl": "https://###.###.###/feedback?",
+  "allowedOrigins": ["localhost:8085"]
+}
