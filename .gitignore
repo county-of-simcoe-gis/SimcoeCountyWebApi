@@ -1,0 +1,6 @@
+sc_copyToServer.bat
+startapp.cmd
+config-secure.json
+
+/node_modules
+/public
