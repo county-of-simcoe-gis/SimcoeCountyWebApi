@@ -70,7 +70,7 @@ router.get("/getCaptchaResponse/:type/:token", function(req, res, next) {
   var secret = "";
   if (type === "DEV") secret = config.captchaDev;
   //DEV
-  else secret = config.captachProduction; //PRODUCTION
+  else secret = config.captchaProduction; //PRODUCTION
 
   const captchaUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + token;
   fetch(captchaUrl, { method: "POST" })
