@@ -68,9 +68,9 @@ router.get("/getCaptchaResponse/:type/:token", function(req, res, next) {
 
   // RECAPTCHA DETAILS
   var secret = "";
-  if (type === "DEV") secret = "6Ld4tKcUAAAAAI7EqM8PgKhhLtkH5T605FPv6Gsv";
+  if (type === "DEV") secret = config.captchaDev;
   //DEV
-  else secret = "6LfDs6cUAAAAAG46yXmvCzFWDWdo9pHx5YJFeJDb"; //PRODUCTION
+  else secret = config.captachProduction; //PRODUCTION
 
   const captchaUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + token;
   fetch(captchaUrl, { method: "POST" })
