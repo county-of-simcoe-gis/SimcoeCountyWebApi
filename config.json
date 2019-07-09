@@ -8,5 +8,7 @@
     },
     "emailSMTPServer" : "smtp.xxx",
     "fromEmail": "a@a.com",
-    "toEmail": "a@a.com"
+    "toEmail": "a@a.com",
+  "captchaDev": "SECRETHERE",
+  "captachProduction": "SECRETHERE"
 }
