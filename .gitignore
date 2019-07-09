@@ -1,6 +1,7 @@
 sc_copyToServer.bat
 startapp.cmd
 config-secure.json
+config.json
 
 /node_modules
 /public
