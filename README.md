@@ -1,6 +1,6 @@
 # Simcoe County Web API
 
-Node JS Express Web API. Designed to work with the main map viewer. This project will grow as needed. It currently inserts feedback, inserts app stats and emails us when new feedback is submitted.
+Node JS Express Web API. Designed to work with the main map viewer [WebViewer](https://github.com/county-of-simcoe-gis/SimcoeCountyWebViewer). This project will grow as needed. It currently inserts feedback, inserts app stats and emails us when new feedback is submitted.
 
 ## Getting Started
 
