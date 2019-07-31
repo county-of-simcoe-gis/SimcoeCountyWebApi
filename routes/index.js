@@ -4,6 +4,8 @@ var feedback = require("../helpers/feedback");
 var appStats = require("../helpers/appStats");
 const fetch = require("node-fetch");
 const config = require("../config.json");
+const geometry = require("../helpers/geometry");
+const myMaps = require("../helpers/myMaps");
 
 /* GET home page. */
 router.get("/", function(req, res, next) {
@@ -12,7 +14,6 @@ router.get("/", function(req, res, next) {
 
 // APP STATS
 router.get("/appStats/:appName/:actionType/:description", function(req, res, next) {
-  console.log(req.params.appName);
   // CHECK THE CALLER
   if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
     res.send("Unauthorized Domain!");
@@ -78,6 +79,47 @@ router.get("/getCaptchaResponse/:type/:token", function(req, res, next) {
     .then(json => {
       res.send(json);
     });
+});
+
+// GEOMETRY - BUFFER
+router.post("/postBufferGeometry", function(req, res, next) {
+  // CHECK THE CALLER
+  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
+    res.send("Unauthorized Domain!");
+    return;
+  }
+
+  // GET BUFFER FROM POSTGRES
+  geometry.bufferGeometry(req.body, result => {
+    res.send(JSON.stringify(result));
+  });
+});
+
+// POST MYMAPS
+router.post("/postMyMaps", function(req, res, next) {
+  // CHECK THE CALLER
+  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
+    res.send("Unauthorized Domain!");
+    return;
+  }
+
+  // INSERT MYMAPS
+  myMaps.insertMyMaps(req.body, id => {
+    res.send(JSON.stringify({ id: id }));
+  });
+});
+
+// GET MYMAPS
+router.get("/getMyMaps/:id", function(req, res, next) {
+  // CHECK THE CALLER
+  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
+    res.send("Unauthorized Domain!");
+    return;
+  }
+
+  myMaps.getMyMaps(req.params.id, result => {
+    res.send(JSON.stringify(result));
+  });
 });
 
 module.exports = router;

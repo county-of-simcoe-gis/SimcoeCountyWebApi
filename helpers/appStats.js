@@ -1,4 +1,4 @@
-var postgres = require("./postgres");
+const postgres = require("./postgres");
 const common = require("./common");
 
 module.exports = {
@@ -11,6 +11,7 @@ module.exports = {
     values ('${appName}','${actionType}','${description}','${dtString}');`;
 
     // INSERT RECORD
-    postgres.insert(insertSql);
+    const pg = new postgres({ dbName: "tabular" });
+    pg.insert(insertSql);
   }
 };
