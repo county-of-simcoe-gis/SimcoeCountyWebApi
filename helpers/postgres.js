@@ -34,6 +34,11 @@ module.exports = class Postgres {
   // RETURN FIRST RECORD
   selectFirst(sql, callback) {
     this.pool.query(sql, (err, res) => {
+      if (res === undefined) {
+        callback({ error: "Query returned ZERO records." });
+        return;
+      }
+
       const row = res.rows[0];
       callback(row);
     });

@@ -6,6 +6,7 @@ const fetch = require("node-fetch");
 const config = require("../config.json");
 const geometry = require("../helpers/geometry");
 const myMaps = require("../helpers/myMaps");
+const realEstate = require("../helpers/realEstate");
 
 /* GET home page. */
 router.get("/", function(req, res, next) {
@@ -118,6 +119,23 @@ router.get("/getMyMaps/:id", function(req, res, next) {
   }
 
   myMaps.getMyMaps(req.params.id, result => {
+    if (result === undefined) res.send(JSON.stringify({ error: "ID Not Found" }));
+
+    res.send(JSON.stringify(result));
+  });
+});
+
+// GET MYMAPS
+router.get("/getRealEstateInfo/:id", function(req, res, next) {
+  // CHECK THE CALLER
+  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
+    res.send("Unauthorized Domain!");
+    return;
+  }
+
+  realEstate.getInfo(req.params.id, result => {
+    if (result === undefined) res.send(JSON.stringify({ error: "MLS Number Not Found" }));
+
     res.send(JSON.stringify(result));
   });
 });

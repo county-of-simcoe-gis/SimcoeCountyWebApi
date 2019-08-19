@@ -3,6 +3,7 @@ const common = require("./common");
 
 module.exports = {
   insertMyMaps: function(json, callback) {
+    console.log("Add My Maps");
     // FORMAT THE DATE
     var dtString = common.getSqlDateString(new Date());
 
@@ -18,6 +19,7 @@ module.exports = {
   },
 
   getMyMaps: function(id, callback) {
+    console.log("Get My Maps");
     var sql = `select * from public.tbl_mymaps  where id = '${id}'`;
     const pg = new postgres({ dbName: "tabular" });
     pg.selectFirst(sql, result => {
