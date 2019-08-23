@@ -7,6 +7,7 @@ const config = require("../config.json");
 const geometry = require("../helpers/geometry");
 const myMaps = require("../helpers/myMaps");
 const realEstate = require("../helpers/realEstate");
+const streetAddresses = require("../helpers/streetAddresses");
 
 /* GET home page. */
 router.get("/", function(req, res, next) {
@@ -15,11 +16,7 @@ router.get("/", function(req, res, next) {
 
 // APP STATS
 router.get("/appStats/:appName/:actionType/:description", function(req, res, next) {
-  // CHECK THE CALLER
-  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
-    res.send("Unauthorized Domain!");
-    return;
-  }
+  if (!isAllowed(req, res)) return;
 
   // INSERT APP STAT
   appStats.insertAppStat(req.params.appName, req.params.actionType, req.params.description);
@@ -28,11 +25,7 @@ router.get("/appStats/:appName/:actionType/:description", function(req, res, nex
 
 // POST FEEDBACK
 router.post("/postFeedback", function(req, res, next) {
-  // CHECK THE CALLER
-  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
-    res.send("Unauthorized Domain!");
-    return;
-  }
+  if (!isAllowed(req, res)) return;
 
   // INSERT FEEDBACK
   const id = feedback.insertFeedback(req.body);
@@ -41,11 +34,7 @@ router.post("/postFeedback", function(req, res, next) {
 
 // GET FEEDBACK
 router.get("/getFeedback/:id", function(req, res, next) {
-  // CHECK THE CALLER
-  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
-    res.send("Unauthorized Domain!");
-    return;
-  }
+  if (!isAllowed(req, res)) return;
 
   feedback.getFeedback(req.params.id, feedback => {
     res.send(JSON.stringify(feedback));
@@ -54,11 +43,7 @@ router.get("/getFeedback/:id", function(req, res, next) {
 
 // GET CAPTCHA SCORE
 router.get("/getCaptchaResponse/:type/:token", function(req, res, next) {
-  // CHECK THE CALLER
-  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
-    res.send("Unauthorized Domain!");
-    return;
-  }
+  if (!isAllowed(req, res)) return;
 
   // GET THE PARAMS
   const type = req.params.type;
@@ -84,11 +69,7 @@ router.get("/getCaptchaResponse/:type/:token", function(req, res, next) {
 
 // GEOMETRY - BUFFER
 router.post("/postBufferGeometry", function(req, res, next) {
-  // CHECK THE CALLER
-  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
-    res.send("Unauthorized Domain!");
-    return;
-  }
+  if (!isAllowed(req, res)) return;
 
   // GET BUFFER FROM POSTGRES
   geometry.bufferGeometry(req.body, result => {
@@ -98,11 +79,7 @@ router.post("/postBufferGeometry", function(req, res, next) {
 
 // POST MYMAPS
 router.post("/postMyMaps", function(req, res, next) {
-  // CHECK THE CALLER
-  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
-    res.send("Unauthorized Domain!");
-    return;
-  }
+  if (!isAllowed(req, res)) return;
 
   // INSERT MYMAPS
   myMaps.insertMyMaps(req.body, id => {
@@ -112,11 +89,7 @@ router.post("/postMyMaps", function(req, res, next) {
 
 // GET MYMAPS
 router.get("/getMyMaps/:id", function(req, res, next) {
-  // CHECK THE CALLER
-  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
-    res.send("Unauthorized Domain!");
-    return;
-  }
+  if (!isAllowed(req, res)) return;
 
   myMaps.getMyMaps(req.params.id, result => {
     if (result === undefined) res.send(JSON.stringify({ error: "ID Not Found" }));
@@ -125,13 +98,9 @@ router.get("/getMyMaps/:id", function(req, res, next) {
   });
 });
 
-// GET MYMAPS
+// GET MLS INFO
 router.get("/getRealEstateInfo/:id", function(req, res, next) {
-  // CHECK THE CALLER
-  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
-    res.send("Unauthorized Domain!");
-    return;
-  }
+  if (!isAllowed(req, res)) return;
 
   realEstate.getInfo(req.params.id, result => {
     if (result === undefined) res.send(JSON.stringify({ error: "MLS Number Not Found" }));
@@ -140,4 +109,24 @@ router.get("/getRealEstateInfo/:id", function(req, res, next) {
   });
 });
 
+// GET STREET NAMES
+router.get("/getStreetNames/:streetName", function(req, res, next) {
+  if (!isAllowed(req, res)) return;
+
+  streetAddresses.getStreets(req.params.streetName, result => {
+    if (result === undefined) res.send(JSON.stringify({ error: "No Streets Found" }));
+
+    res.send(JSON.stringify(result));
+  });
+});
+
+function isAllowed(req, res) {
+  // CHECK THE CALLER
+  if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
+    res.send("Unauthorized Domain!");
+    return false;
+  }
+
+  return true;
+}
 module.exports = router;
