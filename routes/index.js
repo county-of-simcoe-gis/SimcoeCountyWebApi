@@ -120,6 +120,17 @@ router.get("/getStreetNames/:streetName", function(req, res, next) {
   });
 });
 
+// GET APP STATS
+// router.get("/getAppStats/:streetName", function(req, res, next) {
+//   if (!isAllowed(req, res)) return;
+
+//   streetAddresses.getStreets(req.params.streetName, result => {
+//     if (result === undefined) res.send(JSON.stringify({ error: "No Streets Found" }));
+
+//     res.send(JSON.stringify(result));
+//   });
+// });
+
 function isAllowed(req, res) {
   // CHECK THE CALLER
   if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
