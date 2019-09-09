@@ -77,6 +77,16 @@ router.post("/postBufferGeometry", function(req, res, next) {
   });
 });
 
+// GEOMETRY - CENTER
+router.post("/postGetGeometryCenter", function(req, res, next) {
+  if (!isAllowed(req, res)) return;
+
+  // GET CENTER FROM POSTGRES CUSTOM FUNCTION
+  geometry.getGeometryCenter(req.body, result => {
+    res.send(JSON.stringify(result));
+  });
+});
+
 // POST MYMAPS
 router.post("/postMyMaps", function(req, res, next) {
   if (!isAllowed(req, res)) return;
