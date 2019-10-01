@@ -11,12 +11,19 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-promise-router": "^3.0.3",
+    "fetch": "^1.1.0",
+    "file-saver": "^2.0.2",
     "helmet": "^3.18.0",
     "morgan": "~1.9.1",
     "mssql": "^5.1.0",
     "node-fetch": "^2.6.0",
+    "node-server-screenshot": "^0.2.2",
+    "node-webshot": "^1.0.3",
     "nodemailer": "^6.2.1",
     "nodemailer-smtp-transport": "^2.7.4",
-    "pg": "^7.11.0"
+    "pg": "^7.11.0",
+    "phantomjs-prebuilt": "^2.1.16",
+    "webshot": "^0.18.0"
   }
 }

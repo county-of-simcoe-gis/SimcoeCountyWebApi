@@ -44,7 +44,7 @@ module.exports = class Postgres {
     });
   }
 
-  // RETURN FIRST RECORD
+  // RETURN MULTIPLE RECORDS
   selectAll(sql, callback) {
     this.pool.query(sql, (err, res) => {
       if (res === undefined) {
@@ -54,5 +54,45 @@ module.exports = class Postgres {
 
       callback(res.rows);
     });
+  }
+
+  // RETURN MULTIPLE RECORDS
+  selectAllWithValues(sql, values, callback) {
+    this.pool.query(sql, values, (err, res) => {
+      if (res === undefined) {
+        callback({ error: "Query returned ZERO records." });
+        return;
+      }
+
+      callback(res.rows);
+    });
+  }
+
+  // RETURN MULTIPLE RECORDS
+  async selectAllWithValuesWait(sql, values, callback) {
+    const client = await this.pool.connect();
+    try {
+      //await client.query("BEGIN");
+      try {
+        const res = await client.query(sql, values);
+        return res.rows;
+
+        //callback(res.rows);
+      } catch (err) {
+        //await client.query('ROLLBACK')
+        throw err;
+      }
+    } finally {
+      client.release();
+    }
+
+    // await this.pool.query(sql, values, async (err, res) => {
+    //   if (res === undefined) {
+    //     callback({ error: "Query returned ZERO records." });
+    //     return;
+    //   }
+
+    //   callback(res.rows);
+    // });
   }
 };
