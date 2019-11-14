@@ -7,10 +7,10 @@ const fetch = require("node-fetch");
 const config = require("../config.json");
 const geometry = require("../helpers/geometry");
 const myMaps = require("../helpers/myMaps");
-const realEstate = require("../helpers/realEstate");
 const streetAddresses = require("../helpers/streetAddresses");
 const search = require("../helpers/search");
 const common = require("../helpers/common");
+const weather = require("../helpers/weather");
 
 var request = require("request");
 
@@ -28,6 +28,26 @@ router.get("/appStats/:appName/:actionType/:description", function(req, res, nex
   // INSERT APP STAT
   appStats.insertAppStat(req.params.appName, req.params.actionType, req.params.description);
   res.send("OK");
+});
+
+// GET STATS
+router.get("/getAppStats/:fromDate/:toDate/:type", function(req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  // GET APP STATS
+  appStats.getAppStats(req.params.fromDate, req.params.toDate, req.params.type, result => {
+    res.send(JSON.stringify(result));
+  });
+});
+
+// GET STAT TYPES
+router.get("/getAppStatsTypes", function(req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  // GET APP STATS
+  appStats.getAppStatsTypes(result => {
+    res.send(JSON.stringify(result));
+  });
 });
 
 // POST FEEDBACK
@@ -117,17 +137,6 @@ router.get("/getMyMaps/:id", function(req, res, next) {
   });
 });
 
-// GET MLS INFO
-router.get("/getRealEstateInfo/:id", function(req, res, next) {
-  if (!common.isHostAllowed(req, res)) return;
-
-  realEstate.getInfo(req.params.id, result => {
-    if (result === undefined) res.send(JSON.stringify({ error: "MLS Number Not Found" }));
-
-    res.send(JSON.stringify(result));
-  });
-});
-
 // GET STREET NAMES
 router.get("/getStreetNames/:streetName", function(req, res, next) {
   if (!common.isHostAllowed(req, res)) return;
@@ -154,6 +163,17 @@ router.get("/searchById/:id", function(req, res, next) {
 router.get("/getSearchTypes", function(req, res, next) {
   if (!common.isHostAllowed(req, res)) return;
   search.getSearchTypes(result => {
+    if (result === undefined) res.send(JSON.stringify([]));
+    res.send(JSON.stringify(result));
+  });
+});
+
+// GET WEATHER
+router.get("/getCityWeather/:city", function(req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  const city = req.params.city;
+  weather.getCityWeather(city, result => {
     if (result === undefined) res.send(JSON.stringify([]));
     res.send(JSON.stringify(result));
   });

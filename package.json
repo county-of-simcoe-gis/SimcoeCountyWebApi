@@ -24,6 +24,7 @@
     "nodemailer-smtp-transport": "^2.7.4",
     "pg": "^7.11.0",
     "phantomjs-prebuilt": "^2.1.16",
-    "webshot": "^0.18.0"
+    "webshot": "^0.18.0",
+    "xml2js": "^0.4.22"
   }
 }

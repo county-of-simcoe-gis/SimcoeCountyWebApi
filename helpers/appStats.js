@@ -13,5 +13,24 @@ module.exports = {
     // INSERT RECORD
     const pg = new postgres({ dbName: "tabular" });
     pg.insert(insertSql);
+  },
+
+  getAppStats: function(fromDate, toDate, type, callback) {
+    //select date_day,total from public.get_app_stats('2019-09-01','2019-10-8', 'STARTUP_MAP_LOAD');
+    const sqlTemplate = (fromDate, toDate, type) => `select x,y from public.get_app_statsxy('${fromDate}','${toDate}', '${type}');`;
+    const sql = sqlTemplate(fromDate, toDate, type);
+    console.log(sql);
+    const pg = new postgres({ dbName: "tabular" });
+    pg.selectAll(sql, result => {
+      callback(result);
+    });
+  },
+
+  getAppStatsTypes: function(callback) {
+    const sql = "select value as label, value from ((select distinct(action_type) as value from view_app_stats ass where action_type <> '_' order by action_type)) cc";
+    const pg = new postgres({ dbName: "tabular" });
+    pg.selectAll(sql, result => {
+      callback(result);
+    });
   }
 };
