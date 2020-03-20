@@ -7,7 +7,8 @@ const viewBox = searchConfig.OSMViewBox;
 const useESRIGeocoder = searchConfig.useESRIGeocoder;
 const useOSMSearch = searchConfig.useOSMSearch;
 
-const geocodeUrlTemplate = (limit, keywords) => `https://maps.simcoe.ca/arcgis/rest/services/SimcoeUtilities/AddressLocator/GeocodeServer/findAddressCandidates?f=json&maxLocations=${limit}&outFields=House,StreetName,SufType,City&Street=${keywords}`;
+const geocodeUrlTemplate = (limit, keywords) =>
+  `https://maps.simcoe.ca/arcgis/rest/services/SimcoeUtilities/AddressLocator/GeocodeServer/findAddressCandidates?f=json&maxLocations=${limit}&outFields=House,StreetName,SufType,City&Street=${keywords}`;
 const osmUrlTemplateViewBox = (viewBox, limit, keywords) => `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${viewBox}&bounded=1&limit=${limit}&q=${keywords}`;
 const osmUrlTemplateNoViewBox = (limit, keywords) => `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=ca&limit=${limit}&q=${keywords}`;
 
@@ -29,12 +30,19 @@ module.exports = {
       addresses = await this._searchAddress(keywords, muni, type, limit);
 
       // FALL BACK TO GEOCODE
-      if (useESRIGeocoder && addresses.length === 0) {
+      if (useESRIGeocoder && addresses.length === 0 && (type === "Address" || type === undefined || type === "All")) {
         const geocodeResult = await this._getJSON(geocodeUrlTemplate(limit, keywords));
         const candidates = geocodeResult.candidates;
         candidates.forEach(candidate => {
           if (candidate.score > 10) {
-            const searchObj = { name: this._toTitleCase(candidate.address), type: "Geocode", municipality: this._toTitleCase(candidate.attributes.City), location_id: null, x: candidate.location.x, y: candidate.location.y };
+            const searchObj = {
+              name: this._toTitleCase(candidate.address),
+              type: "Geocode",
+              municipality: this._toTitleCase(candidate.attributes.City),
+              location_id: null,
+              x: candidate.location.x,
+              y: candidate.location.y
+            };
             addresses.push(searchObj);
           }
         });
@@ -144,7 +152,15 @@ module.exports = {
         let city = "";
         if (osm.address.city !== undefined) city = osm.address.city;
         else city = osm.address.town;
-        const searchObj = { name: osm.display_name, type: this._toTitleCase(osm.type + " - Open Street Map"), municipality: this._toTitleCase(city), location_id: null, x: osm.lon, y: osm.lat, place_id: osm.place_id };
+        const searchObj = {
+          name: osm.display_name,
+          type: this._toTitleCase(osm.type + " - Open Street Map"),
+          municipality: this._toTitleCase(city),
+          location_id: null,
+          x: osm.lon,
+          y: osm.lat,
+          place_id: osm.place_id
+        };
         osmPlaces.push(searchObj);
       });
     } else {
