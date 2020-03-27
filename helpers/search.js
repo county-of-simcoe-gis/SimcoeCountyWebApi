@@ -50,7 +50,6 @@ module.exports = {
     }
 
     allValues.push(...addresses);
-
     // FILL IN THE SEARCH WITH OTHERS
     if (allValues.length < limit) {
       const numRecordsToReturn = limit - allValues.length;
@@ -73,7 +72,6 @@ module.exports = {
     const sql = `select * from public.tbl_search  where location_id = $1;`;
     const pg = new postgres({ dbName: "tabular" });
     pg.selectAllWithValues(sql, values, result => {
-      console.log(result);
       callback(result[0]);
     });
   },
@@ -117,21 +115,20 @@ module.exports = {
 
     const values = [value, limit];
     let sql = "";
-    if (muni === undefined && type === undefined) sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' limit $2;`;
+    if (muni === undefined && type === undefined)
+      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' order by priority limit $2;`;
     if (muni !== undefined && type === undefined) {
       values.push(muni);
       sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' and municipality = $3 limit $2;`;
     } else if (muni !== undefined && type !== undefined) {
       values.push(muni);
       values.push(type);
-      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type = $4 and municipality = $3 limit $2;`;
+      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike '%' || $1 || '%' and type = $4 and municipality = $3 and type <> 'Address' limit $2;`;
     } else if (muni === undefined && type !== undefined) {
       values.push(type);
-      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type = $3 limit $2;`;
+      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike '%' || $1 || '%' and type = $3 and type <> 'Address' limit $2;`;
     }
 
-    console.log(type);
-    console.log(sql);
     const pg = new postgres({ dbName: "tabular" });
     const pgResult = await pg.selectAllWithValuesWait(sql, values);
     return pgResult;
