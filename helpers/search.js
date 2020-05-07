@@ -13,7 +13,7 @@ const osmUrlTemplateViewBox = (viewBox, limit, keywords) => `https://nominatim.o
 const osmUrlTemplateNoViewBox = (limit, keywords) => `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=ca&limit=${limit}&q=${keywords}`;
 
 module.exports = {
-  search: async function(keywords, type = undefined, muni = undefined, limit = 10, callback) {
+  search: async function (keywords, type = undefined, muni = undefined, limit = 10, callback) {
     // MINIMUM 1 CHAR
     if (keywords.length < 2) {
       callback([]);
@@ -33,7 +33,7 @@ module.exports = {
       if (useESRIGeocoder && addresses.length === 0 && (type === "Address" || type === undefined || type === "All")) {
         const geocodeResult = await this._getJSON(geocodeUrlTemplate(limit, keywords));
         const candidates = geocodeResult.candidates;
-        candidates.forEach(candidate => {
+        candidates.forEach((candidate) => {
           if (candidate.score > 10) {
             const searchObj = {
               name: this._toTitleCase(candidate.address),
@@ -41,7 +41,7 @@ module.exports = {
               municipality: this._toTitleCase(candidate.attributes.City),
               location_id: null,
               x: candidate.location.x,
-              y: candidate.location.y
+              y: candidate.location.y,
             };
             addresses.push(searchObj);
           }
@@ -67,28 +67,28 @@ module.exports = {
     callback(allValues);
   },
 
-  searchById: function(id, callback) {
+  searchById: function (id, callback) {
     const values = [id];
     const sql = `select * from public.tbl_search  where location_id = $1;`;
     const pg = new postgres({ dbName: "tabular" });
-    pg.selectAllWithValues(sql, values, result => {
+    pg.selectAllWithValues(sql, values, (result) => {
       callback(result[0]);
     });
   },
 
-  getSearchTypes: function(callback) {
+  getSearchTypes: function (callback) {
     const sql = "select distinct(type) from public.tbl_search order by type";
     const pg = new postgres({ dbName: "tabular" });
-    pg.selectAll(sql, result => {
+    pg.selectAll(sql, (result) => {
       let types = [];
-      result.forEach(type => {
+      result.forEach((type) => {
         types.push(type.type);
       });
       callback(types);
     });
   },
 
-  _searchAddress: async function(value, muni = undefined, type = undefined, limit = 10) {
+  _searchAddress: async function (value, muni = undefined, type = undefined, limit = 10) {
     const values = [value];
 
     if (type === "All" || type === "undefined") type = undefined;
@@ -109,7 +109,7 @@ module.exports = {
     return pgResult;
   },
 
-  _searchNonAddress: async function(value, type = undefined, muni = undefined, limit = 10) {
+  _searchNonAddress: async function (value, type = undefined, muni = undefined, limit = 10) {
     if (type === "undefined" || type === "All") type = undefined;
     if (muni === "undefined") muni = undefined;
 
@@ -134,7 +134,7 @@ module.exports = {
     return pgResult;
   },
 
-  _searchOsm: async function(keywords, type = undefined, limit = 10) {
+  _searchOsm: async function (keywords, type = undefined, limit = 10) {
     if (type === "undefined") type = undefined;
     console.log(type);
     if (type !== "All" && type !== "Open Street Map") return [];
@@ -144,7 +144,7 @@ module.exports = {
     let osmResult = await this._getJSON(osmUrl);
     let osmPlaces = [];
     if (osmResult.length > 0) {
-      osmResult.forEach(osm => {
+      osmResult.forEach((osm) => {
         //console.log(osm);
         let city = "";
         if (osm.address.city !== undefined) city = osm.address.city;
@@ -156,7 +156,7 @@ module.exports = {
           location_id: null,
           x: osm.lon,
           y: osm.lat,
-          place_id: osm.place_id
+          place_id: osm.place_id,
         };
         osmPlaces.push(searchObj);
       });
@@ -178,7 +178,7 @@ module.exports = {
     return osmPlaces;
   },
 
-  _isFirstWordNumeric: function(value) {
+  _isFirstWordNumeric: function (value) {
     return typeof value == "number";
   },
 
@@ -208,8 +208,8 @@ module.exports = {
   },
 
   _toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt) {
+    return str.replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
-  }
+  },
 };

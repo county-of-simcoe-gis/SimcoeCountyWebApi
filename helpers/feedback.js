@@ -7,7 +7,7 @@ const mapUrl = config.mapUrl;
 const feedbackUrl = config.feedbackUrl;
 
 module.exports = {
-  insertFeedback: function(feedback) {
+  insertFeedback: function (feedback) {
     console.log(feedback);
     // FORMAT THE DATE
     var dtString = common.getSqlDateString(new Date());
@@ -17,13 +17,11 @@ module.exports = {
     values (${feedback.rating},${feedback.forBusinessUse ? 1 : 0},'${feedback.email}',
     '${feedback.comments}',${feedback.xmin},${feedback.ymin},${feedback.xmax},${feedback.ymax},${feedback.centerX},
     ${feedback.centerY},${feedback.scale},'${dtString}','${feedback.otherUses}',${feedback.education},${feedback.recreation},
-    ${feedback.realEstate},${feedback.business},${feedback.delivery},${feedback.economicDevelopment},${feedback.reportProblem},'${feedback.myMapsId}','${
-      feedback.featureId
-    }') RETURNING id;`;
+    ${feedback.realEstate},${feedback.business},${feedback.delivery},${feedback.economicDevelopment},${feedback.reportProblem},'${feedback.myMapsId}','${feedback.featureId}') RETURNING id;`;
 
     // INSERT RECORD
     const pg = new postgres({ dbName: "tabular" });
-    pg.insertWithReturnId(insertSql, id => {
+    pg.insertWithReturnId(insertSql, (id) => {
       var html = feedback.email === "" ? "" : "<div>email: " + feedback.email + "</div>";
       html += "<div>" + feedbackUrl + "ID=" + id + "</div>";
       if (feedback.centerX !== null && feedback.centerY !== null) html += "<div>" + mapUrl + "X=" + feedback.centerX + "&Y=" + feedback.centerY + "</div>";
@@ -33,11 +31,11 @@ module.exports = {
     });
   },
 
-  getFeedback: function(id, callback) {
+  getFeedback: function (id, callback) {
     var sql = `select * from public.tbl_os_feedback  where id = '${id}'`;
     const pg = new postgres({ dbName: "tabular" });
-    pg.selectFirst(sql, result => {
+    pg.selectFirst(sql, (result) => {
       callback(result);
     });
-  }
+  },
 };
