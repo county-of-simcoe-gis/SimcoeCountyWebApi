@@ -11,6 +11,7 @@ const streetAddresses = require("../helpers/streetAddresses");
 const search = require("../helpers/search");
 const common = require("../helpers/common");
 const weather = require("../helpers/weather");
+const _211 = require("../helpers/211");
 
 var request = require("request");
 
@@ -21,9 +22,38 @@ router.get("/", function (req, res, next) {
   res.render("index", { title: "opengiswebapi" });
 });
 
+// 211 CATEGORIES
+router.get("/get211Categories/:isFrench", function (req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  // GET CATEGORIES
+  _211.getCategories(req.params.isFrench, (result) => {
+    res.send(JSON.stringify(result));
+  });
+});
+
+// 211 SUB CATEGORIES
+router.get("/get211SubCategories/:category/:isFrench", function (req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  // GET CATEGORIES
+  _211.getSubCategories(req.params.category, req.params.isFrench, (result) => {
+    res.send(JSON.stringify(result));
+  });
+});
+
+// 211 RESULTS
+router.get("/get211Results/:category/:subCategory/:age/:isFrench", function (req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  // GET CATEGORIES
+  _211.getResults(req.params.category, req.params.subCategory, req.params.age, req.params.isFrench, (result) => {
+    res.send(JSON.stringify(result));
+  });
+});
+
 // APP STATS
 router.get("/appStats/:appName/:actionType/:description", function (req, res, next) {
-  console.log("in");
   if (!common.isHostAllowed(req, res)) return;
 
   // IP FROM PROXY
