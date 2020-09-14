@@ -17,7 +17,7 @@
     "helmet": "^3.18.0",
     "morgan": "~1.9.1",
     "mssql": "^5.1.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "node-server-screenshot": "^0.2.2",
     "node-webshot": "^1.0.3",
     "nodemailer": "^6.2.1",
