@@ -12,7 +12,8 @@ const search = require("../helpers/search");
 const common = require("../helpers/common");
 const weather = require("../helpers/weather");
 const _211 = require("../helpers/211");
-
+const mto = require("../helpers/mto");
+const waze = require("../helpers/waze");
 var request = require("request");
 
 const routeWait = new routerPromise();
@@ -211,6 +212,46 @@ router.get("/getCityWeather/:city", function (req, res, next) {
   weather.getCityWeather(city, (result) => {
     if (result === undefined) res.send(JSON.stringify([]));
     res.send(JSON.stringify(result));
+  });
+});
+
+// GET MTO LAYER (See mto_config.json for layer names)
+// http://localhost:8085/getMTO511Layer/ROADCONDITIONS
+router.get("/getMTO511Layer/:layerName", function (req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  mto.getMTOLayer(req.params.layerName, function (response) {
+    res.send(response);
+  });
+});
+
+// GET WAZE ALERT LAYER
+// http://localhost:8085/getWazeAlertLayer/Alerts/Hazard
+router.get("/getWazeAlertLayer/:category/:type", function (req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  waze.getWazeLayer(req.params.category, req.params.type, function (response) {
+    res.send(response);
+  });
+});
+
+// GET WAZE JAM LAYER
+// http://localhost:8085/getWazeJamLayer
+router.get("/getWazeJamLayer", function (req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  waze.getWazeLayer("JAMS", "", function (response) {
+    res.send(response);
+  });
+});
+
+// GET WAZE IRREGULAR LAYER
+//http://localhost:8085/getWazeIrregularLayer
+router.get("/getWazeIrregularLayer", function (req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
+
+  waze.getWazeLayer("IRREGULAR", "", function (response) {
+    res.send(response);
   });
 });
 

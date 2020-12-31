@@ -1,0 +1,72 @@
+{
+  "sites": {
+    "EVENTS": {
+      "url": "https://511on.ca/api/v2/get/event",
+      "geoType": "POINT"
+    },
+    "CONSTRUCTION": {
+      "url": "https://511on.ca/api/v2/get/constructionprojects",
+      "geoType": "POINT"
+    },
+    "CAMERAS": {
+      "url": "https://511on.ca/api/v2/get/cameras",
+      "geoType": "POINT"
+    },
+    "ROADCONDITIONS": {
+      "url": "https://511on.ca/api/v2/get/roadconditions",
+      "geoType": "POLYLINE"
+    },
+    "TRANSITHUBS": {
+      "url": "https://511on.ca/api/v2/get/transithub",
+      "geoType": "POINT"
+    },
+    "CARPOOLLOTS": {
+      "url": "https://511on.ca/api/v2/get/carpoollots",
+      "geoType": "POINT"
+    },
+    "FERRIES": {
+      "url": "https://511on.ca/api/v2/get/ferryterminals",
+      "geoType": "POINT"
+    },
+    "SERVICECENTRES": {
+      "url": "https://511on.ca/api/v2/get/servicecentres",
+      "geoType": "POINT"
+    },
+    "TRAVELINFOCENTRES": {
+      "url": "https://511on.ca/api/v2/get/informationcenter",
+      "geoType": "POINT"
+    },
+    "HOTHOV": {
+      "url": "https://511on.ca/api/v2/get/hovlanes",
+      "geoType": "POLYLINE"
+    },
+    "ALERTS": {
+      "url": "https://511on.ca/api/v2/get/alerts",
+      "geoType": "NONE"
+    },
+    "roadConditionAreas": [
+      "From Flesherton to Shelburne",
+      "From Orangeville to Highway 50",
+      "From Maple Leaf Drive to Canal Road (Bradford)",
+      "From Highway 50 to Jane Street",
+      "From Beaverton to Gamebridge",
+      "From Barrie to Stayner",
+      "From Stayner to Collingwood",
+      "From Craighurst to Midland",
+      "From Warminster to Waubashene",
+      "From Waubashene to Midland",
+      "From Barrie to Severn Bridge",
+      "From Gamebridge to Warminster",
+      "From Canal Road (Bradford) to Craighurst",
+      "From New Tecumseth to Mulmur",
+      "From Highway 400 (near Cookstown) to New Tecumseth",
+      "From Shelburne to Orangeville",
+      "From Flesherton to Shelburne",
+      "From Collingwood to Owen Sound",
+      "From Rosemont to Harriston",
+      "From Port Severn to Horseshoe Lake",
+      "From Severn Bridge to Muskoka Falls",
+      "From Craighurst to Port Severn"
+    ]
+  }
+}
