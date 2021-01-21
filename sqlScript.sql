@@ -22,6 +22,30 @@ CREATE TABLE public.tbl_mymaps (
 	CONSTRAINT tbl_mymaps_pk PRIMARY KEY (id)
 );
 
+CREATE TABLE public.tbl_map_settings (
+	id uuid NOT NULL DEFAULT uuid_generate_v1(),
+	"json" text NULL,
+	date_created date NULL,
+	is_default bool NOT NULL DEFAULT false,
+	CONSTRAINT tbl_map_settings_pk PRIMARY KEY (id)
+);
+--SAMPLE RECORD FOR MAP SETTINGS
+--INSERT INTO public.tbl_map_settings (id, "json", date_created, is_default) VALUES(uuid_generate_v1(), '{
+--    "name":"Open GIS - Public",
+--    "zoom_level": 10,
+--    "center": "-8878504.68, 5543492.45",
+--    "default_group": "simcoe:All_Layers",
+--    "sources":
+--    [ 
+--      {
+--        "layerUrl":"https://opengis.simcoe.ca/geoserver/simcoe/Config_Public_Default/ows?service=wms&version=1.3.0&request=GetCapabilities",
+--        "secure": false,
+--        "primary":true
+--      }
+--    ]
+--  }', now(), true);
+
+
 CREATE TABLE public.tbl_os_feedback (
 	yminimum float8 NULL,
 	ymaximum float8 NULL,
