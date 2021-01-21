@@ -81,9 +81,12 @@ module.exports = {
     const pg = new postgres({ dbName: "tabular" });
     pg.selectAll(sql, (result) => {
       let types = [];
-      result.forEach((type) => {
-        types.push(type.type);
-      });
+      if (result.length >0 ){
+        result.forEach((type) => {
+          types.push(type.type);
+        });
+        
+      }
       callback(types);
     });
   },
