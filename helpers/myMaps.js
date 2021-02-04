@@ -22,7 +22,7 @@ module.exports = {
     var sql = `select * from public.tbl_mymaps where id = $1`;
     var values = [id];
     const pg = new postgres({ dbName: "tabular" });
-    pg.selectFirst(sql, values, result => {
+    pg.selectFirstWithValues(sql, values, result => {
       callback(result);
     });
   }
