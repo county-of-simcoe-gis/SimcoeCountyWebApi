@@ -19,7 +19,7 @@ module.exports = class Postgres {
   // INSERT RECORD
   executeSqlWithValues(sql, values, callback) {
     this.pool.query(sql, values, (err, res) => {
-      callback(err ? { result: err.stack } : { result: "OK" });
+      if (callback !== undefined) callback(err ? { result: err.stack } : { result: "OK" });
       console.log(err ? { result: err.stack } : { result: "OK" });
     });
   }
