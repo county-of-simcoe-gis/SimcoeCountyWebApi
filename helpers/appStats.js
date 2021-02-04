@@ -8,19 +8,19 @@ module.exports = {
 
     // BUILD SQL
     var insertSql = `INSERT INTO public.tbl_app_stats (app_name,action_type,action_description,action_date,ip) values ($1,$2,$3,$4,$5);`;
-    var values = [appName,actionType,description,dtString,ip];
+    var values = [appName, actionType, description, dtString, ip];
 
     // INSERT RECORD
     const pg = new postgres({ dbName: "tabular" });
-    pg.insert(insertSql,values);
+    pg.executeSqlWithValues(insertSql, values);
   },
 
   getAppStats: function (fromDate, toDate, type, callback) {
     //select date_day,total from public.get_app_stats('2019-09-01','2019-10-8', 'STARTUP_MAP_LOAD');
-    const sql = `select x,y from public.get_app_statsxy($1,$2, $3);`
-    var values = [fromDate,toDate,type];
+    const sql = `select x,y from public.get_app_statsxy($1,$2, $3);`;
+    var values = [fromDate, toDate, type];
     const pg = new postgres({ dbName: "tabular" });
-    pg.selectAllWithValues(sql,values, (result) => {
+    pg.selectAllWithValues(sql, values, (result) => {
       callback(result);
     });
   },

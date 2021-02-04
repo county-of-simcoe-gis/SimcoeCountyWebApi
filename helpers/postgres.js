@@ -12,20 +12,21 @@ module.exports = class Postgres {
       host: conInfo.host,
       database: conInfo.database,
       password: conInfo.password,
-      port: conInfo.port
+      port: conInfo.port,
     });
   }
 
-  // INSERT RECORD AND RETURN ID OF NEW RECORD
-  insert(sql,values, callback) {
+  // INSERT RECORD
+  executeSqlWithValues(sql, values, callback) {
     this.pool.query(sql, values, (err, res) => {
+      callback(err ? { result: err.stack } : { result: "OK" });
       console.log(err ? { result: err.stack } : { result: "OK" });
     });
   }
 
   // INSERT RECORD AND RETURN ID OF NEW RECORD
-  insertWithReturnId(sql,values, callback) {
-    this.pool.query(sql,values, (err, res) => {
+  insertWithReturnId(sql, values, callback) {
+    this.pool.query(sql, values, (err, res) => {
       const id = res.rows[0].id;
       callback(id);
     });
@@ -45,7 +46,7 @@ module.exports = class Postgres {
   }
 
   // RETURN FIRST RECORD USING VALUES
-  selectFirstWithValues(sql,values, callback) {
+  selectFirstWithValues(sql, values, callback) {
     this.pool.query(sql, values, (err, res) => {
       if (res === undefined) {
         callback({ error: "Query returned ZERO records." });

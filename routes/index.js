@@ -14,6 +14,7 @@ const weather = require("../helpers/weather");
 const _211 = require("../helpers/211");
 const mto = require("../helpers/mto");
 const waze = require("../helpers/waze");
+const servicePinger = require("../helpers/servicePinger");
 var request = require("request");
 
 const routeWait = new routerPromise();
@@ -255,50 +256,34 @@ router.get("/getWazeIrregularLayer", function (req, res, next) {
   });
 });
 
-// GET APP STATS
-router.get("/getMapImage", function (req, res, next) {
+// GET SERVICE PINGER STATUS
+router.get("/getIsServicePingerDisabled/:secret", function (req, res, next) {
   if (!common.isHostAllowed(req, res)) return;
 
-  //var webshot = require("webshot");
+  // CHECK FOR SECRET
+  if (req.params.secret !== config.servicePingerSecret) {
+    res.send({ status: "UnAuthorized" });
+    return;
+  }
 
-  var app = require("node-server-screenshot");
-  app.fromURL("http://localhost:8085/imageGenerator/parcel.html", "test.png", function () {
-    //an image of google.com has been saved at ./test.png
+  servicePinger.getPingerStatus((result) => {
+    res.send(result);
   });
-
-  // request.get("http://localhost:8085/imageGenerator/parcel.html", function(error, response) {
-  //   res.writeHead(200, { "Content-Type": "image/jpeg", "Cache-Control": "no-cache" });
-  //   res.end(response.body, "binary");
-  //   //res.send(response.body);
-  // });
-
-  // router.get("http://localhost:8085/imageGenerator/parcel.html", function(error, res2, body) {
-  //   if (!error && res2.statusCode == 200) {
-  //     response.setHeader("Content-Type", "image/png");
-  //     response.writeHead(200);
-  //     response.write(body);
-  //     response.end();
-  //     res.send("OK");
-  //   }
-  // });
-
-  // streetAddresses.getStreets(req.params.streetName, result => {
-  //   if (result === undefined) res.send(JSON.stringify({ error: "No Streets Found" }));
-
-  //   res.send(JSON.stringify(result));
-  // });
 });
 
-// GET APP STATS
-// router.get("/getAppStats/:streetName", function(req, res, next) {
-//   if (!common.isHostAllowed(req, res)) return;
+// GET SERVICE PINGER TIME
+router.get("/setServicePingerMinutes/:secret/:minutes", function (req, res, next) {
+  if (!common.isHostAllowed(req, res)) return;
 
-//   streetAddresses.getStreets(req.params.streetName, result => {
-//     if (result === undefined) res.send(JSON.stringify({ error: "No Streets Found" }));
+  // CHECK FOR SECRET
+  if (req.params.secret !== config.servicePingerSecret) {
+    res.send({ status: "UnAuthorized" });
+    return;
+  }
 
-//     res.send(JSON.stringify(result));
-//   });
-// });
+  servicePinger.setServicePingerMinutes(req.params.minutes, (result) => {
+    res.send(result);
+  });
+});
 
 module.exports = router;
-// module.exports = routeWait;
