@@ -19,7 +19,7 @@ const logger = winston.createLogger({
     //         maxsize: 5242880, //5MB
     //         maxFiles: 5}),
       new winston.transports.File({ 
-          filename: 'logs/api.log', 
+          filename: '/GIS/logs/api.log', 
           timestamp:true,
           maxsize: 5242880, //5MB
           maxFiles: 5 }),
