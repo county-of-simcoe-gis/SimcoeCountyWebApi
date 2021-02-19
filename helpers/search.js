@@ -32,6 +32,7 @@ module.exports = {
       // FALL BACK TO GEOCODE
       if (useESRIGeocoder && addresses.length === 0 && (type === "Address" || type === undefined || type === "All")) {
         const geocodeResult = await this._getJSON(geocodeUrlTemplate(limit, keywords));
+        if (geocodeResult === undefined) callback([]);
         const candidates = geocodeResult.candidates;
         candidates.forEach((candidate) => {
           if (candidate.score > 10) {
@@ -211,6 +212,7 @@ module.exports = {
   },
 
   _toTitleCase(str) {
+    if (str === undefined) return ``;
     return str.replace(/\w\S*/g, function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
