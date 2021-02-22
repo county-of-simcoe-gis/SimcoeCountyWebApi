@@ -29,7 +29,10 @@ app.use(
     type: "application/x-www-form-urlencoding"
   })
 );
-
+app.use(function(req, res, next) {
+  logger.info(`${req.url}`);
+  next();
+});
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
