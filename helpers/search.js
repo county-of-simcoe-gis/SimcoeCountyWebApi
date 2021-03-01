@@ -14,58 +14,63 @@ const osmUrlTemplateNoViewBox = (limit, keywords) => `https://nominatim.openstre
 
 module.exports = {
   search: async function (keywords, type = undefined, muni = undefined, limit = 10, callback) {
-    // MINIMUM 1 CHAR
-    if (keywords.length < 2) {
-      callback([]);
-      return;
-    }
-
-    const parts = keywords.split(" ");
-    const isFirstWordNumeric = !isNaN(parts[0]);
-
-    // FIRST PART IS NUMBER, ASSUME ADDRESS
-    let allValues = [];
-    let addresses = [];
-    if (isFirstWordNumeric) {
-      addresses = await this._searchAddress(keywords, muni, type, limit);
-
-      // FALL BACK TO GEOCODE
-      if (useESRIGeocoder && addresses.length === 0 && (type === "Address" || type === undefined || type === "All")) {
-        const geocodeResult = await this._getJSON(geocodeUrlTemplate(limit, keywords));
-        if (geocodeResult === undefined) callback([]);
-        const candidates = geocodeResult.candidates;
-        candidates.forEach((candidate) => {
-          if (candidate.score > 10) {
-            const searchObj = {
-              name: this._toTitleCase(candidate.address),
-              type: "Geocode",
-              municipality: this._toTitleCase(candidate.attributes.City),
-              location_id: null,
-              x: candidate.location.x,
-              y: candidate.location.y,
-            };
-            addresses.push(searchObj);
-          }
-        });
+    try{
+      // MINIMUM 1 CHAR
+      if (keywords.length < 2) {
+        callback([]);
+        return;
       }
-    }
 
-    allValues.push(...addresses);
-    // FILL IN THE SEARCH WITH OTHERS
-    if (allValues.length < limit) {
-      const numRecordsToReturn = limit - allValues.length;
-      let nonAddresses = await this._searchNonAddress(keywords, type, muni, limit);
-      allValues.push(...nonAddresses);
-    }
+      const parts = keywords.split(" ");
+      const isFirstWordNumeric = !isNaN(parts[0]);
 
-    // // FILL IN THE SEARCH WITH OSM, ONLY IF NO RESULTS
-    if ((useOSMSearch && allValues.length === 0) || type === "Open Street Map" || (allValues.length === 0 && type === "All")) {
-      const numRecordsToReturn = limit - allValues.length;
-      let osmPlaces = await this._searchOsm(keywords, type, numRecordsToReturn);
-      allValues.push(...osmPlaces);
-    }
+      // FIRST PART IS NUMBER, ASSUME ADDRESS
+      let allValues = [];
+      let addresses = [];
+      if (isFirstWordNumeric) {
+        addresses = await this._searchAddress(keywords, muni, type, limit);
 
-    callback(allValues);
+        // FALL BACK TO GEOCODE
+        if (useESRIGeocoder && addresses.length === 0 && (type === "Address" || type === undefined || type === "All")) {
+          const geocodeResult = await this._getJSON(geocodeUrlTemplate(limit, keywords));
+          if (geocodeResult === undefined) callback([]);
+          const candidates = geocodeResult.candidates;
+          if (candidates === undefined) callback([]);
+          candidates.forEach((candidate) => {
+            if (candidate.score > 10) {
+              const searchObj = {
+                name: this._toTitleCase(candidate.address),
+                type: "Geocode",
+                municipality: this._toTitleCase(candidate.attributes.City),
+                location_id: null,
+                x: candidate.location.x,
+                y: candidate.location.y,
+              };
+              addresses.push(searchObj);
+            }
+          });
+        }
+      }
+
+      allValues.push(...addresses);
+      // FILL IN THE SEARCH WITH OTHERS
+      if (allValues.length < limit) {
+        const numRecordsToReturn = limit - allValues.length;
+        let nonAddresses = await this._searchNonAddress(keywords, type, muni, limit);
+        allValues.push(...nonAddresses);
+      }
+
+      // // FILL IN THE SEARCH WITH OSM, ONLY IF NO RESULTS
+      if ((useOSMSearch && allValues.length === 0) || type === "Open Street Map" || (allValues.length === 0 && type === "All")) {
+        const numRecordsToReturn = limit - allValues.length;
+        let osmPlaces = await this._searchOsm(keywords, type, numRecordsToReturn);
+        allValues.push(...osmPlaces);
+      }
+
+      callback(allValues);
+    }catch (e) {
+      callback([]);
+    }
   },
 
   searchById: function (id, callback) {
@@ -193,6 +198,7 @@ module.exports = {
       return json;
     } catch (error) {
       console.log(error);
+      return {};
     }
 
     // const data = await fetch(url)
