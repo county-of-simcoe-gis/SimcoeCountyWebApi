@@ -33,22 +33,24 @@ module.exports = {
         // FALL BACK TO GEOCODE
         if (useESRIGeocoder && addresses.length === 0 && (type === "Address" || type === undefined || type === "All")) {
           const geocodeResult = await this._getJSON(geocodeUrlTemplate(limit, keywords));
-          if (geocodeResult === undefined) callback([]);
-          const candidates = geocodeResult.candidates;
-          if (candidates === undefined) callback([]);
-          candidates.forEach((candidate) => {
-            if (candidate.score > 10) {
-              const searchObj = {
-                name: this._toTitleCase(candidate.address),
-                type: "Geocode",
-                municipality: this._toTitleCase(candidate.attributes.City),
-                location_id: null,
-                x: candidate.location.x,
-                y: candidate.location.y,
-              };
-              addresses.push(searchObj);
+          if (geocodeResult !== undefined) {
+            const candidates = geocodeResult.candidates;
+            if (candidates !== undefined) {
+              candidates.forEach((candidate) => {
+                if (candidate.score > 10) {
+                  const searchObj = {
+                    name: this._toTitleCase(candidate.address),
+                    type: "Geocode",
+                    municipality: this._toTitleCase(candidate.attributes.City),
+                    location_id: null,
+                    x: candidate.location.x,
+                    y: candidate.location.y,
+                  };
+                  addresses.push(searchObj);
+                }
+              });
             }
-          });
+          }
         }
       }
 
