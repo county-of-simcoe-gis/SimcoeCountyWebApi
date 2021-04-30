@@ -6,7 +6,7 @@ module.exports = {
     var sql = `SELECT * FROM public.view_all_streets where streetname ilike '%' || $1 || '%' order by streetname LIMIT 50`;
     var values = [streetName];
     const pg = new postgres({ dbName: "weblive" });
-    pg.selectAllWithValues(sql, result => {
+    pg.selectAllWithValues(sql, values, result => {
       callback(result);
     });
   }
