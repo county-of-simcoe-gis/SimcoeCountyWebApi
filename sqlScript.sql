@@ -86,9 +86,9 @@ CREATE TABLE public.tbl_search (
 	geojson_point varchar NULL,
 	CONSTRAINT tbl_search_pk PRIMARY KEY (id)
 );
-CREATE INDEX tbl_search_trgm_idx_alias ON public.tbl_search USING gin (name gin_trgm_ops);
+CREATE INDEX tbl_search_trgm_idx_alias ON public.tbl_search USING gin (alias gin_trgm_ops);
 CREATE INDEX tbl_search_trgm_idx_name ON public.tbl_search USING gin (name gin_trgm_ops);
-CREATE INDEX tbl_search_trgm_idx_priority ON public.tbl_search USING gin (name gin_trgm_ops);
+CREATE INDEX tbl_search_trgm_idx_priority ON public.tbl_search USING gin (priority gin_trgm_ops);
 
 
 CREATE TABLE public.tbl_search_layers (
