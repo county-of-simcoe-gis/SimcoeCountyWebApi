@@ -3,6 +3,8 @@ const postgres = require("./postgres");
 //import { Postgres } from "./postgres.js";
 const config = require("../config.json");
 const common = require("./common");
+const mapSettings = require("./mapSettings");
+
 const mapUrl = config.mapUrl;
 const feedbackUrl = config.feedbackUrl;
 
@@ -37,17 +39,47 @@ module.exports = {
       feedback.economicDevelopment,
       feedback.reportProblem,
       feedback.myMapsId,
-      feedback.featureId
+      feedback.featureId,
     ];
     // INSERT RECORD
     const pg = new postgres({ dbName: "tabular" });
-    pg.insertWithReturnId(insertSql,values, (id) => {
-      var html = feedback.email === "" ? "" : "<div>email: " + feedback.email + "</div>";
+    pg.insertWithReturnId(insertSql, values, (id) => {
+      var html =
+        feedback.email === "" ? "" : "<div>email: " + feedback.email + "</div>";
       html += "<div>" + feedbackUrl + "ID=" + id + "</div>";
-      if (feedback.centerX !== null && feedback.centerY !== null) html += "<div>" + mapUrl + "X=" + feedback.centerX + "&Y=" + feedback.centerY + "</div>";
+      if (feedback.centerX !== null && feedback.centerY !== null)
+        html +=
+          "<div>" +
+          mapUrl +
+          "X=" +
+          feedback.centerX +
+          "&Y=" +
+          feedback.centerY +
+          "</div>";
 
-      if (feedback.myMapsId !== null) html += "<div>" + mapUrl + "TAB=MyMaps&MY_MAPS_ID=" + feedback.myMapsId + "&MY_MAPS_FEATURE_ID=" + feedback.featureId + "</div>";
-      email.sendMail("Feedback - opengis.simcoe.ca", html);
+      if (feedback.myMapsId !== null)
+        html +=
+          "<div>" +
+          mapUrl +
+          "TAB=MyMaps&MY_MAPS_ID=" +
+          feedback.myMapsId +
+          "&MY_MAPS_FEATURE_ID=" +
+          feedback.featureId +
+          "</div>";
+      if (feedback.map_id !== undefined) {
+        mapSettings.getMap(feedback.map_id, (response) => {
+          const map_settings = JSON.parse(
+            JSON.parse(JSON.stringify(response)).json
+          );
+
+          email.sendMail(
+            "Feedback - opengis.simcoe.ca",
+            html,
+            true,
+            map_settings.feedback_contact
+          );
+        });
+      } else email.sendMail("Feedback - opengis.simcoe.ca", html);
     });
   },
 
@@ -55,7 +87,7 @@ module.exports = {
     var sql = `select * from public.tbl_os_feedback  where id = $1`;
     var values = [id];
     const pg = new postgres({ dbName: "tabular" });
-    pg.selectFirstWithValues(sql,values, (result) => {
+    pg.selectFirstWithValues(sql, values, (result) => {
       callback(result);
     });
   },
