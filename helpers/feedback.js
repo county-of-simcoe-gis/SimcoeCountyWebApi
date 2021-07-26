@@ -44,40 +44,16 @@ module.exports = {
     // INSERT RECORD
     const pg = new postgres({ dbName: "tabular" });
     pg.insertWithReturnId(insertSql, values, (id) => {
-      var html =
-        feedback.email === "" ? "" : "<div>email: " + feedback.email + "</div>";
+      var html = feedback.email === "" ? "" : "<div>email: " + feedback.email + "</div>";
       html += "<div>" + feedbackUrl + "ID=" + id + "</div>";
-      if (feedback.centerX !== null && feedback.centerY !== null)
-        html +=
-          "<div>" +
-          mapUrl +
-          "X=" +
-          feedback.centerX +
-          "&Y=" +
-          feedback.centerY +
-          "</div>";
+      if (feedback.centerX !== null && feedback.centerY !== null) html += "<div>" + mapUrl + "X=" + feedback.centerX + "&Y=" + feedback.centerY + "</div>";
 
-      if (feedback.myMapsId !== null)
-        html +=
-          "<div>" +
-          mapUrl +
-          "TAB=MyMaps&MY_MAPS_ID=" +
-          feedback.myMapsId +
-          "&MY_MAPS_FEATURE_ID=" +
-          feedback.featureId +
-          "</div>";
+      if (feedback.myMapsId !== null) html += "<div>" + mapUrl + "TAB=MyMaps&MY_MAPS_ID=" + feedback.myMapsId + "&MY_MAPS_FEATURE_ID=" + feedback.featureId + "</div>";
       if (feedback.map_id !== undefined) {
         mapSettings.getMap(feedback.map_id, (response) => {
-          const map_settings = JSON.parse(
-            JSON.parse(JSON.stringify(response)).json
-          );
+          const map_settings = JSON.parse(JSON.parse(JSON.stringify(response)).json);
 
-          email.sendMail(
-            "Feedback - opengis.simcoe.ca",
-            html,
-            true,
-            map_settings.feedback_contact
-          );
+          email.sendMail("Feedback - opengis.simcoe.ca", html, true, map_settings.feedback_contact);
         });
       } else email.sendMail("Feedback - opengis.simcoe.ca", html);
     });

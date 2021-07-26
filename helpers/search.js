@@ -9,19 +9,11 @@ const useOSMSearch = searchConfig.useOSMSearch;
 
 const geocodeUrlTemplate = (limit, keywords) =>
   `https://maps.simcoe.ca/arcgis/rest/services/SimcoeUtilities/AddressLocator/GeocodeServer/findAddressCandidates?f=json&maxLocations=${limit}&outFields=House,StreetName,SufType,City&Street=${keywords}`;
-const osmUrlTemplateViewBox = (viewBox, limit, keywords) =>
-  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${viewBox}&bounded=1&limit=${limit}&q=${keywords}`;
-const osmUrlTemplateNoViewBox = (limit, keywords) =>
-  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=ca&limit=${limit}&q=${keywords}`;
+const osmUrlTemplateViewBox = (viewBox, limit, keywords) => `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${viewBox}&bounded=1&limit=${limit}&q=${keywords}`;
+const osmUrlTemplateNoViewBox = (limit, keywords) => `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&countrycodes=ca&limit=${limit}&q=${keywords}`;
 
 module.exports = {
-  search: async function (
-    keywords,
-    type = undefined,
-    muni = undefined,
-    limit = 10,
-    callback
-  ) {
+  search: async function (keywords, type = undefined, muni = undefined, limit = 10, callback) {
     try {
       // MINIMUM 1 CHAR
       if (keywords.length < 2) {
@@ -39,14 +31,8 @@ module.exports = {
         addresses = await this._searchAddress(keywords, muni, type, limit);
 
         // FALL BACK TO GEOCODE
-        if (
-          useESRIGeocoder &&
-          addresses.length === 0 &&
-          (type === "Address" || type === undefined || type === "All")
-        ) {
-          const geocodeResult = await this._getJSON(
-            geocodeUrlTemplate(limit, keywords)
-          );
+        if (useESRIGeocoder && addresses.length === 0 && (type === "Address" || type === undefined || type === "All")) {
+          const geocodeResult = await this._getJSON(geocodeUrlTemplate(limit, keywords));
           if (geocodeResult !== undefined) {
             const candidates = geocodeResult.candidates;
             if (candidates !== undefined) {
@@ -72,27 +58,14 @@ module.exports = {
       // FILL IN THE SEARCH WITH OTHERS
       if (allValues.length < limit) {
         const numRecordsToReturn = limit - allValues.length;
-        let nonAddresses = await this._searchNonAddress(
-          keywords,
-          type,
-          muni,
-          limit
-        );
+        let nonAddresses = await this._searchNonAddress(keywords, type, muni, limit);
         allValues.push(...nonAddresses);
       }
 
       // // FILL IN THE SEARCH WITH OSM, ONLY IF NO RESULTS
-      if (
-        (useOSMSearch && allValues.length === 0) ||
-        type === "Open Street Map" ||
-        (allValues.length === 0 && type === "All")
-      ) {
+      if ((useOSMSearch && allValues.length === 0) || type === "Open Street Map" || (allValues.length === 0 && type === "All")) {
         const numRecordsToReturn = limit - allValues.length;
-        let osmPlaces = await this._searchOsm(
-          keywords,
-          type,
-          numRecordsToReturn
-        );
+        let osmPlaces = await this._searchOsm(keywords, type, numRecordsToReturn);
         allValues.push(...osmPlaces);
       }
 
@@ -125,12 +98,7 @@ module.exports = {
     });
   },
 
-  _searchAddress: async function (
-    value,
-    muni = undefined,
-    type = undefined,
-    limit = 10
-  ) {
+  _searchAddress: async function (value, muni = undefined, type = undefined, limit = 10) {
     const values = [value];
 
     if (type === "All" || type === "undefined") type = undefined;
@@ -154,12 +122,7 @@ module.exports = {
     return pgResult;
   },
 
-  _searchNonAddress: async function (
-    value,
-    type = undefined,
-    muni = undefined,
-    limit = 10
-  ) {
+  _searchNonAddress: async function (value, type = undefined, muni = undefined, limit = 10) {
     if (type === "undefined" || type === "All") type = undefined;
     if (muni === "undefined") muni = undefined;
 

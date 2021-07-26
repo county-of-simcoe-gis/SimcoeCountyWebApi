@@ -5,7 +5,7 @@ var xml2js = require("xml2js");
 var parser = new xml2js.Parser();
 
 module.exports = {
-  getCityWeather: function(city, callback) {
+  getCityWeather: function (city, callback) {
     // XML2JSON OPTIONS
     var options = {
       object: true,
@@ -14,21 +14,21 @@ module.exports = {
       sanitize: true,
       trim: true,
       arrayNotation: false,
-      alternateTextNode: false
+      alternateTextNode: false,
     };
 
-    const url = city => `https://dd.weather.gc.ca/citypage_weather/xml/ON/${city}_e.xml`;
+    const url = (city) => `https://dd.weather.gc.ca/citypage_weather/xml/ON/${city}_e.xml`;
     return fetch(url(city))
-      .then(response => {
+      .then((response) => {
         return response.text();
       })
-      .then(responseText => {
-        parser.parseString(responseText, function(err, result) {
+      .then((responseText) => {
+        parser.parseString(responseText, function (err, result) {
           callback(result);
         });
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
-  }
+  },
 };

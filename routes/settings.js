@@ -13,8 +13,7 @@ router.get("/getMap/:id", function (req, res, next) {
     if (!common.isHostAllowed(req, res)) return;
 
     mapSettings.getMap(req.params.id, (result) => {
-      if (result === undefined)
-        res.send(JSON.stringify({ error: "ID Not Found" }));
+      if (result === undefined) res.send(JSON.stringify({ error: "ID Not Found" }));
 
       res.send(JSON.stringify(result));
     });
@@ -30,8 +29,7 @@ router.get("/getDefaultMap", function (req, res, next) {
     if (!common.isHostAllowed(req, res)) return;
 
     mapSettings.getDefaultMap((result) => {
-      if (result === undefined)
-        res.send(JSON.stringify({ error: "ID Not Found" }));
+      if (result === undefined) res.send(JSON.stringify({ error: "ID Not Found" }));
 
       res.send(JSON.stringify(result));
     });

@@ -3,7 +3,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 //var logger = require("morgan");
 //replaced morgan with winston
-const logger = require('./helpers/logger');
+const logger = require("./helpers/logger");
 
 var bodyParser = require("body-parser");
 var cors = require("cors");
@@ -26,10 +26,10 @@ app.use(
     extended: true,
     parameterLimit: 50000,
     arrayLimit: 50000,
-    type: "application/x-www-form-urlencoding"
+    type: "application/x-www-form-urlencoding",
   })
 );
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   logger.info(`${req.url}`);
   next();
 });
@@ -41,7 +41,7 @@ app.use("/users", usersRouter);
 app.use("/async", asyncRouter);
 app.use("/settings", settingsRouter);
 
-app.get('*', function(req, res){
+app.get("*", function (req, res) {
   logger.warn(`Invalid URL Request- ${req.url}`);
   res.status(404).send();
 });
@@ -53,7 +53,7 @@ app.use(
     extended: true,
     parameterLimit: 50000,
     arrayLimit: 50000,
-    type: "application/x-www-form-urlencoding"
+    type: "application/x-www-form-urlencoding",
   })
 );
 
