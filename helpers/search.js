@@ -14,7 +14,7 @@ const osmUrlTemplateNoViewBox = (limit, keywords) => `https://nominatim.openstre
 
 module.exports = {
   search: async function (keywords, type = undefined, muni = undefined, limit = 10, callback) {
-    try{
+    try {
       // MINIMUM 1 CHAR
       if (keywords.length < 2) {
         callback([]);
@@ -70,7 +70,7 @@ module.exports = {
       }
 
       callback(allValues);
-    }catch (e) {
+    } catch (e) {
       callback([]);
     }
   },
@@ -89,11 +89,10 @@ module.exports = {
     const pg = new postgres({ dbName: "tabular" });
     pg.selectAll(sql, (result) => {
       let types = [];
-      if (result.length >0 ){
+      if (result.length > 0) {
         result.forEach((type) => {
           types.push(type.type);
         });
-        
       }
       callback(types);
     });
@@ -106,11 +105,14 @@ module.exports = {
 
     let sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type = 'Address'`;
     if (muni !== undefined && muni !== "undefined") {
-      sql += " and municipality = '" + muni + "'";
+      sql += " and lower(municipality) = lower($2)";
+      values.push(muni);
     }
 
     if (type !== undefined && type !== "undefined") {
-      sql += " and type = '" + type + "'";
+      if (muni !== undefined && muni !== "undefined") sql += " and type = $3";
+      else sql += " and type = $2";
+      values.push(type);
     }
 
     sql += " limit " + limit + ";";
@@ -130,11 +132,11 @@ module.exports = {
       sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' order by priority limit $2;`;
     if (muni !== undefined && type === undefined) {
       values.push(muni);
-      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' and municipality = $3 limit $2;`;
+      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' and lower(municipality) = lower($3) limit $2;`;
     } else if (muni !== undefined && type !== undefined) {
       values.push(muni);
       values.push(type);
-      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike '%' || $1 || '%' and type = $4 and municipality = $3 and type <> 'Address' limit $2;`;
+      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike '%' || $1 || '%' and type = $4 and lower(municipality) = lower($3) and type <> 'Address' limit $2;`;
     } else if (muni === undefined && type !== undefined) {
       values.push(type);
       sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike '%' || $1 || '%' and type = $3 and type <> 'Address' limit $2;`;

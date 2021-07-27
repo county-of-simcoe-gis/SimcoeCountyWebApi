@@ -1,24 +1,23 @@
 var express = require("express");
 var router = express.Router();
-const logger = require('../helpers/logger');
-
+const logger = require("../helpers/logger");
 
 /* GET users listing. */
-router.get("/", function(req, res, next) {
-  try{
+router.get("/", function (req, res, next) {
+  try {
     res.send("respond with a resource");
-  }catch(e){
+  } catch (e) {
     logger.error(e.stack);
     res.status(500).send();
   }
 });
 
-router.get("/test", function(req, res, next) {
-  try{
+router.get("/test", function (req, res, next) {
+  try {
     console.log("test");
-    throw('OOPS!');
+    throw "OOPS!";
     res.send("respond with a resource");
-  }catch(e){
+  } catch (e) {
     logger.error(e.stack);
     res.status(500).send();
   }
