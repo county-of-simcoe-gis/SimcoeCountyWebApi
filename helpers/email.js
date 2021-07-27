@@ -1,21 +1,13 @@
 var nodemailer = require("nodemailer");
-var smtpTransport = require("nodemailer-smtp-transport");
 const config = require("../config.json");
 
-var transporter = nodemailer.createTransport(
-  smtpTransport({
-    host: config.emailSMTPServer,
-    port: 25,
-    // auth: {
-    //     user: 'username@mysmtpserver.com',
-    //     pass: 'mypasswd'
-    // },
-    // authMethod:'NTLM',
-    secure: false,
-    ignoreTLS: true,
-    debug: true,
-  })
-);
+var transporter = nodemailer.createTransport({
+  host: config.emailSMTPServer,
+  port: 25,
+  secure: false,
+  ignoreTLS: true,
+  debug: true,
+});
 
 module.exports = {
   sendMail(subject, body, isHtml = true, cc = undefined) {
