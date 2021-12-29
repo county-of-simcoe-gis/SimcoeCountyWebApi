@@ -6,3 +6,5 @@ config.json
 /node_modules
 /public
 /logs
+config.js
+startup.cmd
