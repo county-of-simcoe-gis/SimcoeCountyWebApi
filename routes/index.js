@@ -440,8 +440,11 @@ router.get("/getPropertyReportInfo/:arn", function (req, res, next) {
 const got = require("got");
 router.get("/getParcelImage/:arn/:overview/:width/:height", function (req, res, next) {
   parcelImageGenerator.getImage(req.params.arn, req.params.overview, req.params.width, req.params.height, (resultUrl) => {
-    res.set("Content-Type", "image/jpeg");
-    got.stream(resultUrl).pipe(res);
+    if (!resultUrl) res.status(404).send();
+    else {
+      res.set("Content-Type", "image/jpeg");
+      got.stream(resultUrl).pipe(res);
+    }
   });
 });
 

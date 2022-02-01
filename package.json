@@ -24,7 +24,7 @@
     "morgan": "~1.9.1",
     "mssql": "^5.1.5",
     "mssql-ssrs": "^1.4.1",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "nodemailer": "^6.6.3",
     "npm-check-updates": "^10.3.1",
     "pg": "^8.7.0",
