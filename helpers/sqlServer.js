@@ -1,4 +1,5 @@
 const sql = require("mssql");
+
 const config = require("../config").sqlServer;
 module.exports = class SqlServer {
   constructor(opt) {
@@ -16,6 +17,18 @@ module.exports = class SqlServer {
 
     this.pool.on("error", (err) => {
       console.log("Error Connecting to Sql Server");
+    });
+  }
+
+  select(sqlString, callback) {
+    if (sqlString.includes("'")) sqlString.replace("''");
+    this.poolConnect.then((pool) => {
+      pool.request().query(sqlString, (err, result) => {
+        if (err !== null) console.log(err);
+
+        callback(result);
+        sql.close();
+      });
     });
   }
 
@@ -81,7 +94,6 @@ module.exports = class SqlServer {
     }
   }
 
-  // RETURN FIRST RECORDS
   selectFirstWithValues(sqlString, values, callback) {
     try {
       this.poolConnect.then((pool) => {
@@ -94,6 +106,7 @@ module.exports = class SqlServer {
           if (!res) {
             callback({ error: "Query returned ZERO records." });
           } else {
+
             callback(res.recordset[0]);
           }
         });
@@ -126,6 +139,7 @@ module.exports = class SqlServer {
       sql.close();
     }
   }
+
   executeQuery(sqlString, callback) {
     this.poolConnect.then((pool) => {
       pool.request().query(sqlString, (err, result) => {
@@ -140,6 +154,7 @@ module.exports = class SqlServer {
       });
     });
   }
+
   getSqlType(type, opts = undefined) {
     let precision = 0;
     let scale = 0;
