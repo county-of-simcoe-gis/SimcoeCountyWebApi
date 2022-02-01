@@ -1,4 +1,4 @@
-const config = require("../config.json");
+const config = require("../config.js");
 
 module.exports = {
   getSqlDateString: function (dt) {
@@ -18,7 +18,7 @@ module.exports = {
 
   isHostAllowed(req, res) {
     // CHECK THE CALLER
-    if (config.allowedOrigins.indexOf(req.headers.host) === -1) {
+    if (config.app.allowedOrigins.indexOf(req.headers.host) === -1) {
       res.send("Unauthorized Domain!");
       return false;
     }

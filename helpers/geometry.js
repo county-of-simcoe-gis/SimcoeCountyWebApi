@@ -2,6 +2,7 @@ const postgres = require("./postgres");
 
 module.exports = {
   bufferGeometry: function (obj, callback) {
+    console.log("Buffering: " + obj.distance);
     const geoJSON = obj.geoJSON;
     const distance = obj.distance;
     const srid = obj.srid;
@@ -14,6 +15,7 @@ module.exports = {
   },
 
   getGeometryCenter: function (obj, callback) {
+    console.log("Get geometry Center");
     const geoJSON = obj.geoJSON;
     const srid = obj.srid;
     const sql = `SELECT ST_AsGeoJSON(weblive.public.fn_sc_find_geometry_center(ST_SetSRID(ST_GeomFromGeoJSON($1), $2))) As geojson`;
