@@ -1,11 +1,12 @@
 const sql = require("mssql");
-const config = require("../config.json");
 
-module.exports = class sqlServer {
+const config = require("../config").sqlServer;
+module.exports = class SqlServer {
   constructor(opt) {
     let conInfo = null;
-    if (opt.dbName === "tabular") conInfo = config.sqlServerConnectionTabular;
-    else if (opt.dbName === "weblive") conInfo = config.sqlServerConnectionWeblive;
+    if (opt.dbName === "tabular") conInfo = config.connectionTabular;
+    else if (opt.dbName === "weblive") conInfo = config.connectionWebLive;
+    else if (opt.dbName === "oasys") conInfo = config.connectionOasys;
 
     const sqlConStringTemplate = (userName, password, server, db) => `mssql://${userName}:${password}@${server}/${db}`;
     this.sqlConString = sqlConStringTemplate(conInfo.user, conInfo.password, conInfo.host, conInfo.database);
@@ -18,6 +19,7 @@ module.exports = class sqlServer {
       console.log("Error Connecting to Sql Server");
     });
   }
+
   select(sqlString, callback) {
     if (sqlString.includes("'")) sqlString.replace("''");
     this.poolConnect.then((pool) => {
@@ -29,6 +31,7 @@ module.exports = class sqlServer {
       });
     });
   }
+
   // RETURN FIRST RECORD
   selectFirst(sqlString, callback) {
     try {
@@ -90,7 +93,7 @@ module.exports = class sqlServer {
       sql.close();
     }
   }
-  // RETURN FIRST RECORD
+
   selectFirstWithValues(sqlString, values, callback) {
     try {
       this.poolConnect.then((pool) => {
@@ -103,6 +106,29 @@ module.exports = class sqlServer {
           if (!res) {
             callback({ error: "Query returned ZERO records." });
           } else {
+
+            callback(res.recordset[0]);
+          }
+        });
+      });
+    } catch (err) {
+      callback({ error: "Query failed!" });
+    } finally {
+      sql.close();
+    }
+  }
+  executeQueryWithValues(sqlString, values, callback) {
+    try {
+      this.poolConnect.then((pool) => {
+        const request = pool.request();
+        values.forEach((item) => {
+          request.input(item.name, this.getSqlType(item.type, item.typeOpts), item.value);
+        });
+        request.query(sqlString, (err, res) => {
+          if (err !== null) console.log(err);
+          if (!res) {
+            callback(err);
+          } else {
             callback(res.recordset);
           }
         });
@@ -113,6 +139,22 @@ module.exports = class sqlServer {
       sql.close();
     }
   }
+
+  executeQuery(sqlString, callback) {
+    this.poolConnect.then((pool) => {
+      pool.request().query(sqlString, (err, result) => {
+        if (err !== null) {
+          console.log(err);
+          callback(err);
+          return;
+        }
+
+        callback(result);
+        sql.close();
+      });
+    });
+  }
+
   getSqlType(type, opts = undefined) {
     let precision = 0;
     let scale = 0;
@@ -120,7 +162,7 @@ module.exports = class sqlServer {
     if (opts) {
       if (opts.precision) precision = opts.precision;
       if (opts.scale) scale = opts.scale;
-      if (opts.length) precision = opts.length;
+      if (opts.length) length = opts.length;
     }
 
     switch (type) {
