@@ -8,7 +8,7 @@ module.exports = class SSRS {
 
   async runReport(reportPath, reportParams, reportName, format, callback) {
     try {
-      await ssrs.start(config.sqlServer.reportServerConfig.server, config.sqlServer.reportServerConfig.soapConfig);
+      await ssrs.start(config.reportServerConfig.server, config.reportServerConfig.soapConfig);
       var report = await ssrs.reportExecution.getReport(reportPath, format, reportParams);
       const fnTemplate = (reportName, dateStamp, format) => `reports/${reportName}_${dateStamp}.${format}`;
       let fileExtension = format;

@@ -6,6 +6,7 @@ config.json
 /node_modules
 /public
 /logs
+/reports
 config.js
 startup.cmd
 package-lock.json

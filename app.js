@@ -13,6 +13,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var asyncRouter = require("./routes/async");
 var settingsRouter = require("./routes/settings");
+var reportsRouter = require("./routes/reports");
 
 var app = express();
 app.use(cors());
@@ -40,6 +41,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/async", asyncRouter);
 app.use("/settings", settingsRouter);
+app.use("/reports", reportsRouter);
 
 app.get("*", function (req, res) {
   logger.warn(`Invalid URL Request- ${req.url}`);
