@@ -1,11 +1,11 @@
 const { Pool } = require("pg");
-const config = require("../config.json");
+const config = require("../config.js");
 
 module.exports = class Postgres {
   constructor(opt) {
     let conInfo = null;
-    if (opt.dbName === "tabular") conInfo = config.postgresConnectionTabular;
-    else if (opt.dbName === "weblive") conInfo = config.postgresConnectionWeblive;
+    if (opt.dbName === "tabular") conInfo = config.postGres.connectionTabular;
+    else if (opt.dbName === "weblive") conInfo = config.postGres.connectionWeblive;
 
     this.pool = new Pool({
       user: conInfo.user,

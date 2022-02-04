@@ -1,5 +1,5 @@
 var nodemailer = require("nodemailer");
-const config = require("../config.json");
+const config = require("../config.js");
 
 var transporter = nodemailer.createTransport({
   host: config.emailSMTPServer,
@@ -16,8 +16,8 @@ module.exports = {
       return re.test(email);
     };
     var mailOptions = {
-      from: config.fromEmail,
-      to: config.toEmail,
+      from: config.app.fromEmail,
+      to: config.app.toEmail,
       subject: subject,
       text: isHtml ? "" : body,
       html: isHtml ? body : "",

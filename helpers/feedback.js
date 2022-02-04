@@ -1,12 +1,12 @@
 const email = require("./email");
 const postgres = require("./postgres");
 //import { Postgres } from "./postgres.js";
-const config = require("../config.json");
+const config = require("../config.js");
 const common = require("./common");
 const mapSettings = require("./mapSettings");
 
-const mapUrl = config.mapUrl;
-const feedbackUrl = config.feedbackUrl;
+const mapUrl = config.app.mapUrl;
+const feedbackUrl = config.app.feedbackUrl;
 
 module.exports = {
   insertFeedback: function (feedback) {

@@ -6,7 +6,7 @@ var appStats = require("../helpers/appStats");
 const logger = require("../helpers/logger");
 
 const fetch = require("node-fetch");
-const config = require("../config.json");
+const config = require("../config.js");
 const geometry = require("../helpers/geometry");
 const myMaps = require("../helpers/myMaps");
 const streetAddresses = require("../helpers/streetAddresses");
@@ -17,6 +17,8 @@ const _211 = require("../helpers/211");
 const mto = require("../helpers/mto");
 const waze = require("../helpers/waze");
 const servicePinger = require("../helpers/servicePinger");
+const propertyReport = require("../helpers/propertyReport");
+const parcelImageGenerator = require("../helpers/parcelImageGenerator");
 var request = require("request");
 
 const routeWait = new routerPromise();
@@ -168,9 +170,9 @@ router.get("/getCaptchaResponse/:type/:token", function (req, res, next) {
 
     // RECAPTCHA DETAILS
     var secret = "";
-    if (type === "DEV") secret = config.captchaDev;
+    if (type === "DEV") secret = config.app.captchaDev;
     //DEV
-    else secret = config.captchaProduction; //PRODUCTION
+    else secret = config.app.captchaProduction; //PRODUCTION
 
     const captchaUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + token;
     fetch(captchaUrl, { method: "POST" })
@@ -293,6 +295,22 @@ router.get("/getSearchTypes", function (req, res, next) {
 });
 
 // GET WEATHER
+router.get("/getRadarImages/:fromDate/:toDate", function (req, res, next) {
+  try {
+    if (!common.isHostAllowed(req, res)) return;
+    const fromDate = req.params.fromDate;
+    const toDate = req.params.toDate;
+    weather.getRadarImages(fromDate, toDate, (result) => {
+      if (result === undefined) res.send(JSON.stringify([]));
+      res.send(JSON.stringify(result));
+    });
+  } catch (e) {
+    logger.error(e.stack);
+    res.status(500).send();
+  }
+});
+
+// GET WEATHER
 router.get("/getCityWeather/:city", function (req, res, next) {
   try {
     if (!common.isHostAllowed(req, res)) return;
@@ -374,7 +392,7 @@ router.get("/getIsServicePingerDisabled/:secret", function (req, res, next) {
     if (!common.isHostAllowed(req, res)) return;
 
     // CHECK FOR SECRET
-    if (req.params.secret !== config.servicePingerSecret) {
+    if (req.params.secret !== config.app.servicePingerSecret) {
       res.send({ status: "UnAuthorized" });
       return;
     }
@@ -394,7 +412,7 @@ router.get("/setServicePingerMinutes/:secret/:minutes", function (req, res, next
     if (!common.isHostAllowed(req, res)) return;
 
     // CHECK FOR SECRET
-    if (req.params.secret !== config.servicePingerSecret) {
+    if (req.params.secret !== config.app.servicePingerSecret) {
       res.send({ status: "UnAuthorized" });
       return;
     }
@@ -406,6 +424,28 @@ router.get("/setServicePingerMinutes/:secret/:minutes", function (req, res, next
     logger.error(e.stack);
     res.status(500).send();
   }
+});
+
+// GET PROPERTY REPORT
+// http://localhost:8085/getPropertyReportInfo
+router.get("/getPropertyReportInfo/:arn", function (req, res, next) {
+  propertyReport.getPropertyReportInfo(req.params.arn, (result) => {
+    res.json(result);
+    return next();
+  });
+});
+
+// GET PARCEL IMAGE
+// http://localhost:8085/getParcelImage/434101000324801/false/800/800
+const got = require("got");
+router.get("/getParcelImage/:arn/:overview/:width/:height", function (req, res, next) {
+  parcelImageGenerator.getImage(req.params.arn, req.params.overview, req.params.width, req.params.height, (resultUrl) => {
+    if (!resultUrl) res.status(404).send();
+    else {
+      res.set("Content-Type", "image/jpeg");
+      got.stream(resultUrl).pipe(res);
+    }
+  });
 });
 
 module.exports = router;
