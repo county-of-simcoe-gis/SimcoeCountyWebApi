@@ -10,7 +10,19 @@ module.exports = {
 
     const barrieMsg = "Please contact City of Barrie.";
     const orilliaMsg = "Please contact City of Orillia.";
-
+    const getAssessedValueImage = (value) => {
+      const assessedValueFormatter = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 });
+      const assessedValueCanvas = createCanvas(300, 15);
+      const assessedValueTextContext = assessedValueCanvas.getContext("2d");
+      assessedValueTextContext.textAlign = "left";
+      assessedValueTextContext.fillStyle = "#fff";
+      assessedValueTextContext.fillRect(0, 0, assessedValueCanvas.width, assessedValueCanvas.height);
+      assessedValueTextContext.fillStyle = "#000";
+      assessedValueTextContext.font = `normal 10px Arial`;
+      assessedValueTextContext.textBaseline = "top";
+      assessedValueTextContext.fillText(value > 0 ? assessedValueFormatter.format(value) : "unknown", 0, 0);
+      return assessedValueCanvas.toDataURL();
+    };
     ss.selectFirstWithValues(sql, values, (result) => {
       resultFormatted = {
         ARN: result.ARN,
@@ -86,19 +98,6 @@ module.exports = {
       //console.log(resultFormatted);
       callback(resultFormatted);
     });
-  },
-  getAssessedValueImage(value) {
-    const assessedValueFormatter = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0 });
-    const assessedValueCanvas = createCanvas(300, 15);
-    const assessedValueTextContext = assessedValueCanvas.getContext("2d");
-    assessedValueTextContext.textAlign = "left";
-    assessedValueTextContext.fillStyle = "#fff";
-    assessedValueTextContext.fillRect(0, 0, assessedValueCanvas.width, assessedValueCanvas.height);
-    assessedValueTextContext.fillStyle = "#000";
-    assessedValueTextContext.font = `normal 10px Arial`;
-    assessedValueTextContext.textBaseline = "top";
-    assessedValueTextContext.fillText(value > 0 ? assessedValueFormatter.format(value) : "unknown", 0, 0);
-    return assessedValueCanvas.toDataURL();
   },
 
   // async getReport(arn, callback) {
