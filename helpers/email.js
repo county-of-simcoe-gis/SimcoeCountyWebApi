@@ -2,7 +2,7 @@ var nodemailer = require("nodemailer");
 const config = require("../config.js");
 
 var transporter = nodemailer.createTransport({
-  host: config.emailSMTPServer,
+  host: config.app.emailSMTPServer,
   port: 25,
   secure: false,
   ignoreTLS: true,
