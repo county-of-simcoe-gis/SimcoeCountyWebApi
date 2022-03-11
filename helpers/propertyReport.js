@@ -33,6 +33,7 @@ module.exports = {
       } catch (e) {
         console.log(e);
       }
+
       const barrieMsg = "Please contact City of Barrie.";
       const orilliaMsg = "Please contact City of Orillia.";
       const getAssessedValueImage = (value) => {
