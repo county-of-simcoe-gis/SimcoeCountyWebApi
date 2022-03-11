@@ -49,8 +49,8 @@ module.exports = {
         return assessedValueCanvas.toDataURL();
       };
       ss.selectFirstWithValues(sql, values, (result) => {
-        if (result.error) {
-          console.log(result.error);
+        if (!result) {
+          console.log("Property not found");
           callback({});
         } else {
           try {
