@@ -28,7 +28,8 @@ module.exports = {
       try {
         console.log("Get Broadband Speeds");
         const braodbandResult = await pg.selectAllWithValuesWait(broadbandSql, broadbandValues);
-        broadbandSpeed = braodbandResult[0].potential_coverage;
+        if (braodbandResult[0]) broadbandSpeed = braodbandResult[0].potential_coverage;
+        else broadbandSpeed = "No information available";
       } catch (e) {
         console.log(e);
       }
