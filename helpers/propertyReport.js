@@ -13,7 +13,16 @@ module.exports = {
       let values = [{ name: "arn", type: "NVarChar", typeOpts: { length: 250 }, value: arn }];
       const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_New WHERE UniqueMaps = 1 AND ARN = @arn`;
       let broadbandSpeed = "";
-      const broadbandSql = `select potential_coverage from public.ssmatview_can_isp_combined_parcels where arn = $1 limit 1`;
+      const broadbandSql = `select potential_coverage,
+                                    case potential_coverage 
+                                      when 'Up to 50 Mbps Down/10 Mbps Up' then 1
+                                      when 'Up to 25 Mbps Down/5 Mbps Up' then 2 
+                                      when 'Up to 10 Mbps Down/2 Mbps Up' then 3
+                                      when 'Up to 5 Mbps Down/1 Mbps Up' then 4 
+                                      when 'Less than 5 Mbps Down/1 Mbps Up' then 5 
+                                      else 6 
+	                                  end order_field 
+                            from public.ssmatview_can_isp_combined_parcels where arn = $1 order by order_field limit 1`;
       var broadbandValues = [arn];
       const pg = new postgres({ dbName: "weblive" });
       try {
