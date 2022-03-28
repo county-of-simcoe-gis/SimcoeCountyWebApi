@@ -285,8 +285,8 @@ router.get("/getSearchTypes", function (req, res, next) {
     if (!common.isHostAllowed(req, res)) return;
 
     search.getSearchTypes((result) => {
-      if (result === undefined) res.send(JSON.stringify([]));
-      res.send(JSON.stringify(result));
+      if (result === undefined || result.error) res.send(JSON.stringify([]));
+      else res.send(JSON.stringify(result));
     });
   } catch (e) {
     logger.error(e.stack);
@@ -295,14 +295,14 @@ router.get("/getSearchTypes", function (req, res, next) {
 });
 
 // GET WEATHER
-router.get("/getRadarImages/:fromDate/:toDate", function (req, res, next) {
+router.get("/getRadarImages", function (req, res, next) {
   try {
     if (!common.isHostAllowed(req, res)) return;
-    const fromDate = req.params.fromDate;
-    const toDate = req.params.toDate;
+    const fromDate = req.query.fromDate;
+    const toDate = req.query.toDate;
     weather.getRadarImages(fromDate, toDate, (result) => {
-      if (result === undefined) res.send(JSON.stringify([]));
-      res.send(JSON.stringify(result));
+      if (result === undefined || result.error) res.send(JSON.stringify([]));
+      else res.send(JSON.stringify(result));
     });
   } catch (e) {
     logger.error(e.stack);
@@ -317,8 +317,8 @@ router.get("/getCityWeather/:city", function (req, res, next) {
 
     const city = req.params.city;
     weather.getCityWeather(city, (result) => {
-      if (result === undefined) res.send(JSON.stringify([]));
-      res.send(JSON.stringify(result));
+      if (result === undefined || result.error) res.send(JSON.stringify([]));
+      else res.send(JSON.stringify(result));
     });
   } catch (e) {
     logger.error(e.stack);
