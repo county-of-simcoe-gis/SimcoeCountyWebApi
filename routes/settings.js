@@ -3,7 +3,6 @@ var router = express.Router();
 
 const mapSettings = require("../helpers/mapSettings");
 const common = require("../helpers/common");
-const logger = require("../helpers/logger");
 
 // GET MAP SETTINGS
 router.get("/getMap/:id", function (req, res, next) {
@@ -19,7 +18,7 @@ router.get("/getMap/:id", function (req, res, next) {
       return next();
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
     next();
   }
@@ -36,7 +35,7 @@ router.get("/getDefaultMap", function (req, res, next) {
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });

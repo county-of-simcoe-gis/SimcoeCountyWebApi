@@ -2,7 +2,6 @@ var express = require("express");
 var router = express.Router();
 const reportGenerator = require("../helpers/reportGenerator");
 const common = require("../helpers/common");
-const logger = require("../helpers/logger");
 const fs = require("fs");
 
 // GET MAP SETTINGS
@@ -24,7 +23,7 @@ router.get("/EconomicDevelopmentReportMLS/:mls", function (req, res, next) {
       }
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });

@@ -24,7 +24,7 @@ module.exports = class SqlServer {
     if (sqlString.includes("'")) sqlString.replace("''");
     this.poolConnect.then((pool) => {
       pool.request().query(sqlString, (err, result) => {
-        if (err !== null) console.log(err);
+        if (err !== null) console.dir(err);
 
         callback(result);
         sql.close();
@@ -38,7 +38,7 @@ module.exports = class SqlServer {
       this.poolConnect.then((pool) => {
         const request = pool.request();
         request.query(sqlString, (err, res) => {
-          if (err !== null) console.log(err);
+          if (err !== null) console.dir(err);
           if (!res) {
             callback({ error: "Query returned ZERO records." });
           } else {
@@ -57,7 +57,7 @@ module.exports = class SqlServer {
       this.poolConnect.then((pool) => {
         const request = pool.request();
         request.query(sqlString, (err, res) => {
-          if (err !== null) console.log(err);
+          if (err !== null) console.dir(err);
           if (!res) {
             callback({ error: "Query returned ZERO records." });
           } else {
@@ -79,7 +79,7 @@ module.exports = class SqlServer {
           request.input(item.name, this.getSqlType(item.type, item.typeOpts), item.value);
         });
         request.query(sqlString, (err, res) => {
-          if (err !== null) console.log(err);
+          if (err !== null) console.dir(err);
           if (!res) {
             callback({ error: "Query returned ZERO records." });
           } else {
@@ -102,11 +102,10 @@ module.exports = class SqlServer {
           request.input(item.name, this.getSqlType(item.type, item.typeOpts), item.value);
         });
         request.query(sqlString, (err, res) => {
-          if (err !== null) console.log(err);
+          if (err !== null) console.dir(err);
           if (!res) {
             callback({ error: "Query returned ZERO records." });
           } else {
-
             callback(res.recordset[0]);
           }
         });
@@ -125,7 +124,7 @@ module.exports = class SqlServer {
           request.input(item.name, this.getSqlType(item.type, item.typeOpts), item.value);
         });
         request.query(sqlString, (err, res) => {
-          if (err !== null) console.log(err);
+          if (err !== null) console.dir(err);
           if (!res) {
             callback(err);
           } else {
@@ -144,7 +143,7 @@ module.exports = class SqlServer {
     this.poolConnect.then((pool) => {
       pool.request().query(sqlString, (err, result) => {
         if (err !== null) {
-          console.log(err);
+          console.dir(err);
           callback(err);
           return;
         }

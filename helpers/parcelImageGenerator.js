@@ -33,7 +33,7 @@ module.exports = {
       const sql = `SELECT geometry::EnvelopeAggregate(Shape).ToString() as WKT from WEBLIVE.GIS.TERANET_DAPF WHERE ARN = @arn`;
       ss.selectFirstWithValues(sql, values, (result) => {
         if (result.error) {
-          console.log(result.error);
+          console.error(result.error);
           callback();
         } else {
           if (!result.WKT) {

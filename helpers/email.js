@@ -25,7 +25,7 @@ module.exports = {
     if (cc !== undefined && validateEmail(cc)) mailOptions["cc"] = cc;
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        console.log(error);
+        console.dir(error);
       } else {
         console.log("Email sent: " + info.response);
       }

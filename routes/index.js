@@ -3,7 +3,6 @@ var router = express.Router();
 var routerPromise = require("express-promise-router");
 var feedback = require("../helpers/feedback");
 var appStats = require("../helpers/appStats");
-const logger = require("../helpers/logger");
 
 const fetch = require("node-fetch");
 const config = require("../config.js");
@@ -28,7 +27,7 @@ router.get("/", function (req, res, next) {
   try {
     res.send({ title: "opengiswebapi" });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -43,7 +42,7 @@ router.get("/get211Categories/:isFrench", function (req, res, next) {
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -58,7 +57,7 @@ router.get("/get211SubCategories/:category/:isFrench", function (req, res, next)
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -73,7 +72,7 @@ router.get("/get211Results/:category/:subCategory/:age/:isFrench", function (req
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -90,7 +89,7 @@ router.get("/appStats/:appName/:actionType/:description", function (req, res, ne
     appStats.insertAppStat(req.params.appName, req.params.actionType, req.params.description, ip);
     res.send("OK");
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -105,7 +104,7 @@ router.get("/getAppStats/:fromDate/:toDate/:type", function (req, res, next) {
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -120,7 +119,7 @@ router.get("/getAppStatsTypes", function (req, res, next) {
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -134,7 +133,7 @@ router.post("/postFeedback", function (req, res, next) {
     const id = feedback.insertFeedback(req.body);
     res.send(id);
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -150,7 +149,7 @@ router.get("/getFeedback/:id", function (req, res, next) {
       res.send(JSON.stringify(feedback));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -181,7 +180,7 @@ router.get("/getCaptchaResponse/:type/:token", function (req, res, next) {
         res.send(json);
       });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -196,7 +195,7 @@ router.post("/postBufferGeometry", function (req, res, next) {
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -211,7 +210,7 @@ router.post("/postGetGeometryCenter", function (req, res, next) {
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -226,7 +225,7 @@ router.post("/postMyMaps", function (req, res, next) {
       res.send(JSON.stringify({ id: id }));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -242,7 +241,7 @@ router.get("/getMyMaps/:id", function (req, res, next) {
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -258,7 +257,7 @@ router.get("/getStreetNames/:streetName", function (req, res, next) {
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -266,15 +265,13 @@ router.get("/getStreetNames/:streetName", function (req, res, next) {
 // GET LOCATION
 router.get("/searchById/:id", function (req, res, next) {
   try {
-    console.log("in id");
-    console.log(req.params.id);
     if (!common.isHostAllowed(req, res)) return;
     search.searchById(req.params.id, (result) => {
       if (result === undefined) res.send(JSON.stringify([]));
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -289,7 +286,7 @@ router.get("/getSearchTypes", function (req, res, next) {
       else res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -305,7 +302,7 @@ router.get("/getRadarImages", function (req, res, next) {
       else res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -321,7 +318,7 @@ router.get("/getCityWeather/:city", function (req, res, next) {
       else res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -336,7 +333,7 @@ router.get("/getMTO511Layer/:layerName", function (req, res, next) {
       res.send(response);
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -351,7 +348,7 @@ router.get("/getWazeAlertLayer/:category/:type", function (req, res, next) {
       res.send(response);
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -366,7 +363,7 @@ router.get("/getWazeJamLayer", function (req, res, next) {
       res.send(response);
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -381,7 +378,7 @@ router.get("/getWazeIrregularLayer", function (req, res, next) {
       res.send(response);
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -401,7 +398,7 @@ router.get("/getIsServicePingerDisabled/:secret", function (req, res, next) {
       res.send(result);
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -421,7 +418,7 @@ router.get("/setServicePingerMinutes/:secret/:minutes", function (req, res, next
       res.send(result);
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -437,7 +434,7 @@ router.get("/getPropertyReportInfo/:arn", function (req, res, next) {
       return next();
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
@@ -456,7 +453,7 @@ router.get("/getParcelImage/:arn/:overview/:width/:height", function (req, res, 
       }
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });

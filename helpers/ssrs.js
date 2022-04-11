@@ -24,7 +24,7 @@ module.exports = class SSRS {
         }
       });
     } catch (error) {
-      console.log(error);
+      console.dir(error);
       callback("Error: " + error);
     }
   }

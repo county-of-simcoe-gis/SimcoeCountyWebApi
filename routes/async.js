@@ -2,7 +2,6 @@ var express = require("express");
 var routerPromise = require("express-promise-router");
 const common = require("../helpers/common");
 const search = require("../helpers/search");
-const logger = require("../helpers/logger");
 const routeWait = new routerPromise();
 
 /* GET users listing. */
@@ -24,7 +23,7 @@ routeWait.get("/search", async function (req, res, next) {
       res.send(JSON.stringify(result));
     });
   } catch (e) {
-    logger.error(e.stack);
+    console.error(e.stack);
     res.status(500).send();
   }
 });
