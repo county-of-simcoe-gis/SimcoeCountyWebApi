@@ -36,6 +36,19 @@ app.use(function (req, res, next) {
 });
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(function (req, res, next) {
+  var err = null;
+  try {
+    decodeURIComponent(req.path);
+  } catch (e) {
+    err = e;
+  }
+  if (err) {
+    logger.warn(`Invalid URL Request- ${req.url}`);
+    res.status(404).send();
+  }
+  next();
+});
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

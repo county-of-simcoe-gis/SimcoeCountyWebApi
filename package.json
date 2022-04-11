@@ -7,13 +7,13 @@
     "dev": "nodemon --exec node ./bin/www"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.15"
   },
   "dependencies": {
     "@mapbox/polyline": "^1.1.1",
-    "body-parser": "^1.19.0",
-    "canvas": "^2.9.0",
-    "cookie-parser": "^1.4.5",
+    "body-parser": "^1.19.2",
+    "canvas": "^2.9.1",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
@@ -26,11 +26,11 @@
     "mssql": "^5.1.5",
     "mssql-ssrs": "^1.4.1",
     "node-fetch": "^2.6.7",
-    "nodemailer": "^6.6.3",
+    "nodemailer": "^6.7.3",
     "npm-check-updates": "^10.3.1",
-    "pg": "^8.7.0",
+    "pg": "^8.7.3",
     "phantomjs-prebuilt": "^2.1.16",
-    "winston": "^3.3.3",
+    "winston": "^3.6.0",
     "xml2js": "^0.4.23"
   }
 }

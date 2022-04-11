@@ -11,13 +11,17 @@ router.get("/getMap/:id", function (req, res, next) {
     if (!common.isHostAllowed(req, res)) return;
 
     mapSettings.getMap(req.params.id, (result) => {
-      if (result === undefined) res.send(JSON.stringify({ error: "ID Not Found" }));
-
-      res.send(JSON.stringify(result));
+      if (result === undefined) {
+        res.json({ error: "ID Not Found" });
+      } else {
+        res.json(result);
+      }
+      return next();
     });
   } catch (e) {
     logger.error(e.stack);
     res.status(500).send();
+    next();
   }
 });
 
