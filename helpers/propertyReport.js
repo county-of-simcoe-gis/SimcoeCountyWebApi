@@ -2,6 +2,7 @@ const ssrs = require("./ssrs");
 const sqlServer = require("./sqlServer");
 const ss = new sqlServer({ dbName: "tabular" });
 const { createCanvas } = require("canvas");
+const e = require("express");
 const postgres = require("./postgres");
 
 // const reports = new ssrs();
@@ -32,6 +33,7 @@ module.exports = {
       } catch (e) {
         console.log(e);
       }
+
       const barrieMsg = "Please contact City of Barrie.";
       const orilliaMsg = "Please contact City of Orillia.";
       const getAssessedValueImage = (value) => {
