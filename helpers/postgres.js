@@ -60,7 +60,6 @@ module.exports = class Postgres {
 
   // RETURN MULTIPLE RECORDS
   selectAll(sql, callback) {
-    console.log(sql);
     this.pool.query(sql, (err, res) => {
       if (res === undefined) {
         callback({ error: "Query returned ZERO records." });

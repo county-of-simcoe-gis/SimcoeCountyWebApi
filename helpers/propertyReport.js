@@ -8,7 +8,6 @@ const postgres = require("./postgres");
 // const reports = new ssrs();
 module.exports = {
   async getPropertyReportInfo(arn, callback) {
-    console.log(`getPropertyReportInfo ${arn}`);
     if (arn) {
       let values = [{ name: "arn", type: "NVarChar", typeOpts: { length: 250 }, value: arn }];
       const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_New WHERE UniqueMaps = 1 AND ARN = @arn`;
@@ -26,12 +25,11 @@ module.exports = {
       var broadbandValues = [arn];
       const pg = new postgres({ dbName: "weblive" });
       try {
-        console.log("Get Broadband Speeds");
         const braodbandResult = await pg.selectAllWithValuesWait(broadbandSql, broadbandValues);
         if (braodbandResult[0]) broadbandSpeed = braodbandResult[0].potential_coverage;
         else broadbandSpeed = "No information available";
       } catch (e) {
-        console.log(e);
+        console.dir(e);
       }
 
       const barrieMsg = "Please contact City of Barrie.";
@@ -130,7 +128,7 @@ module.exports = {
             //console.log(resultFormatted);
             callback(resultFormatted);
           } catch (e) {
-            console.log(e);
+            console.dir(e);
             callback({});
           }
         }
