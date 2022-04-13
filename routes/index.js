@@ -19,6 +19,7 @@ const servicePinger = require("../helpers/servicePinger");
 const propertyReport = require("../helpers/propertyReport");
 const parcelImageGenerator = require("../helpers/parcelImageGenerator");
 var request = require("request");
+var moment = require("moment");
 
 const routeWait = new routerPromise();
 
@@ -297,10 +298,12 @@ router.get("/getRadarImages", function (req, res, next) {
     if (!common.isHostAllowed(req, res)) return;
     const fromDate = req.query.fromDate;
     const toDate = req.query.toDate;
-    weather.getRadarImages(fromDate, toDate, (result) => {
-      if (result === undefined || result.error) res.send(JSON.stringify([]));
-      else res.send(JSON.stringify(result));
-    });
+    if (moment(fromDate).isValid() && moment(toDate).isValid())
+      weather.getRadarImages(fromDate, toDate, (result) => {
+        if (result === undefined || result.error) res.send(JSON.stringify([]));
+        else res.send(JSON.stringify(result));
+      });
+    else res.send(JSON.stringify([]));
   } catch (e) {
     console.error(e.stack);
     res.status(500).send();
