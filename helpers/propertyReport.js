@@ -14,7 +14,7 @@ module.exports = {
       let broadbandSpeed = "";
       const broadbandSql = `select potential_coverage,
                                     case potential_coverage 
-                                      when 'Up to 50 Mbps Down/10 Mbps Up' then 1
+                                      when 'Up to or exceeds 50 Mbps Down/10 Mbps Up' then 1
                                       when 'Up to 25 Mbps Down/5 Mbps Up' then 2 
                                       when 'Up to 10 Mbps Down/2 Mbps Up' then 3
                                       when 'Up to 5 Mbps Down/1 Mbps Up' then 4 
