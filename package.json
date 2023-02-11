@@ -7,7 +7,7 @@
     "dev": "nodemon --exec node ./bin/www"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.20"
   },
   "dependencies": {
     "@mapbox/polyline": "^1.1.1",
@@ -26,7 +26,7 @@
     "mssql-ssrs": "^1.4.1",
     "node-fetch": "^2.6.7",
     "nodemailer": "^6.6.3",
-    "npm-check-updates": "^10.3.1",
+    "npm-check-updates": "^16.7.4",
     "pg": "^8.7.0",
     "phantomjs-prebuilt": "^2.1.16",
     "winston": "^3.3.3",
