@@ -1,39 +1,50 @@
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var bodyParser = require("body-parser");
-var cors = require("cors");
-var helmet = require("helmet");
+"use strict";
+var restify = require("restify");
+var config = require("./config");
+const package_file = require("./package.json");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var asyncRouter = require("./routes/async");
-var settingsRouter = require("./routes/settings");
-var reportsRouter = require("./routes/reports");
+var corsMiddleware = require("restify-cors-middleware");
+const swaggerUi = require("swagger-ui-restify");
+const swaggerOptions = {
+  explorer: false,
+  customCss: ".swagger-ui .topbar { display: none }",
+  baseURL: "docs",
+};
+const documentationOutputFile = require("path").join(__dirname, "./api-doc.json");
 
-var app = express();
-app.use(cors());
-app.use(helmet());
-
-app.use(express.json({ limit: "50mb", type: "application/json" }));
-app.use(
-  express.urlencoded({
-    limit: "50mb",
-    extended: true,
-    parameterLimit: 50000,
-    arrayLimit: 50000,
-    type: "application/x-www-form-urlencoding",
-  })
-);
-
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-app.use(function (req, res, next) {
-  console.log(`${req.method} ${req.url}`);
-  if (req.body && Object.keys(req.body).length > 0) console.dir(req.body);
-  next();
+// CORS FOR RESTIFY
+var cors = corsMiddleware({
+  preflightMaxAge: 5,
+  origins: ["forestryapps.simcoe.ca", "http://localhost:3000", "https://opengis.simcoe.ca", "https://opengis2.simcoe.ca"],
+  allowHeaders: ["Authorization, Origin, X-Requested-With, Content-Type, Accept,AccessToken"],
+  exposeHeaders: [],
 });
-app.use(function (req, res, next) {
+
+// CREATE SERVER
+var serverPort = process.env.PORT || config.app.port;
+var server = restify.createServer({
+  name: package_file.title || "API Server",
+  version: package_file.version || "1.0.0",
+  maxParamLength: 1000,
+});
+
+server.pre(cors.preflight);
+server.use(cors.actual);
+
+// Ensure we don't drop data on uploads
+server.pre(restify.pre.pause());
+
+// Clean up sloppy paths like //todo//////1//
+server.pre(restify.pre.sanitizePath());
+
+// Handles annoying user agents (curl)
+server.pre(restify.pre.userAgentConnection());
+
+// Set a per request bunyan logger (with requestid filled in)
+server.use(restify.plugins.requestLogger());
+
+//Try parsing url and return 404 if invalid
+server.use(function (req, res, next) {
   var err = null;
   try {
     decodeURIComponent(req.path);
@@ -41,36 +52,48 @@ app.use(function (req, res, next) {
     err = e;
   }
   if (err) {
-    console.warn(`Invalid URL Request - ${req.url}`);
+    logger.warn(`Invalid URL Request- ${req.url}`);
     res.status(404).send();
   }
   next();
 });
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/async", asyncRouter);
-app.use("/settings", settingsRouter);
-app.use("/reports", reportsRouter);
-// app.get("*", function (req, res, next) {
-//   console.warn(`Path not found - ${req.url}`);
-//   res.status(404).send("");
-// });
+// Use the common stuff you probably want
+server.use(restify.plugins.acceptParser(server.acceptable));
+server.use(restify.plugins.acceptParser(server.acceptable));
+server.use(restify.plugins.dateParser());
+server.use(restify.plugins.queryParser());
+server.use(restify.plugins.gzipResponse());
+server.use(
+  restify.plugins.bodyParser({
+    mapParams: true,
+  })
+); // Allows for JSON mapping to REST
+server.use(restify.plugins.authorizationParser()); // Looks for authorization headers
 
-app.use(function (req, res, next) {
-  if (!res._headerSent) {
-    console.warn(`Path not found - ${req.url}`);
-    return res.status(404).send();
-  }
+// LOG ALL INCOMING REQUESTS
+server.use(function (req, res, next) {
+  console.log(new Date().toLocaleString("en-US", { timeZone: "EST" }), req.method, req.url);
+  next();
 });
 
-app.use(function (err, req, res, next) {
-  if (!res._headerSent) {
-    console.error(err);
-    return res.status(500).send({ error: err });
-  }
+require("./routes/routeBuilder")(server);
+server.get(`/${swaggerOptions.baseURL}.json`, (req, res, next) => {
+  const documentation = require(documentationOutputFile);
+  res.json(documentation);
+  next();
 });
 
-app.use(bodyParser);
+server.get(`/${swaggerOptions.baseURL}/*`, ...swaggerUi.serve);
+server.get(`/${swaggerOptions.baseURL}`, swaggerUi.setup(require(documentationOutputFile), swaggerOptions));
+server.get("*", function (req, res, next) {
+  console.warn(`Invalid URL Request- ${req.url}`);
+  res.send(404);
+  next();
+});
 
-module.exports = app;
+server.listen(serverPort, function () {
+  var consoleMessage = "\n OpenGIS API";
+  consoleMessage += "\n %s server is listening at %s";
+  console.log("Listening on port: " + serverPort);
+});

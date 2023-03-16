@@ -25,8 +25,8 @@ module.exports = {
       var broadbandValues = [arn];
       const pg = new postgres({ dbName: "weblive" });
       try {
-        const braodbandResult = await pg.selectAllWithValuesWait(broadbandSql, broadbandValues);
-        if (braodbandResult[0]) broadbandSpeed = braodbandResult[0].potential_coverage;
+        const broadbandResult = await pg.selectAllWithValuesWait(broadbandSql, broadbandValues);
+        if (broadbandResult[0]) broadbandSpeed = broadbandResult[0].potential_coverage;
         else broadbandSpeed = "No information available";
       } catch (e) {
         console.dir(e);
