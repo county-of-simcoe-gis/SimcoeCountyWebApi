@@ -19,7 +19,7 @@ module.exports = (baseRoute, middleWare, router) => {
     try {
       if (!common.isHostAllowed(req, res)) return;
       _211.getCategories(req.params.isFrench, (result) => {
-        res.json(JSON.stringify(result));
+        res.json(result);
         return next();
       });
     } catch (e) {
@@ -51,7 +51,7 @@ module.exports = (baseRoute, middleWare, router) => {
       try {
         if (!common.isHostAllowed(req, res)) return;
         _211.getSubCategories(req.params.category, req.params.isFrench, (result) => {
-          res.json(JSON.stringify(result));
+          res.json(result);
           return next();
         });
       } catch (e) {
@@ -63,7 +63,7 @@ module.exports = (baseRoute, middleWare, router) => {
     router.get(baseRoute + "/Results/:category/:subCategory/:age/:isFrench", middleWare, (req, res, next) => {
       /* 
       #swagger.tags = ['Public/211']
-      #swagger.path = '/public/211/SubCategories/{category}/{subCategory}/{age}/{isFrench}'
+      #swagger.path = '/public/211/Results/{category}/{subCategory}/{age}/{isFrench}'
       #swagger.deprecated = false
       #swagger.ignore = false
       #swagger.summary = 'Get 211 Entries with filter parameters'
@@ -95,7 +95,7 @@ module.exports = (baseRoute, middleWare, router) => {
       try {
         if (!common.isHostAllowed(req, res)) return;
         _211.getResults(req.params.category, req.params.subCategory, req.params.age, req.params.isFrench, (result) => {
-          res.json(JSON.stringify(result));
+          res.json(result);
           return next();
         });
       } catch (e) {

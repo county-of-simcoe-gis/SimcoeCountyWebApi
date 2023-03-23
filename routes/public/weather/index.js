@@ -29,14 +29,15 @@ module.exports = (baseRoute, middleWare, router) => {
       const toDate = req.query.toDate;
       if (moment(fromDate).isValid() && moment(toDate).isValid())
         weather.getRadarImages(fromDate, toDate, (result) => {
-          if (result === undefined || result.error) res.send(JSON.stringify([]));
-          else res.send(JSON.stringify(result));
+          if (result === undefined || result.error) res.send([]);
+          else res.send(result);
         });
-      else res.send(JSON.stringify([]));
+      else res.send([]);
       return next();
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });
@@ -59,13 +60,14 @@ module.exports = (baseRoute, middleWare, router) => {
       if (!common.isHostAllowed(req, res)) return;
       const city = req.params.city;
       weather.getCityWeather(city, (result) => {
-        if (result === undefined || result.error) res.send(JSON.stringify([]));
-        else res.send(JSON.stringify(result));
+        if (result === undefined || result.error) res.send([]);
+        else res.send(result);
         return next();
       });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });

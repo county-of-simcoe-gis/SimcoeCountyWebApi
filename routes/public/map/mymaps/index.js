@@ -21,12 +21,13 @@ module.exports = (baseRoute, middleWare, router) => {
       if (!common.isHostAllowed(req, res)) return;
 
       myMaps.insertMyMaps(req.body, (id) => {
-        res.send(JSON.stringify({ id: id }));
+        res.send({ id: id });
         return next();
       });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   }),
@@ -48,13 +49,14 @@ module.exports = (baseRoute, middleWare, router) => {
         if (!common.isHostAllowed(req, res)) return;
 
         myMaps.getMyMaps(req.params.id, (result) => {
-          if (result === undefined) res.send(JSON.stringify({ error: "ID Not Found" }));
-          res.send(JSON.stringify(result));
+          if (result === undefined) res.send({ error: "ID Not Found" });
+          res.send(result);
           return next();
         });
       } catch (e) {
         console.error(e.stack);
-        res.status(500).send();
+        res.status(500);
+        res.send();
         return next();
       }
     });

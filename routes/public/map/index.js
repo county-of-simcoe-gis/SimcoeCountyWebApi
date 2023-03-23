@@ -43,9 +43,9 @@ module.exports = (baseRoute, middleWare, router) => {
     try {
       if (!common.isHostAllowed(req, res)) return;
       mapSettings.getDefaultMap((result) => {
-        if (result === undefined) res.send(JSON.stringify({ error: "ID Not Found" }));
+        if (result === undefined) res.send({ error: "ID Not Found" });
 
-        res.send(JSON.stringify(result));
+        res.send(result);
         return next();
       });
     } catch (e) {

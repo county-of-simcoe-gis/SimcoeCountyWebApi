@@ -66,7 +66,7 @@ module.exports = (baseRoute, middleWare, router) => {
     try {
       if (!common.isHostAllowed(req, res)) return;
       feedback.getFeedback(req.params.id, (feedback) => {
-        res.send(JSON.stringify(feedback));
+        res.send(feedback);
         return next();
       });
     } catch (e) {

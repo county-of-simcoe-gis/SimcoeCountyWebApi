@@ -25,7 +25,7 @@ module.exports = (baseRoute, middleWare, router) => {
 
       // GET BUFFER FROM POSTGRES
       geometry.bufferGeometry(req.body, (result) => {
-        res.send(JSON.stringify(result));
+        res.send(result);
         return next();
       });
     } catch (e) {
@@ -55,7 +55,7 @@ module.exports = (baseRoute, middleWare, router) => {
 
         // GET CENTER FROM POSTGRES CUSTOM FUNCTION
         geometry.getGeometryCenter(req.body, (result) => {
-          res.send(JSON.stringify(result));
+          res.send(result);
           return next();
         });
       } catch (e) {

@@ -81,7 +81,7 @@
         "deprecated": false
       }
     },
-    "/public/211/SubCategories/{category}/{subCategory}/{age}/{isFrench}": {
+    "/public/211/Results/{category}/{subCategory}/{age}/{isFrench}": {
       "get": {
         "tags": [
           "Public/211"

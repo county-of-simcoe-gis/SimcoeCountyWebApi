@@ -1,8 +1,9 @@
 const common = require("../../../helpers/common");
 const search = require("../../../helpers/search");
+const streetAddresses = require("../../../helpers/streetAddresses");
 
 module.exports = (baseRoute, middleWare, router) => {
-  router.get(baseRoute + "/", middleWare, (req, res, next) => {
+  router.get(baseRoute, middleWare, (req, res, next) => {
     /* 
       #swagger.tags = ['Public/Search']
       #swagger.path = '/public/search'
@@ -42,13 +43,14 @@ module.exports = (baseRoute, middleWare, router) => {
 
       if (!common.isHostAllowed(req, res)) return;
       search.search(keywords, type, muni, limit, async (result) => {
-        if (result === undefined) res.send(JSON.stringify([]));
-        res.send(JSON.stringify(result));
+        if (result === undefined) res.send([]);
+        res.send(result);
         return next();
       });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });
@@ -71,13 +73,14 @@ module.exports = (baseRoute, middleWare, router) => {
     try {
       if (!common.isHostAllowed(req, res)) return;
       search.searchById(req.params.id, (result) => {
-        if (result === undefined) res.send(JSON.stringify([]));
-        res.send(JSON.stringify(result));
+        if (result === undefined) res.send([]);
+        res.send(result);
         return next();
       });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });
@@ -99,14 +102,15 @@ module.exports = (baseRoute, middleWare, router) => {
     try {
       if (!common.isHostAllowed(req, res)) return;
       streetAddresses.getStreets(req.params.streetName, (result) => {
-        if (result === undefined) res.send(JSON.stringify({ error: "No Streets Found" }));
+        if (result === undefined) res.send({ error: "No Streets Found" });
 
-        res.send(JSON.stringify(result));
+        res.send(result);
         return next();
       });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });
@@ -123,13 +127,14 @@ module.exports = (baseRoute, middleWare, router) => {
     try {
       if (!common.isHostAllowed(req, res)) return;
       search.getSearchTypes((result) => {
-        if (result === undefined || result.error) res.send(JSON.stringify([]));
-        else res.send(JSON.stringify(result));
+        if (result === undefined || result.error) res.send([]);
+        else res.send(result);
         return next();
       });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });

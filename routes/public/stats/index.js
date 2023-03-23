@@ -40,7 +40,8 @@ module.exports = (baseRoute, middleWare, router) => {
       return next();
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });
@@ -74,12 +75,13 @@ module.exports = (baseRoute, middleWare, router) => {
     try {
       if (!common.isHostAllowed(req, res)) return;
       appStats.getAppStats(req.params.fromDate, req.params.toDate, req.params.type, (result) => {
-        res.send(JSON.stringify(result));
+        res.send(result);
         return next();
       });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });
@@ -95,12 +97,13 @@ module.exports = (baseRoute, middleWare, router) => {
     try {
       if (!common.isHostAllowed(req, res)) return;
       appStats.getAppStatsTypes((result) => {
-        res.send(JSON.stringify(result));
+        res.send(result);
         return next();
       });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });
