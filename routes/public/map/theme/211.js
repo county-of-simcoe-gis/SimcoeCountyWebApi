@@ -1,11 +1,11 @@
-const _211 = require("../../../helpers/211");
-const common = require("../../../helpers/common");
+const _211 = require("../../../../helpers/211");
+const common = require("../../../../helpers/common");
 
 module.exports = (baseRoute, middleWare, router) => {
   router.get(baseRoute + "/Categories/:isFrench", middleWare, (req, res, next) => {
     /* 
-      #swagger.tags = ['Public/211']
-      #swagger.path = '/public/211/Categories/{isFrench}'
+      #swagger.tags = ['Public/Map/Theme/211']
+      #swagger.path = '/public/map/theme/211/Categories/{isFrench}'
       #swagger.deprecated = false
       #swagger.ignore = false
       #swagger.summary = 'Get 211 categories'
@@ -30,8 +30,8 @@ module.exports = (baseRoute, middleWare, router) => {
   }),
     router.get(baseRoute + "/SubCategories/:category/:isFrench", middleWare, (req, res, next) => {
       /* 
-      #swagger.tags = ['Public/211']
-      #swagger.path = '/public/211/SubCategories/{category}/{isFrench}'
+      #swagger.tags = ['Public/Map/Theme/211']
+      #swagger.path = '/public/map/theme/211/SubCategories/{category}/{isFrench}'
       #swagger.deprecated = false
       #swagger.ignore = false
       #swagger.summary = 'Get 211 sub-categories'
@@ -62,8 +62,8 @@ module.exports = (baseRoute, middleWare, router) => {
     }),
     router.get(baseRoute + "/Results/:category/:subCategory/:age/:isFrench", middleWare, (req, res, next) => {
       /* 
-      #swagger.tags = ['Public/211']
-      #swagger.path = '/public/211/Results/{category}/{subCategory}/{age}/{isFrench}'
+      #swagger.tags = ['Public/Map/Theme/211']
+      #swagger.path = '/public/map/theme/211/Results/{category}/{subCategory}/{age}/{isFrench}'
       #swagger.deprecated = false
       #swagger.ignore = false
       #swagger.summary = 'Get 211 Entries with filter parameters'

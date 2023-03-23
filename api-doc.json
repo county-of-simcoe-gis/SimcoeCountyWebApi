@@ -14,158 +14,6 @@
     }
   ],
   "paths": {
-    "/public/211/Categories/{isFrench}": {
-      "get": {
-        "tags": [
-          "Public/211"
-        ],
-        "summary": "Get 211 categories",
-        "description": "",
-        "parameters": [
-          {
-            "name": "isFrench",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "true/false to return french/english"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/public/211/SubCategories/{category}/{isFrench}": {
-      "get": {
-        "tags": [
-          "Public/211"
-        ],
-        "summary": "Get 211 sub-categories",
-        "description": "",
-        "parameters": [
-          {
-            "name": "category",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Category"
-          },
-          {
-            "name": "isFrench",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "true/false to return french/english"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/public/211/Results/{category}/{subCategory}/{age}/{isFrench}": {
-      "get": {
-        "tags": [
-          "Public/211"
-        ],
-        "summary": "Get 211 Entries with filter parameters",
-        "description": "",
-        "parameters": [
-          {
-            "name": "category",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Category"
-          },
-          {
-            "name": "subCategory",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Sub-Category"
-          },
-          {
-            "name": "age",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Age"
-          },
-          {
-            "name": "isFrench",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "true/false to return french/english"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/public/511/MTOLayer/{layerName}": {
-      "get": {
-        "tags": [
-          "Public/511"
-        ],
-        "summary": "Get 511 Information",
-        "description": "",
-        "parameters": [
-          {
-            "name": "layerName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Layer name to filter 511 data"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "deprecated": false
-      }
-    },
     "/public/captcha/response/{type}/{token}": {
       "get": {
         "tags": [
@@ -577,6 +425,301 @@
         "deprecated": false
       }
     },
+    "/public/map/theme/211/Categories/{isFrench}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/211"
+        ],
+        "summary": "Get 211 categories",
+        "description": "",
+        "parameters": [
+          {
+            "name": "isFrench",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "true/false to return french/english"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/211/SubCategories/{category}/{isFrench}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/211"
+        ],
+        "summary": "Get 211 sub-categories",
+        "description": "",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Category"
+          },
+          {
+            "name": "isFrench",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "true/false to return french/english"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/211/Results/{category}/{subCategory}/{age}/{isFrench}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/211"
+        ],
+        "summary": "Get 211 Entries with filter parameters",
+        "description": "",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Category"
+          },
+          {
+            "name": "subCategory",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sub-Category"
+          },
+          {
+            "name": "age",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Age"
+          },
+          {
+            "name": "isFrench",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "true/false to return french/english"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/511/MTOLayer/{layerName}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/511"
+        ],
+        "summary": "Get 511 Information",
+        "description": "",
+        "parameters": [
+          {
+            "name": "layerName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Layer name to filter 511 data"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/511/AlertLayer/{category}/{type}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/511"
+        ],
+        "summary": "Get Waze alerts",
+        "description": "",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Category of alert"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Type of alert"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/511/JamLayer": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/511"
+        ],
+        "summary": "Get Waze Traffic Jam Layer",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/511/IrregularLayer": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/511"
+        ],
+        "summary": "Get Waze Irregular Layer",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/tool/weather/RadarImages": {
+      "get": {
+        "tags": [
+          "Public/Map/Tool/Weather"
+        ],
+        "summary": "Get radar images",
+        "description": "",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start Date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End Date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/tool/weather/CityWeather/{city}": {
+      "get": {
+        "tags": [
+          "Public/Map/Tool/Weather"
+        ],
+        "summary": "Get radar images",
+        "description": "",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "City"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/public/reports/MLS/{mls}": {
       "get": {
         "tags": [
@@ -865,149 +1008,6 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/public/waze/AlertLayer/{category}/{type}": {
-      "get": {
-        "tags": [
-          "Public/Waze"
-        ],
-        "summary": "Get Waze alerts",
-        "description": "",
-        "parameters": [
-          {
-            "name": "category",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Category of alert"
-          },
-          {
-            "name": "type",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Type of alert"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/public/waze/JamLayer": {
-      "get": {
-        "tags": [
-          "Public/Waze"
-        ],
-        "summary": "Get Waze Traffic Jam Layer",
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/public/waze/IrregularLayer": {
-      "get": {
-        "tags": [
-          "Public/Waze"
-        ],
-        "summary": "Get Waze Irregular Layer",
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/public/weather/RadarImages": {
-      "get": {
-        "tags": [
-          "Public/Weather"
-        ],
-        "summary": "Get radar images",
-        "description": "",
-        "parameters": [
-          {
-            "name": "fromDate",
-            "in": "query",
-            "description": "Start Date",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "toDate",
-            "in": "query",
-            "description": "End Date",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          }
-        },
-        "deprecated": false
-      }
-    },
-    "/public/weather/CityWeather/{city}": {
-      "get": {
-        "tags": [
-          "Public/Weather"
-        ],
-        "summary": "Get radar images",
-        "description": "",
-        "parameters": [
-          {
-            "name": "city",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "City"
           }
         ],
         "responses": {

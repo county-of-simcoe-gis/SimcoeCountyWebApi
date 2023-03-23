@@ -1,12 +1,12 @@
-const weather = require("../../../helpers/weather");
-const common = require("../../../helpers/common");
+const weather = require("../../../../helpers/weather");
+const common = require("../../../../helpers/common");
 var moment = require("moment");
 
 module.exports = (baseRoute, middleWare, router) => {
-  router.get(baseRoute + "/RadarImages/", middleWare, (req, res, next) => {
+  router.get(baseRoute + "/RadarImages", middleWare, (req, res, next) => {
     /* 
-      #swagger.tags = ['Public/Weather']
-      #swagger.path = '/public/weather/RadarImages'
+      #swagger.tags = ['Public/Map/Tool/Weather']
+      #swagger.path = '/public/map/tool/weather/RadarImages'
       #swagger.deprecated = false
       #swagger.ignore = false
       #swagger.summary = 'Get radar images'
@@ -27,13 +27,16 @@ module.exports = (baseRoute, middleWare, router) => {
       if (!common.isHostAllowed(req, res)) return;
       const fromDate = req.query.fromDate;
       const toDate = req.query.toDate;
-      if (moment(fromDate).isValid() && moment(toDate).isValid())
+      if (moment(fromDate).isValid() && moment(toDate).isValid()) {
         weather.getRadarImages(fromDate, toDate, (result) => {
           if (result === undefined || result.error) res.send([]);
           else res.send(result);
+          return next();
         });
-      else res.send([]);
-      return next();
+      } else {
+        res.send([]);
+        return next();
+      }
     } catch (e) {
       console.error(e.stack);
       res.status(500);
@@ -43,8 +46,8 @@ module.exports = (baseRoute, middleWare, router) => {
   });
   router.get(baseRoute + "/CityWeather/:city", middleWare, (req, res, next) => {
     /* 
-      #swagger.tags = ['Public/Weather']
-      #swagger.path = '/public/weather/CityWeather/{city}'
+      #swagger.tags = ['Public/Map/Tool/Weather']
+      #swagger.path = '/public/map/tool/weather/CityWeather/{city}'
       #swagger.deprecated = false
       #swagger.ignore = false
       #swagger.summary = 'Get radar images'
