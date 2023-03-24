@@ -2,7 +2,7 @@ const _211 = require("../../../../helpers/211");
 const common = require("../../../../helpers/common");
 
 module.exports = (baseRoute, middleWare, router) => {
-  router.get(baseRoute + "/Categories/:isFrench", middleWare, (req, res, next) => {
+  router.get(baseRoute + "/categories/:isFrench", middleWare, (req, res, next) => {
     /* 
       #swagger.tags = ['Public/Map/Theme/211']
       #swagger.path = '/public/map/theme/211/Categories/{isFrench}'
