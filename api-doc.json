@@ -7,10 +7,10 @@
   },
   "servers": [
     {
-      "url": "https://opengis.simcoe.ca/api/"
+      "url": "https://opengis.simcoe.ca/api_v2/"
     },
     {
-      "url": "http://opengis.simcoe.ca/api/"
+      "url": "http://opengis.simcoe.ca/api_v2/"
     }
   ],
   "paths": {

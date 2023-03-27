@@ -2,7 +2,7 @@ const feedback = require("../../../helpers/feedback");
 const common = require("../../../helpers/common");
 
 module.exports = (baseRoute, middleWare, router) => {
-  router.post(baseRoute + "/", middleWare, (req, res, next) => {
+  router.post(baseRoute, middleWare, (req, res, next) => {
     /* 
       #swagger.tags = ['Public/Feedback']
       #swagger.path = '/public/feedback'

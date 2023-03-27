@@ -2,7 +2,7 @@ const myMaps = require("../../../../helpers/myMaps");
 const common = require("../../../../helpers/common");
 
 module.exports = (baseRoute, middleWare, router) => {
-  router.post(baseRoute + "/", middleWare, (req, res, next) => {
+  router.post(baseRoute, middleWare, (req, res, next) => {
     /* 
       #swagger.tags = ['Public/Map']
       #swagger.path = '/public/map/mymaps'
@@ -30,9 +30,9 @@ module.exports = (baseRoute, middleWare, router) => {
       res.send();
       return next();
     }
-  }),
-    router.get(baseRoute + "/:id", middleWare, (req, res, next) => {
-      /* 
+  });
+  router.get(baseRoute + "/:id", middleWare, (req, res, next) => {
+    /* 
       #swagger.tags = ['Public/Map']
       #swagger.path = '/public/map/mymaps/{id}'
       #swagger.deprecated = false
@@ -45,19 +45,19 @@ module.exports = (baseRoute, middleWare, router) => {
           type: 'string'
       } 
     */
-      try {
-        if (!common.isHostAllowed(req, res)) return;
+    try {
+      if (!common.isHostAllowed(req, res)) return;
 
-        myMaps.getMyMaps(req.params.id, (result) => {
-          if (result === undefined) res.send({ error: "ID Not Found" });
-          res.send(result);
-          return next();
-        });
-      } catch (e) {
-        console.error(e.stack);
-        res.status(500);
-        res.send();
+      myMaps.getMyMaps(req.params.id, (result) => {
+        if (result === undefined) res.send({ error: "ID Not Found" });
+        res.send(result);
         return next();
-      }
-    });
+      });
+    } catch (e) {
+      console.error(e.stack);
+      res.status(500);
+      res.send();
+      return next();
+    }
+  });
 };

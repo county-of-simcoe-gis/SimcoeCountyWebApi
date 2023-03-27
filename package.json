@@ -4,7 +4,7 @@
   "version": "1.1.0",
   "description": "API for OpenGIS web application",
   "host": "opengis.simcoe.ca",
-  "basePath": "/api/",
+  "basePath": "/api_v2/",
   "main": "server.js",
   "private": true,
   "scripts": {
@@ -13,7 +13,7 @@
     "doc-gen": "node swagger.js"
   },
   "devDependencies": {
-    "nodemon": "^2.0.21"
+    "nodemon": "^2.0.22"
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.10",
