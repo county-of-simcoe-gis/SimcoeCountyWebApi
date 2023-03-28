@@ -9,6 +9,7 @@ const swaggerOptions = {
   explorer: false,
   customCss: ".swagger-ui .topbar { display: none }",
   baseURL: "docs",
+  customSiteTitle: "API Documentation",
 };
 const documentationOutputFile = require("path").join(__dirname, "./api-doc.json");
 
