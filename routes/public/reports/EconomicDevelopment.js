@@ -30,7 +30,6 @@ module.exports = (baseRoute, middleWare, router) => {
           res.setHeader("Content-Disposition", "attachment; filename=EconomicDevelopmentReport.pdf");
           file.pipe(res);
         }
-        next();
       });
     } catch (e) {
       console.error(e.stack);

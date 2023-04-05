@@ -720,7 +720,7 @@
         "deprecated": false
       }
     },
-    "/public/reports/MLS/{mls}": {
+    "/public/reports/EconomicDevelopment/MLS/{mls}": {
       "get": {
         "tags": [
           "Public/Reports"
@@ -749,7 +749,7 @@
         "deprecated": false
       }
     },
-    "/public/reports/image/{arn}/{overview}/{width}/{height}": {
+    "/public/reports/parcel/image/{arn}/{overview}/{width}/{height}": {
       "get": {
         "tags": [
           "Public/Reports"
