@@ -37,6 +37,7 @@ module.exports = {
           callback();
         } else {
           if (!result.WKT) {
+            console.error("WKT not found");
             callback();
           } else {
             var wkt = result.WKT;

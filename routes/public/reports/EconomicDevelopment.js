@@ -5,7 +5,7 @@ module.exports = (baseRoute, middleWare, router) => {
   router.get(baseRoute + "/MLS/:mls", middleWare, (req, res, next) => {
     /* 
       #swagger.tags = ['Public/Reports']
-      #swagger.path = '/public/reports/MLS/{mls}'
+      #swagger.path = '/public/reports/EconomicDevelopment/MLS/{mls}'
       #swagger.deprecated = false
       #swagger.ignore = false
       #swagger.summary = 'Retrieve economic development report'

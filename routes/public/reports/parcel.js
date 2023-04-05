@@ -6,7 +6,7 @@ module.exports = (baseRoute, middleWare, router) => {
   router.get(baseRoute + "/image/:arn/:overview/:width/:height", middleWare, (req, res, next) => {
     /* 
       #swagger.tags = ['Public/Reports']
-      #swagger.path = '/public/reports/image/{arn}/{overview}/{width}/{height}'
+      #swagger.path = '/public/reports/parcel/image/{arn}/{overview}/{width}/{height}'
       #swagger.deprecated = false
       #swagger.ignore = false
       #swagger.summary = 'Retrieve parcel image'
@@ -38,12 +38,12 @@ module.exports = (baseRoute, middleWare, router) => {
     try {
       if (!common.isHostAllowed(req, res)) return;
       parcelImageGenerator.getImage(req.params.arn, req.params.overview, req.params.width, req.params.height, (resultUrl) => {
-        if (!resultUrl) res.status(404).send();
-        else {
+        if (!resultUrl) {
+          res.status(404).send();
+        } else {
           res.set("Content-Type", "image/jpeg");
           got.stream(resultUrl).pipe(res);
         }
-        return next();
       });
     } catch (e) {
       console.error(e.stack);
