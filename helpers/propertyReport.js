@@ -1,11 +1,8 @@
-const ssrs = require("./ssrs");
 const sqlServer = require("./sqlServer");
 const ss = new sqlServer({ dbName: "tabular" });
 const { createCanvas } = require("canvas");
-const e = require("express");
 const postgres = require("./postgres");
 
-// const reports = new ssrs();
 module.exports = {
   async getPropertyReportInfo(arn, callback) {
     if (arn) {
@@ -44,7 +41,8 @@ module.exports = {
         assessedValueTextContext.fillStyle = "#000";
         assessedValueTextContext.font = `normal 10px Arial`;
         assessedValueTextContext.textBaseline = "top";
-        assessedValueTextContext.fillText(value > 0 ? assessedValueFormatter.format(value) : "unknown", 0, 0);
+        if (isNaN(value)) assessedValueTextContext.fillText(value);
+        else assessedValueTextContext.fillText(value > 0 ? assessedValueFormatter.format(value) : "unknown", 0, 0);
         return assessedValueCanvas.toDataURL();
       };
       ss.selectFirstWithValues(sql, values, (result) => {
@@ -55,9 +53,9 @@ module.exports = {
           try {
             resultFormatted = {
               ARN: result.ARN,
-              PropertyType: result.PropertyDescripter,
+              PropertyType: result.ARN.substring(0, 4) === "4342" ? "N/A" : result.PropertyDescripter,
               Address: result.StNum || result.FullName || result.Muni ? `${result.StNum}  ${result.FullName}, ${result.Muni}` : `(Not Available)`,
-              AssessedValue: getAssessedValueImage(result.AssessedValue),
+              AssessedValue: getAssessedValueImage(result.ARN.substring(0, 4) === "4342" ? "N/A" : result.AssessedValue),
               ReportURL: result.REPORT_PUBLIC,
               HasZoning: result.HasZoning,
               EmergencyService: {

@@ -8,11 +8,20 @@ module.exports = class SqlServer {
     else if (opt.dbName === "weblive") conInfo = config.connectionWebLive;
     else if (opt.dbName === "oasys") conInfo = config.connectionOasys;
 
-    const sqlConStringTemplate = (userName, password, server, db) => `mssql://${userName}:${password}@${server}/${db}`;
-    this.sqlConString = sqlConStringTemplate(conInfo.user, conInfo.password, conInfo.host, conInfo.database);
+    // const sqlConStringTemplate = (userName, password, server, db) => `mssql://${userName}:${password}@${server}/${db}`;
+    // this.sqlConString = sqlConStringTemplate(conInfo.user, conInfo.password, conInfo.host, conInfo.database);
 
     // promise style:
-    this.pool = new sql.ConnectionPool(this.sqlConString);
+    // this.pool = new sql.ConnectionPool(this.sqlConString);
+    this.pool = new sql.ConnectionPool({
+      user: conInfo.user,
+      password: conInfo.password,
+      server: conInfo.host,
+      database: conInfo.database,
+      options: {
+        trustServerCertificate: true,
+      },
+    });
     this.poolConnect = this.pool.connect();
 
     this.pool.on("error", (err) => {

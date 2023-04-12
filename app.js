@@ -86,7 +86,9 @@ server.get(`/${swaggerOptions.baseURL}.json`, (req, res, next) => {
 });
 
 server.get(`/${swaggerOptions.baseURL}/*`, ...swaggerUi.serve);
-server.get(`/${swaggerOptions.baseURL}`, swaggerUi.setup(require(documentationOutputFile), swaggerOptions));
+server.get(`/${swaggerOptions.baseURL}`, (req, res, next) => swaggerUi.setup(require(documentationOutputFile), swaggerOptions));
+
+// server.get(`/${swaggerOptions.baseURL}`, swaggerUi.setup(require(documentationOutputFile), swaggerOptions));
 server.get("*", function (req, res, next) {
   console.warn(`Invalid URL Request- ${req.url}`);
   res.send(404);

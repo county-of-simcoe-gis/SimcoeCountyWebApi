@@ -17,28 +17,21 @@
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.10",
-    "@mapbox/polyline": "^1.1.1",
-    "body-parser": "^1.20.2",
+    "@mapbox/polyline": "^1.2.0",
     "canvas": "^2.11.0",
-    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "express-promise-router": "^3.0.3",
     "geojson": "^0.5.0",
     "got": "^11.8.6",
-    "helmet": "^3.23.3",
     "moment": "^2.29.4",
-    "mssql": "^5.1.5",
-    "mssql-ssrs": "^1.4.1",
+    "mssql": "^9.1.1",
+    "mssql-ssrs": "^2.1.0",
     "node-fetch": "^2.6.9",
     "nodemailer": "^6.9.1",
     "pg": "^8.10.0",
-    "phantomjs-prebuilt": "^2.1.16",
-    "restify": "^8.6.0",
+    "restify": "^11.1.0",
     "restify-cors-middleware": "^1.1.1",
     "swagger-autogen": "^2.23.1",
     "swagger-ui-restify": "^3.0.8",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.5.0"
   }
 }
