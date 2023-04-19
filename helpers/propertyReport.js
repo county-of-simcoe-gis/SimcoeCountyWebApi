@@ -41,7 +41,7 @@ module.exports = {
         assessedValueTextContext.fillStyle = "#000";
         assessedValueTextContext.font = `normal 10px Arial`;
         assessedValueTextContext.textBaseline = "top";
-        if (isNaN(value)) assessedValueTextContext.fillText(value);
+        if (isNaN(value)) assessedValueTextContext.fillText(value, 0, 0);
         else assessedValueTextContext.fillText(value > 0 ? assessedValueFormatter.format(value) : "unknown", 0, 0);
         return assessedValueCanvas.toDataURL();
       };
