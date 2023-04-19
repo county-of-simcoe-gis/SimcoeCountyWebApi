@@ -1,16 +1,10 @@
 "use strict";
 var restify = require("restify");
 var config = require("./config");
-const package_file = require("./package.json");
-
+const pathToSwaggerUi = require("swagger-ui-dist").absolutePath();
+const fs = require("fs");
+const packageJson = require("./package.json");
 var corsMiddleware = require("restify-cors-middleware");
-const swaggerUi = require("swagger-ui-restify");
-const swaggerOptions = {
-  explorer: false,
-  customCss: ".swagger-ui .topbar { display: none }",
-  baseURL: "docs",
-  customSiteTitle: "API Documentation",
-};
 const documentationOutputFile = require("path").join(__dirname, "./api-doc.json");
 
 // CORS FOR RESTIFY
@@ -24,8 +18,8 @@ var cors = corsMiddleware({
 // CREATE SERVER
 var serverPort = process.env.PORT || config.app.port;
 var server = restify.createServer({
-  name: package_file.title || "API Server",
-  version: package_file.version || "1.0.0",
+  name: packageJson.title || "API Server",
+  version: packageJson.version || "1.0.0",
   maxParamLength: 1000,
 });
 
@@ -61,7 +55,6 @@ server.use(function (req, res, next) {
 
 // Use the common stuff you probably want
 server.use(restify.plugins.acceptParser(server.acceptable));
-server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.dateParser());
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.gzipResponse());
@@ -79,16 +72,35 @@ server.use(function (req, res, next) {
 });
 
 require("./routes/routeBuilder")(server);
-server.get(`/${swaggerOptions.baseURL}.json`, (req, res, next) => {
+server.get(`/docs.json`, (req, res, next) => {
   const documentation = require(documentationOutputFile);
   res.json(documentation);
   next();
 });
 
-server.get(`/${swaggerOptions.baseURL}/*`, ...swaggerUi.serve);
-server.get(`/${swaggerOptions.baseURL}`, (req, res, next) => swaggerUi.setup(require(documentationOutputFile), swaggerOptions));
+const swaggerIndexContent = fs
+  .readFileSync(`${pathToSwaggerUi}/swagger-initializer.js`)
+  .toString()
+  .replace("https://petstore.swagger.io/v2/swagger.json", `https://${packageJson.host}${packageJson.basePath}docs.json`);
 
-// server.get(`/${swaggerOptions.baseURL}`, swaggerUi.setup(require(documentationOutputFile), swaggerOptions));
+server.get("/docs/swagger-initializer.js", (req, res, next) => {
+  res.writeHead(200, {
+    "Content-Length": Buffer.byteLength(swaggerIndexContent),
+    "Content-Type": "application/javascript",
+  });
+  res.write(swaggerIndexContent);
+  res.end();
+});
+server.get("/docs", (req, res, next) => res.redirect(`${packageJson.basePath}docs/index.html`, next));
+server.get(
+  "/docs/*",
+  restify.plugins.serveStatic({
+    appendRequestPath: false,
+    directory: pathToSwaggerUi,
+    default: "index.html",
+  })
+);
+
 server.get("*", function (req, res, next) {
   console.warn(`Invalid URL Request- ${req.url}`);
   res.send(404);
