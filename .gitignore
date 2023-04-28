@@ -10,3 +10,4 @@ config.json
 config.js
 startup.cmd
 package-lock.json
+Build.ps1

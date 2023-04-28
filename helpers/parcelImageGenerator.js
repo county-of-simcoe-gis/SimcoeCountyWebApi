@@ -32,25 +32,31 @@ module.exports = {
       let values = [{ name: "arn", type: "NVarChar", typeOpts: { length: 250 }, value: arn }];
       const sql = `SELECT geometry::EnvelopeAggregate(Shape).ToString() as WKT from WEBLIVE.GIS.TERANET_DAPF WHERE ARN = @arn`;
       ss.selectFirstWithValues(sql, values, (result) => {
-        if (!result.WKT) {
+        if (result.error) {
+          console.error(result.error);
           callback();
         } else {
-          var wkt = result.WKT;
-          wkt = wkt.replace("POLYGON ((", "");
-          wkt = wkt.replace("))", "");
-          wkt = wkt.replace(",", "");
-          wktParts = wkt.split(" ");
+          if (!result.WKT) {
+            console.error("WKT not found");
+            callback();
+          } else {
+            var wkt = result.WKT;
+            wkt = wkt.replace("POLYGON ((", "");
+            wkt = wkt.replace("))", "");
+            wkt = wkt.replace(",", "");
+            wktParts = wkt.split(" ");
 
-          // BUILD EXTENT
-          minX = wktParts[0];
-          maxX = wktParts[2];
-          minY = wktParts[1];
-          maxY = wktParts[5];
-          bBox = bBoxTemplate(minX, maxX, minY, maxY);
+            // BUILD EXTENT
+            minX = wktParts[0];
+            maxX = wktParts[2];
+            minY = wktParts[1];
+            maxY = wktParts[5];
+            bBox = bBoxTemplate(minX, maxX, minY, maxY);
 
-          // CALLBACK URL
-          var callbackUrl = parcelURLTemplate(serviceUrl, bBox, parcelLayerId, arn, width, height);
-          callback(callbackUrl);
+            // CALLBACK URL
+            var callbackUrl = parcelURLTemplate(serviceUrl, bBox, parcelLayerId, arn, width, height);
+            callback(callbackUrl);
+          }
         }
       });
     }

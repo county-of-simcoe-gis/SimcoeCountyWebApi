@@ -10,7 +10,7 @@ const feedbackUrl = config.app.feedbackUrl;
 
 module.exports = {
   insertFeedback: function (feedback) {
-    console.log(feedback);
+    console.dir(feedback);
     // FORMAT THE DATE
     var dtString = common.getSqlDateString(new Date());
 

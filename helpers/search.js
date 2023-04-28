@@ -149,16 +149,15 @@ module.exports = {
 
   _searchOsm: async function (keywords, type = undefined, limit = 10) {
     if (type === "undefined") type = undefined;
-    console.log(type);
+    console.log("Search", type);
     if (type !== "All" && type !== "Open Street Map") return [];
 
-    console.log("in OSM");
+    console.log("Searching in OSM");
     let osmUrl = osmUrlTemplateViewBox(viewBox, limit, keywords);
     let osmResult = await this._getJSON(osmUrl);
     let osmPlaces = [];
     if (osmResult.length > 0) {
       osmResult.forEach((osm) => {
-        //console.log(osm);
         let city = "";
         if (osm.address.city !== undefined) city = osm.address.city;
         else city = osm.address.town;
@@ -187,7 +186,7 @@ module.exports = {
       // });
     }
 
-    console.log(osmPlaces.length);
+    console.log("Search return", osmPlaces.length);
     return osmPlaces;
   },
 
@@ -201,7 +200,7 @@ module.exports = {
       const json = await response.json();
       return json;
     } catch (error) {
-      console.log(error);
+      console.dir(error);
       return {};
     }
 

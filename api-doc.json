@@ -1,0 +1,1025 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "2.0.0",
+    "title": "OpenGIS API",
+    "description": "API for OpenGIS web application"
+  },
+  "servers": [
+    {
+      "url": "https://opengis.simcoe.ca/api_v2/"
+    },
+    {
+      "url": "http://opengis.simcoe.ca/api_v2/"
+    }
+  ],
+  "paths": {
+    "/public/captcha/response/{type}/{token}": {
+      "get": {
+        "tags": [
+          "Public/Captcha"
+        ],
+        "summary": "Captcha verification",
+        "description": "",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Type"
+          },
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/feedback": {
+      "post": {
+        "tags": [
+          "Public/Feedback"
+        ],
+        "summary": "Submit Feedback",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Feedback Details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "rating": {
+                  "type": "string",
+                  "example": "rating"
+                },
+                "forBusinessUse": {
+                  "type": "string",
+                  "example": "forBusinessUse"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "email"
+                },
+                "comments": {
+                  "type": "string",
+                  "example": "comments"
+                },
+                "xmin": {
+                  "type": "string",
+                  "example": "xmin"
+                },
+                "ymin": {
+                  "type": "string",
+                  "example": "ymin"
+                },
+                "xmax": {
+                  "type": "string",
+                  "example": "xmax"
+                },
+                "ymax": {
+                  "type": "string",
+                  "example": "ymax"
+                },
+                "centerX": {
+                  "type": "string",
+                  "example": "centerX"
+                },
+                "centerY": {
+                  "type": "string",
+                  "example": "centerY"
+                },
+                "scale": {
+                  "type": "string",
+                  "example": "scale"
+                },
+                "otherUses": {
+                  "type": "string",
+                  "example": "otherUses"
+                },
+                "education": {
+                  "type": "string",
+                  "example": "education"
+                },
+                "recreation": {
+                  "type": "string",
+                  "example": "recreation"
+                },
+                "realEstate": {
+                  "type": "string",
+                  "example": "realEstate"
+                },
+                "business": {
+                  "type": "string",
+                  "example": "business"
+                },
+                "delivery": {
+                  "type": "string",
+                  "example": "delivery"
+                },
+                "economicDevelopment": {
+                  "type": "string",
+                  "example": "economicDevelopment"
+                },
+                "reportProblem": {
+                  "type": "string",
+                  "example": "reportProblem"
+                },
+                "myMapsId": {
+                  "type": "string",
+                  "example": "myMapsId"
+                },
+                "featureId": {
+                  "type": "string",
+                  "example": "featureId"
+                }
+              },
+              "required": [
+                "rating",
+                "forBusinessUse",
+                "email",
+                "comments",
+                "xmin",
+                "ymin",
+                "xmax",
+                "ymax",
+                "centerX",
+                "centerY",
+                "scale",
+                "otherUses",
+                "education",
+                "recreation",
+                "realEstate",
+                "business",
+                "delivery",
+                "economicDevelopment",
+                "reportProblem",
+                "myMapsId",
+                "featureId"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/feedback/{id}": {
+      "get": {
+        "tags": [
+          "Public/Feedback"
+        ],
+        "summary": "Retrieve Feedback",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Feedback ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/geometry/buffer": {
+      "post": {
+        "tags": [
+          "Public/Map"
+        ],
+        "summary": "Provide a buffer geometry for the submitted geometry",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Geometry Details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "geoJSON": {
+                  "type": "string",
+                  "example": "geoJSON"
+                },
+                "distance": {
+                  "type": "string",
+                  "example": "distance"
+                },
+                "srid": {
+                  "type": "string",
+                  "example": "srid"
+                }
+              },
+              "required": [
+                "geoJSON",
+                "distance",
+                "srid"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/geometry/center": {
+      "post": {
+        "tags": [
+          "Public/Map"
+        ],
+        "summary": "Provide a center point geometry for the submitted geometry",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Geometry Details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "geoJSON": {
+                  "type": "string",
+                  "example": "geoJSON"
+                },
+                "srid": {
+                  "type": "string",
+                  "example": "srid"
+                }
+              },
+              "required": [
+                "geoJSON",
+                "srid"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/{id}": {
+      "get": {
+        "tags": [
+          "Public/Map"
+        ],
+        "summary": "Retrieve Map config",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Map ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/default": {
+      "get": {
+        "tags": [
+          "Public/Map"
+        ],
+        "summary": "Retrieve Default Map config",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/mymaps": {
+      "post": {
+        "tags": [
+          "Public/Map"
+        ],
+        "summary": "Save My Maps drawing",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "JSON MyMaps drawing object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "body": {
+                  "type": "string",
+                  "example": "body"
+                }
+              },
+              "required": [
+                "body"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/mymaps/{id}": {
+      "get": {
+        "tags": [
+          "Public/Map"
+        ],
+        "summary": "Retrieve My Maps drawing",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "My Maps Drawing ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/211/Categories/{isFrench}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/211"
+        ],
+        "summary": "Get 211 categories",
+        "description": "",
+        "parameters": [
+          {
+            "name": "isFrench",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "true/false to return french/english"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/211/SubCategories/{category}/{isFrench}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/211"
+        ],
+        "summary": "Get 211 sub-categories",
+        "description": "",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Category"
+          },
+          {
+            "name": "isFrench",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "true/false to return french/english"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/211/Results/{category}/{subCategory}/{age}/{isFrench}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/211"
+        ],
+        "summary": "Get 211 Entries with filter parameters",
+        "description": "",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Category"
+          },
+          {
+            "name": "subCategory",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sub-Category"
+          },
+          {
+            "name": "age",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Age"
+          },
+          {
+            "name": "isFrench",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "true/false to return french/english"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/511/MTOLayer/{layerName}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/511"
+        ],
+        "summary": "Get 511 Information",
+        "description": "",
+        "parameters": [
+          {
+            "name": "layerName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Layer name to filter 511 data"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/511/AlertLayer/{category}/{type}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/511"
+        ],
+        "summary": "Get Waze alerts",
+        "description": "",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Category of alert"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Type of alert"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/511/JamLayer": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/511"
+        ],
+        "summary": "Get Waze Traffic Jam Layer",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/511/IrregularLayer": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/511"
+        ],
+        "summary": "Get Waze Irregular Layer",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/tool/weather/RadarImages": {
+      "get": {
+        "tags": [
+          "Public/Map/Tool/Weather"
+        ],
+        "summary": "Get radar images",
+        "description": "",
+        "parameters": [
+          {
+            "name": "fromDate",
+            "in": "query",
+            "description": "Start Date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "description": "End Date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/tool/weather/CityWeather/{city}": {
+      "get": {
+        "tags": [
+          "Public/Map/Tool/Weather"
+        ],
+        "summary": "Get radar images",
+        "description": "",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "City"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/reports/EconomicDevelopment/MLS/{mls}": {
+      "get": {
+        "tags": [
+          "Public/Reports"
+        ],
+        "summary": "Retrieve economic development report",
+        "description": "",
+        "parameters": [
+          {
+            "name": "mls",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "MLS Number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/reports/parcel/image/{arn}/{overview}/{width}/{height}": {
+      "get": {
+        "tags": [
+          "Public/Reports"
+        ],
+        "summary": "Retrieve parcel image",
+        "description": "",
+        "parameters": [
+          {
+            "name": "arn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ARN"
+          },
+          {
+            "name": "overview",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Is Overview"
+          },
+          {
+            "name": "width",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Image Width"
+          },
+          {
+            "name": "height",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Image height"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/reports/property/{arn}": {
+      "get": {
+        "tags": [
+          "Public/Reports"
+        ],
+        "summary": "Retrieve property report information",
+        "description": "",
+        "parameters": [
+          {
+            "name": "arn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ARN"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/search": {
+      "get": {
+        "tags": [
+          "Public/Search"
+        ],
+        "summary": "Search of property information",
+        "description": "",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Search Text",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit number of records returned",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Type of search",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "muni",
+            "in": "query",
+            "description": "Municipality to limit search to",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/search/{id}": {
+      "get": {
+        "tags": [
+          "Public/Search"
+        ],
+        "summary": "Retrieve a single search item",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Specific searchable item ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/search/street/{streetName}": {
+      "get": {
+        "tags": [
+          "Public/Search"
+        ],
+        "summary": "Find a street",
+        "description": "",
+        "parameters": [
+          {
+            "name": "streetName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Street Name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/search/types": {
+      "get": {
+        "tags": [
+          "Public/Search"
+        ],
+        "summary": "Get list of search types",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/stats/write/{appName}/{actionType}/{description}": {
+      "get": {
+        "tags": [
+          "Public/Stats"
+        ],
+        "summary": "Write to appstats",
+        "description": "",
+        "parameters": [
+          {
+            "name": "appName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Application Name"
+          },
+          {
+            "name": "actionType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Type of action"
+          },
+          {
+            "name": "description",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Details of the logged action"
+          },
+          {
+            "name": "proxy-ip",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    }
+  }
+}

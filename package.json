@@ -1,35 +1,37 @@
 {
   "name": "opengiswebapi",
-  "version": "1.1.0",
+  "title": "OpenGIS API",
+  "version": "2.0.1",
+  "description": "API for OpenGIS web application",
+  "host": "opengis.simcoe.ca",
+  "basePath": "/api_v2/",
+  "main": "server.js",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "dev": "nodemon --exec node ./bin/www"
+    "start": "node server.js",
+    "dev": "nodemon --exec node app.js",
+    "doc-gen": "node swagger.js"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.22"
   },
   "dependencies": {
-    "@mapbox/polyline": "^1.1.1",
-    "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.5",
+    "@mapbox/node-pre-gyp": "^1.0.10",
+    "@mapbox/polyline": "^1.2.0",
+    "canvas": "^2.11.0",
     "cors": "^2.8.5",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "express-promise-router": "^3.0.3",
-    "fetch": "^1.1.0",
     "geojson": "^0.5.0",
-    "helmet": "^3.23.3",
-    "moment": "^2.29.2",
-    "morgan": "~1.9.1",
-    "mssql": "^5.1.5",
-    "mssql-ssrs": "^1.4.1",
-    "node-fetch": "^2.6.7",
-    "nodemailer": "^6.6.3",
-    "npm-check-updates": "^10.3.1",
-    "pg": "^8.7.0",
-    "phantomjs-prebuilt": "^2.1.16",
-    "winston": "^3.3.3",
-    "xml2js": "^0.4.23"
+    "got": "^11.8.6",
+    "moment": "^2.29.4",
+    "mssql": "^9.1.1",
+    "mssql-ssrs": "^2.1.0",
+    "node-fetch": "^2.6.9",
+    "nodemailer": "^6.9.1",
+    "pg": "^8.10.0",
+    "restify": "^11.1.0",
+    "restify-cors-middleware": "^1.1.1",
+    "swagger-autogen": "^2.23.1",
+    "swagger-ui-dist": "^4.18.2",
+    "xml2js": "^0.5.0"
   }
 }

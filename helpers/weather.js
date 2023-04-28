@@ -6,16 +6,17 @@ var parser = new xml2js.Parser();
 
 module.exports = {
   getRadarImages: function (fromDate, toDate, callback) {
-    const db = new SqlServer({ dbName: "tabular" });
+    const db = new sqlServer({ dbName: "tabular" });
+
     const values = [
-      { name: "fromDate", type: "Date", value: fromDate },
-      { name: "toDate", type: "Date", value: toDate },
+      { name: "fromDate", type: "NVarChar", typeOpts: { length: 50 }, value: fromDate },
+      { name: "toDate", type: "NVarChar", typeOpts: { length: 50 }, value: toDate },
     ];
     const sqlQuery = `SELECT [RADAR_CODE],[RADAR_DESCRIPTION],[RADAR_DATE],[JS_MAPIMAGE],[FILE_NAME],datediff(minute,'2015-1-1',[RADAR_DATE]) as TIME_ID 
                       FROM dbo.tbl_Weather_Radar_Current_Images 
                       WHERE [RADAR_DATE] BETWEEN @fromDate AND @toDate
                       ORDER BY RADAR_DATE`;
-    //console.log(sqlQuery);
+
     db.selectAllWithValues(sqlQuery, values, (result) => {
       callback(result);
     });
