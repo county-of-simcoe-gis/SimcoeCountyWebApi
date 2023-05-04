@@ -10,7 +10,7 @@ const documentationOutputFile = require("path").join(__dirname, "./api-doc.json"
 // CORS FOR RESTIFY
 var cors = corsMiddleware({
   preflightMaxAge: 5,
-  origins: ["forestryapps.simcoe.ca", "http://localhost:3000", "https://opengis.simcoe.ca", "https://opengis2.simcoe.ca"],
+  origins: ["http://localhost:3000", "https://opengis.simcoe.ca", "https://opengis2.simcoe.ca"],
   allowHeaders: ["Authorization, Origin, X-Requested-With, Content-Type, Accept,AccessToken"],
   exposeHeaders: [],
 });
