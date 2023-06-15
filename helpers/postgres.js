@@ -6,7 +6,6 @@ module.exports = class Postgres {
     let conInfo = null;
     if (opt.dbName === "tabular") conInfo = config.postGres.connectionTabular;
     else if (opt.dbName === "weblive") conInfo = config.postGres.connectionWeblive;
-
     this.pool = new Pool({
       user: conInfo.user,
       host: conInfo.host,
@@ -36,6 +35,7 @@ module.exports = class Postgres {
   selectFirst(sql, callback) {
     this.pool.query(sql, (err, res) => {
       if (res === undefined) {
+        console.log(err);
         callback({ error: "Query returned ZERO records." });
         return;
       }

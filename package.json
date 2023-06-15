@@ -3,8 +3,8 @@
   "title": "OpenGIS API",
   "version": "2.0.1",
   "description": "API for OpenGIS web application",
-  "host": "opengis.simcoe.ca",
-  "basePath": "/api_v2/",
+  "host": "localhost",
+  "basePath": "/",
   "main": "server.js",
   "private": true,
   "scripts": {
@@ -20,6 +20,7 @@
     "@mapbox/polyline": "^1.2.0",
     "canvas": "^2.11.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.1.4",
     "geojson": "^0.5.0",
     "got": "^11.8.6",
     "moment": "^2.29.4",

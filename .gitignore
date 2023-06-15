@@ -7,7 +7,12 @@ config.json
 /public
 /logs
 /reports
-config.js
 startup.cmd
 package-lock.json
 Build.ps1
+.env
+.env.development
+.env.local
+.env.production
+.env.sample
+docker_build.bat
