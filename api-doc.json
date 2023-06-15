@@ -810,7 +810,7 @@
         "tags": [
           "Public/Reports"
         ],
-        "summary": "Retrieve property report information",
+        "summary": "Retrieve property report",
         "description": "",
         "parameters": [
           {
