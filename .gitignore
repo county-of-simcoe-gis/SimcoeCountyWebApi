@@ -14,5 +14,4 @@ Build.ps1
 .env.development
 .env.local
 .env.production
-.env.sample
 docker_build.bat
