@@ -1,4 +1,6 @@
 FROM node:18-slim
+RUN apt-get update
+RUN apt-get --assume-yes install fonts-tlwg-garuda-ttf
 # Create app directory
 WORKDIR /usr/src/app
 #Copy the package.json file to container folder
