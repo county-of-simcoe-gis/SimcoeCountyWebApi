@@ -1,14 +1,15 @@
-module.exports = (server) => {
+module.exports = (server, defaultRoute = "") => {
   const routeFiles = getAllFiles(require("path").join(__dirname));
+
   routeFiles.forEach((file) => {
     if (file.name === "routeBuilder.js") return;
     let route = `${file.path.replace(require("path").join(__dirname), "")}${file.name !== "index.js" ? "/" + file.name.replace(".js", "") : ""}`;
     route = route.split("\\").join("/");
-    console.log("Building Routes", require("path").join(file.path, file.name.replace(".js", "")), route);
+    console.log("Building Routes", require("path").join(file.path, file.name.replace(".js", "")), defaultRoute + route);
     let middleWare = (req, res, next) => {
       return next();
     };
-    require(require("path").join(file.path, file.name.replace(".js", "")))(route, middleWare, server);
+    require(require("path").join(file.path, file.name.replace(".js", "")))(defaultRoute + route, middleWare, server);
   });
 };
 

@@ -11,3 +11,8 @@ config.js
 startup.cmd
 package-lock.json
 Build.ps1
+.env
+docker_build.bat
+.env.development
+.env.local
+.env.production
