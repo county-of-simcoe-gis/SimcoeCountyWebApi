@@ -5,6 +5,7 @@
   "description": "API for OpenGIS web application",
   "host": "opengis.simcoe.ca",
   "basePath": "/api_v2/",
+  "defaultRoute": "/api_v2",
   "main": "server.js",
   "private": true,
   "scripts": {

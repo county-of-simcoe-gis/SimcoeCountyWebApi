@@ -13,10 +13,10 @@ module.exports = class PowerBIEmbed {
     const url = `https://api.powerbi.com/v1.0/myorg/GenerateToken`;
     const reportConfig = {};
     this.getToken((token) => {
-      console.log(token.access_token);
+      // console.log(token.access_token);
       this.getReportId(token.access_token, report, (response) => {
         if (response && response.id) {
-          console.log(response);
+          // console.log(response);
 
           reportConfig["Id"] = response.id;
           reportConfig["EmbedUrl"] = response.embedUrl;
@@ -51,7 +51,7 @@ module.exports = class PowerBIEmbed {
               return res.json();
             })
             .then((json) => {
-              console.log(json);
+              // console.log(json);
 
               reportConfig.EmbedToken["Token"] = json.token;
               reportConfig.EmbedToken["TokenId"] = json.tokenId;
