@@ -34,7 +34,7 @@ module.exports = (baseRoute, middleWare, router) => {
       #swagger.summary = 'Set embedded parameters'
       #swagger.parameters['obj'] = {
           in: 'body',
-          description: 'Feedback Details',
+          description: 'Report Parameters',
           required: true,
           schema: [{ 
             $name:'name',
