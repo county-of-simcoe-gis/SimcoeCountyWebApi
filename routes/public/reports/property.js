@@ -24,7 +24,46 @@ module.exports = (baseRoute, middleWare, router) => {
       });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
+      return next();
+    }
+  });
+  router.get(baseRoute + "/pdf/:arn", middleWare, (req, res, next) => {
+    /* 
+      #swagger.tags = ['Public/Reports']
+      #swagger.path = '/public/reports/property/{arn}'
+      #swagger.deprecated = false
+      #swagger.ignore = false
+      #swagger.summary = 'Retrieve property report'
+       #swagger.parameters['arn'] = {
+          in: 'path',
+          description: 'ARN',
+          required: true,
+          type: 'string'
+      }
+       
+    */
+    try {
+      if (!common.isHostAllowed(req, res)) return;
+
+      reportGenerator.getPropertyReport(req.params.arn, (result) => {
+        const fileExists = fs.existsSync(result);
+        if (!fileExists) {
+          res.send(result);
+        } else {
+          var file = fs.createReadStream(result);
+          var stat = fs.statSync(result);
+          res.setHeader("Content-Length", stat.size);
+          res.setHeader("Content-Type", "application/pdf");
+          res.setHeader("Content-Disposition", "attachment; filename=PropertyReport.pdf");
+          file.pipe(res);
+        }
+      });
+    } catch (e) {
+      console.error(e.stack);
+      res.status(500);
+      res.send();
       return next();
     }
   });

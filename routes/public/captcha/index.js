@@ -48,7 +48,8 @@ module.exports = (baseRoute, middleWare, router) => {
         });
     } catch (e) {
       console.error(e.stack);
-      res.status(500).send();
+      res.status(500);
+      res.send();
       return next();
     }
   });

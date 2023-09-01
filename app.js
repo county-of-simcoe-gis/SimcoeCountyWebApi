@@ -48,7 +48,9 @@ server.use(function (req, res, next) {
   }
   if (err) {
     logger.warn(`Invalid URL Request- ${req.url}`);
-    res.status(404).send();
+    res.status(404);
+    res.send();
+    return next();
   }
   next();
 });
