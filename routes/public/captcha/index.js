@@ -35,10 +35,7 @@ module.exports = (baseRoute, middleWare, router) => {
       res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
       // RECAPTCHA DETAILS
-      var secret = "";
-      if (type === "DEV") secret = config.app.captchaDev;
-      //DEV
-      else secret = config.app.captchaProduction; //PRODUCTION
+      var secret = config.app.captcha;
 
       const captchaUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secret + "&response=" + token;
       fetch(captchaUrl, { method: "POST" })
