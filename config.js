@@ -68,3 +68,6 @@ exports.powerbi = {
   resource: "https://analysis.windows.net/powerbi/api",
   scope: "https://analysis.windows.net/powerbi/api/.default",
 };
+exports.waze = {
+  url: process.env.WAZE_URL,
+};

@@ -3,10 +3,10 @@
 var GeoJSON = require("geojson");
 const fetch = require("node-fetch");
 var moment = require("moment");
+const config = require("../config").waze;
 
 // WAZE URL API
-var wazeURL =
-  "https://na-georss.waze.com/rtserver/web/TGeoRSS?tk=ccp_partner&ccp_partner_name=The%20Corporation%20of%20the%20County%20of%20Simcoe&format=JSON&types=traffic,alerts,irregularities&polygon=-80.252000,43.898000;-80.416000,44.961000;-78.873000,44.992000;-78.840000,44.324000;-79.488000,44.028000;-80.252000,43.898000;-80.252000,43.898000";
+var wazeURL = config.url;
 module.exports = {
   // MAIN FUNCTION
   getWazeLayer: function (category, type, callback) {
