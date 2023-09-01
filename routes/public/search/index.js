@@ -44,7 +44,7 @@ module.exports = (baseRoute, middleWare, router) => {
       if (!common.isHostAllowed(req, res)) return;
       search.search(keywords, type, muni, limit, async (result) => {
         if (result === undefined) res.send([]);
-        res.send(result);
+        else res.send(result);
         return next();
       });
     } catch (e) {
@@ -74,7 +74,7 @@ module.exports = (baseRoute, middleWare, router) => {
       if (!common.isHostAllowed(req, res)) return;
       search.searchById(req.params.id, (result) => {
         if (result === undefined) res.send([]);
-        res.send(result);
+        else res.send(result);
         return next();
       });
     } catch (e) {
@@ -103,8 +103,7 @@ module.exports = (baseRoute, middleWare, router) => {
       if (!common.isHostAllowed(req, res)) return;
       streetAddresses.getStreets(req.params.streetName, (result) => {
         if (result === undefined) res.send({ error: "No Streets Found" });
-
-        res.send(result);
+        else res.send(result);
         return next();
       });
     } catch (e) {

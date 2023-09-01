@@ -1,10 +1,11 @@
 {
   "name": "opengiswebapi",
   "title": "OpenGIS API",
-  "version": "2.0.1",
+  "version": "2.0.3",
   "description": "API for OpenGIS web application",
-  "host": "localhost",
-  "basePath": "/",
+  "host": "opengis.simcoe.ca",
+  "basePath": "/api_v2/",
+  "defaultRoute": "/api_v2",
   "main": "server.js",
   "private": true,
   "scripts": {

@@ -48,7 +48,9 @@ server.use(function (req, res, next) {
   }
   if (err) {
     logger.warn(`Invalid URL Request- ${req.url}`);
-    res.status(404).send();
+    res.status(404);
+    res.send();
+    return next();
   }
   next();
 });
@@ -71,8 +73,8 @@ server.use(function (req, res, next) {
   next();
 });
 
-require("./routes/routeBuilder")(server);
-server.get(`/docs.json`, (req, res, next) => {
+require("./routes/routeBuilder")(server, packageJson.defaultRoute);
+server.get(packageJson.defaultRoute + `/docs.json`, (req, res, next) => {
   const documentation = require(documentationOutputFile);
   res.json(documentation);
   next();
@@ -83,7 +85,7 @@ const swaggerIndexContent = fs
   .toString()
   .replace("https://petstore.swagger.io/v2/swagger.json", `https://${packageJson.host}${packageJson.basePath}docs.json`);
 
-server.get("/docs/swagger-initializer.js", (req, res, next) => {
+server.get(packageJson.defaultRoute + "/docs/swagger-initializer.js", (req, res, next) => {
   res.writeHead(200, {
     "Content-Length": Buffer.byteLength(swaggerIndexContent),
     "Content-Type": "application/javascript",
@@ -91,9 +93,9 @@ server.get("/docs/swagger-initializer.js", (req, res, next) => {
   res.write(swaggerIndexContent);
   res.end();
 });
-server.get("/docs", (req, res, next) => res.redirect(`${packageJson.basePath}docs/index.html`, next));
+server.get(packageJson.defaultRoute + "/docs", (req, res, next) => res.redirect(`${packageJson.basePath}docs/index.html`, next));
 server.get(
-  "/docs/*",
+  packageJson.defaultRoute + "/docs/*",
   restify.plugins.serveStatic({
     appendRequestPath: false,
     directory: pathToSwaggerUi,

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "2.0.1",
+    "version": "2.0.2",
     "title": "OpenGIS API",
     "description": "API for OpenGIS web application"
   },
@@ -749,6 +749,65 @@
         "deprecated": false
       }
     },
+    "/public/reports/mls/image/{mls}/{overview}/{width}/{height}": {
+      "get": {
+        "tags": [
+          "Public/Reports"
+        ],
+        "summary": "Retrieve parcel image",
+        "description": "",
+        "parameters": [
+          {
+            "name": "mls",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "MLS"
+          },
+          {
+            "name": "overview",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Is Overview"
+          },
+          {
+            "name": "width",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Image Width"
+          },
+          {
+            "name": "height",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Image height"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/public/reports/parcel/image/{arn}/{overview}/{width}/{height}": {
       "get": {
         "tags": [
@@ -795,6 +854,9 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "404": {
             "description": "Not Found"
           },
@@ -810,7 +872,7 @@
         "tags": [
           "Public/Reports"
         ],
-        "summary": "Retrieve property report information",
+        "summary": "Retrieve property report",
         "description": "",
         "parameters": [
           {

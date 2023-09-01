@@ -40,9 +40,9 @@ module.exports = {
     if (age === "All") age = "";
 
     var sql;
-    sql = `SELECT * FROM public.tbl_211_raw  where latitude <> '' and cwd_simcategory_headinggroups ilike '%' || $1 || '%' and cwd_simcategory_headings ilike '%' || $2 || '%' and age_category ilike '%' || $3 || '%' ;`;
+    sql = `SELECT * FROM public.tbl_211_raw  where latitude <> '' and map_record <> 'Do Not Map' and cwd_simcategory_headinggroups ilike '%' || $1 || '%' and cwd_simcategory_headings ilike '%' || $2 || '%' and age_category ilike '%' || $3 || '%' ;`;
     if (isFrench === "true")
-      sql = `SELECT * FROM public.tbl_211_french_raw  where latitude <> '' and cwd_simcategory_headinggroups ilike '%' || $1 || '%' and cwd_simcategory_headings ilike '%' || $2 || '%' and age_category ilike '%' || $3 || '%' ;`;
+      sql = `SELECT * FROM public.tbl_211_french_raw  where latitude <> '' and map_record <> 'Do Not Map' and cwd_simcategory_headinggroups ilike '%' || $1 || '%' and cwd_simcategory_headings ilike '%' || $2 || '%' and age_category ilike '%' || $3 || '%' ;`;
     var values = [category, subCategory, age];
     const pg = new postgres({ dbName: "tabular" });
     pg.selectAllWithValues(sql, values, (result) => {
