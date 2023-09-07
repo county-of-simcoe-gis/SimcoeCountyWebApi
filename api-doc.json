@@ -749,6 +749,74 @@
         "deprecated": false
       }
     },
+    "/public/reports/embed/report": {
+      "get": {
+        "tags": [
+          "Public/Reports"
+        ],
+        "summary": "Retrieve embed token",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      },
+      "post": {
+        "tags": [
+          "Public/Reports"
+        ],
+        "summary": "Set embedded parameters",
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "description": "Report Parameters",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "name"
+                  },
+                  "value": {
+                    "type": "string",
+                    "example": "value"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "type"
+                  }
+                },
+                "required": [
+                  "name",
+                  "value",
+                  "type"
+                ]
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/public/reports/mls/image/{mls}/{overview}/{width}/{height}": {
       "get": {
         "tags": [

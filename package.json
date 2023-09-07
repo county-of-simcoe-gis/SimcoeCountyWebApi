@@ -22,6 +22,7 @@
     "canvas": "^2.11.0",
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
+    "fast-xml-parser": "^4.2.7",
     "geojson": "^0.5.0",
     "got": "^11.8.6",
     "moment": "^2.29.4",
@@ -31,9 +32,8 @@
     "nodemailer": "^6.9.1",
     "pg": "^8.10.0",
     "restify": "^11.1.0",
-    "restify-cors-middleware": "^1.1.1",
+    "restify-cors-middleware2": "^2.2.1",
     "swagger-autogen": "^2.23.1",
-    "swagger-ui-dist": "^4.18.2",
-    "xml2js": "^0.5.0"
+    "swagger-ui-dist": "^4.18.2"
   }
 }

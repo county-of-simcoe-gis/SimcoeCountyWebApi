@@ -1,8 +1,15 @@
 const sqlServer = require("./sqlServer");
-const common = require("./common");
 const fetch = require("node-fetch");
-var xml2js = require("xml2js");
-var parser = new xml2js.Parser();
+const { XMLParser } = require("fast-xml-parser");
+const options = {
+  ignoreAttributes: false, // Ignore the XML attributes
+  numberParseOptions: {
+    leadingZeros: false,
+  },
+  attributeNamePrefix: "", // Default is an underscore. Set to null to disable it
+  attributesGroupName: "$", // XML node attributes group name prefix
+};
+const parser = new XMLParser(options);
 
 module.exports = {
   getRadarImages: function (fromDate, toDate, callback) {
@@ -39,9 +46,7 @@ module.exports = {
         return response.text();
       })
       .then((responseText) => {
-        parser.parseString(responseText, function (err, result) {
-          callback(result);
-        });
+        callback(parser.parse(responseText));
       })
       .catch((error) => {
         console.error(error);
