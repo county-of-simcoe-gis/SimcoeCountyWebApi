@@ -14,7 +14,7 @@
     "doc-gen": "node swagger.js"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.0.1"
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.10",
