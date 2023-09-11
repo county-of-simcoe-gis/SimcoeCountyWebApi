@@ -31,8 +31,13 @@ module.exports = (baseRoute, middleWare, router) => {
     */
     try {
       if (!common.isHostAllowed(req, res)) return;
+      console.log("HEADERS" + JSON.stringify(req.headers), "remoteAddress" + req.connection.remoteAddress, "remotePort" + req.connection.remotePort, "localAddress" + req.connection.localAddress);
       // IP FROM PROXY
-      const ip = req.headers["proxy-ip"] === undefined ? "LOCAL_DEBUGGING" : req.headers["proxy-ip"];
+      let ip = req.headers["x-real-ip"];
+      if (ip === undefined) ip = req.headers["proxy-ip"];
+      if (ip === undefined) ip = req.headers["x-forwarded-for"];
+      if (ip === undefined) ip = req.connection.remoteAddress;
+      if (ip === "::1") ip = "LOCAL_DEBUGGING";
 
       // INSERT APP STAT
       appStats.insertAppStat(req.params.appName, req.params.actionType, req.params.description, ip);
