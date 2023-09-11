@@ -31,7 +31,6 @@ module.exports = (baseRoute, middleWare, router) => {
     */
     try {
       if (!common.isHostAllowed(req, res)) return;
-      console.log("HEADERS" + JSON.stringify(req.headers), "remoteAddress" + req.connection.remoteAddress, "remotePort" + req.connection.remotePort, "localAddress" + req.connection.localAddress);
       // IP FROM PROXY
       let ip = req.headers["x-real-ip"];
       if (ip === undefined) ip = req.headers["proxy-ip"];
