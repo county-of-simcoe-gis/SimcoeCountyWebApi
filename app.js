@@ -4,7 +4,7 @@ var config = require("./config");
 const pathToSwaggerUi = require("swagger-ui-dist").absolutePath();
 const fs = require("fs");
 const packageJson = require("./package.json");
-var corsMiddleware = require("restify-cors-middleware");
+var corsMiddleware = require("restify-cors-middleware2");
 const documentationOutputFile = require("path").join(__dirname, "./api-doc.json");
 
 // CORS FOR RESTIFY
