@@ -1133,7 +1133,21 @@
             "description": "Details of the logged action"
           },
           {
+            "name": "x-real-ip",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "proxy-ip",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-forwarded-for",
             "in": "header",
             "schema": {
               "type": "string"

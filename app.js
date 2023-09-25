@@ -6,6 +6,7 @@ const fs = require("fs");
 const packageJson = require("./package.json");
 var corsMiddleware = require("restify-cors-middleware2");
 const documentationOutputFile = require("path").join(__dirname, "./api-doc.json");
+const _workaround = require("./_workaround");
 
 // CORS FOR RESTIFY
 var cors = corsMiddleware({
@@ -29,8 +30,18 @@ server.use(cors.actual);
 // Ensure we don't drop data on uploads
 server.pre(restify.pre.pause());
 
+//TEMPORARY WORKAROUND FOR BUG IN RESTIFY
+server.pre((req, res, next) => {
+  try {
+    if (!_workaround.strip(req.url)) req.url = "/";
+    restify.pre.sanitizePath()(req, res, next);
+  } catch (e) {
+    console.error(e);
+  }
+});
+//REMOVED BECAUSE OF BUG IN RESTIFY
 // Clean up sloppy paths like //todo//////1//
-server.pre(restify.pre.sanitizePath());
+// server.pre(restify.pre.sanitizePath());
 
 // Handles annoying user agents (curl)
 server.pre(restify.pre.userAgentConnection());
@@ -42,15 +53,16 @@ server.use(restify.plugins.requestLogger());
 server.use(function (req, res, next) {
   var err = null;
   try {
-    decodeURIComponent(req.path);
+    if (!req.path) throw new Error("Invalid URL");
+    else decodeURIComponent(req.path);
   } catch (e) {
     err = e;
   }
   if (err) {
-    logger.warn(`Invalid URL Request- ${req.url}`);
+    console.warn(`Invalid URL Request- ${req.url}`);
     res.status(404);
     res.send();
-    return next();
+    next();
   }
   next();
 });
@@ -77,7 +89,7 @@ require("./routes/routeBuilder")(server, packageJson.defaultRoute);
 server.get(packageJson.defaultRoute + `/docs.json`, (req, res, next) => {
   const documentation = require(documentationOutputFile);
   res.json(documentation);
-  next();
+  return next();
 });
 
 const swaggerIndexContent = fs
@@ -104,9 +116,16 @@ server.get(
 );
 
 server.get("*", function (req, res, next) {
-  console.warn(`Invalid URL Request- ${req.url}`);
-  res.send(404);
-  next();
+  try {
+    console.warn(`Invalid URL Request- ${req.url}`);
+    res.send(404);
+    next();
+  } catch (e) {
+    console.error(e.stack);
+    res.status(500);
+    res.send();
+    next();
+  }
 });
 
 server.listen(serverPort, function () {
