@@ -11,7 +11,7 @@ const _workaround = require("./_workaround");
 // CORS FOR RESTIFY
 var cors = corsMiddleware({
   preflightMaxAge: 5,
-  origins: ["http://localhost:3000", "https://opengis.simcoe.ca", "https://opengis2.simcoe.ca"],
+  origins: ["http://localhost:3000", "https://opengis.simcoe.ca", "https://opengis2.simcoe.ca", "https://forestryapps.simcoe.ca"],
   allowHeaders: ["Authorization, Origin, X-Requested-With, Content-Type, Accept,AccessToken"],
   exposeHeaders: [],
 });
@@ -59,7 +59,7 @@ server.use(function (req, res, next) {
     err = e;
   }
   if (err) {
-    console.warn(`Invalid URL Request- ${req.url}`);
+    console.warn(`Invalid URL Request- ${req.url.replace(/\n|\r/g, "")}`);
     res.status(404);
     res.send();
     next();
@@ -81,7 +81,7 @@ server.use(restify.plugins.authorizationParser()); // Looks for authorization he
 
 // LOG ALL INCOMING REQUESTS
 server.use(function (req, res, next) {
-  console.log(new Date().toLocaleString("en-US", { timeZone: "EST" }), req.method, req.url);
+  console.log(new Date().toLocaleString("en-US", { timeZone: "EST" }), req.method, req.url.replace(/\n|\r/g, ""));
   next();
 });
 
@@ -117,7 +117,7 @@ server.get(
 
 server.get("*", function (req, res, next) {
   try {
-    console.warn(`Invalid URL Request- ${req.url}`);
+    console.warn(`Invalid URL Request- ${req.url.replace(/\n|\r/g, "")}`);
     res.send(404);
     next();
   } catch (e) {
