@@ -103,7 +103,7 @@ module.exports = {
 
     if (type === "All" || type === "undefined") type = undefined;
 
-    let sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type = 'Address'`;
+    let sql = `select distinct name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type = 'Address'`;
     if (muni !== undefined && muni !== "undefined") {
       sql += " and lower(municipality) = lower($2)";
       values.push(muni);
@@ -129,10 +129,10 @@ module.exports = {
     const values = [value, limit];
     let sql = "";
     if (muni === undefined && type === undefined)
-      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' order by priority limit $2;`;
+      sql = `select distinct name,type,municipality,location_id,priority from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' order by priority limit $2;`;
     if (muni !== undefined && type === undefined) {
       values.push(muni);
-      sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' and lower(municipality) = lower($3) limit $2;`;
+      sql = `select distinct name,type,municipality,location_id,priority from public.tbl_search  where name ilike $1 || '%' and type <> 'Address' and lower(municipality) = lower($3) order by priority limit $2;`;
     } else if (muni !== undefined && type !== undefined) {
       values.push(muni);
       values.push(type);
@@ -141,7 +141,6 @@ module.exports = {
       values.push(type);
       sql = `select name,type,municipality,location_id from public.tbl_search  where name ilike '%' || $1 || '%' and type = $3 and type <> 'Address' limit $2;`;
     }
-
     const pg = new postgres({ dbName: "tabular" });
     const pgResult = await pg.selectAllWithValuesWait(sql, values);
     return pgResult;
