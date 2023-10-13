@@ -28,6 +28,16 @@ module.exports = {
       } catch (e) {
         console.dir(e);
       }
+      let newCollectionDay = "";
+      const newCollectionDaySql = `select newzone from public.ssview_sc_solidwastecollectiondays_dec2023_byarn where arn = $1 limit 1`;
+      var newCollectionDayValues = [arn];
+      try {
+        const newCollectionDayResults = await pg.selectAllWithValuesWait(newCollectionDaySql, newCollectionDayValues);
+        if (newCollectionDayResults[0]) newCollectionDay = newCollectionDayResults[0].newzone;
+        else newCollectionDay = "";
+      } catch (e) {
+        console.dir(e);
+      }
 
       const barrieMsg = "Please contact City of Barrie.";
       const orilliaMsg = "Please contact City of Orillia.";
@@ -91,6 +101,7 @@ module.exports = {
                     }
                   : {
                       GarbageDay: result.REGULAR_COLLECTION_DAY,
+                      GarbageDayNew: newCollectionDay || result.REGULAR_COLLECTION_DAY,
                       LandfillLocation_General: `${result.LANDFILL_CLOSEST_NAME} (${result.LANDFILL_CLOSEST_KM}) KM)`,
                       LandfillLocation_GeneralPin: result.LANDFILL_CLOSEST_PIN,
                       LandfillLocation_Hazardous: `${result.LANDFILL_HAZARD_NAME} (${result.LANDFILL_HAZARD_KM} KM)`,
