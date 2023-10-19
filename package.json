@@ -11,9 +11,11 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon --exec node app.js",
-    "doc-gen": "node swagger.js"
+    "doc-gen": "node swagger.js",
+    "test": "mocha"
   },
   "devDependencies": {
+    "mocha": "^10.2.0",
     "nodemon": "^3.0.1"
   },
   "dependencies": {
