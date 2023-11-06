@@ -7,8 +7,8 @@ exports.app = {
   emailSMTPServer: process.env.APP_SMTP_SERVER,
   fromEmail: process.env.APP_EMAIL_FROM,
   toEmail: process.env.APP_EMAIL_TO,
-  mapUrl: process.env.MAP_URL,
-  feedbackUrl: process.env.FEEDBACK_URL,
+  mapUrl: process.env.MAP_URL || "https://opengis.simcoe.ca/?",
+  feedbackUrl: process.env.FEEDBACK_URL || "https://opengis.simcoe.ca/feedback/?",
   allowedOrigins: process.env.APP_ALLOWED_ORIGIN ? [...process.env.APP_ALLOWED_ORIGIN.split(",")] : ["localhost"],
   captcha: process.env.CAPTCH_SECRET,
 };
