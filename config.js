@@ -36,13 +36,7 @@ exports.sqlServer = {
     password: process.env.SQL_TABULAR_PASS,
     port: process.env.SQL_PORT,
   },
-  connectionOasys: {
-    user: process.env.SQL_OASYS_USER,
-    host: process.env.SQL_HOST,
-    database: process.env.SQL_OASYS_DB,
-    password: process.env.SQL_OASYS_PASS,
-    port: process.env.SQL_PORT,
-  },
+
   connectionWebLive: {
     user: process.env.SQL_WEBLIVE_USER,
     host: process.env.SQL_HOST,

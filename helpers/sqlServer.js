@@ -6,7 +6,6 @@ module.exports = class SqlServer {
     let conInfo = null;
     if (opt.dbName === "tabular") conInfo = config.connectionTabular;
     else if (opt.dbName === "weblive") conInfo = config.connectionWebLive;
-    else if (opt.dbName === "oasys") conInfo = config.connectionOasys;
 
     // const sqlConStringTemplate = (userName, password, server, db) => `mssql://${userName}:${password}@${server}/${db}`;
     // this.sqlConString = sqlConStringTemplate(conInfo.user, conInfo.password, conInfo.host, conInfo.database);
