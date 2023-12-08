@@ -1,11 +1,4 @@
-// const ssrs = require("./ssrs");
 const PowerBI = require("./powerbi");
-
-const sqlServer = require("./sqlServer");
-const postgres = require("./postgres");
-
-const ss = new sqlServer({ dbName: "tabular" });
-// const reports = new ssrs();
 const reports = new PowerBI();
 
 module.exports = {
