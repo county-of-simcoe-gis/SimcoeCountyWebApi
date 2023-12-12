@@ -11,7 +11,7 @@ const _workaround = require("./_workaround");
 // CORS FOR RESTIFY
 var cors = corsMiddleware({
   preflightMaxAge: 5,
-  origins: ["http://localhost:3000", "https://opengis.simcoe.ca", "https://opengis2.simcoe.ca", "https://forestryapps.simcoe.ca"],
+  origins: ["http://localhost:3000", "https://opengis.simcoe.ca", "https://opengis2.simcoe.ca", "https://forestryapps.simcoe.ca", "https://cam.simcoe.ca"],
   allowHeaders: ["Authorization, Origin, X-Requested-With, Content-Type, Accept,AccessToken"],
   exposeHeaders: [],
 });

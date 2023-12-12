@@ -44,7 +44,15 @@ module.exports = (baseRoute, middleWare, router) => {
           return next();
         } else {
           res.set("Content-Type", "image/jpeg");
-          got.stream(resultUrl).pipe(res);
+          got
+            .stream(resultUrl)
+            .on("error", function (e) {
+              console.error(e.stack);
+              res.status(500);
+              res.send();
+              return next();
+            })
+            .pipe(res);
         }
       });
     } catch (e) {
