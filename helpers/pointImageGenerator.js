@@ -13,7 +13,7 @@ module.exports = {
     const bBoxTemplate = (minX, maxX, minY, maxY) => `${minX},${minY},${maxX},${maxY}`;
 
     // SERVICE URLS
-    const serviceUrlPoint = "https://maps.simcoe.ca/arcgis/rest/services/TestServices/MLS_Image_Report/MapServer/";
+    const serviceUrlPoint = "https://maps2.simcoe.ca/arcgis/rest/services/SimcoeCounty/MLSImage_Report/MapServer/";
     const serviceUrlOverview = "https://maps.simcoe.ca/arcgis/rest/services/SimcoeCounty/ParcelImageOverview_Report_MLS/MapServer/";
 
     // LAYER ID OF POINT
