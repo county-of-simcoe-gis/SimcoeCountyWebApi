@@ -1,14 +1,14 @@
 const got = require("got");
-const sqlServer = require("./sqlServer");
-const ss = new sqlServer({ dbName: "weblive" });
+const postgres = require("./postgres");
+const pg = new postgres({ dbName: "weblive" });
 
 module.exports = {
   getImage(mls, overview, width, height, callback) {
     // POINT TEMPLATE
-    const pointURLTemplate = (serviceUrl, bBox, pointLayerId, mls, width, height) =>
-      `${serviceUrl}export?bbox=${bBox}&bboxSR=3857&layers=&layerDefs=%7B${pointLayerId}%3A"MLSNO+%3D+%27${mls}%27"%7D&size=${width},${height}&format=jpg&transparent=true&dpi=96&f=image`;
-    const pointOverviewURLTemplate = (serviceUrl, bBox, pointLayerId, mls, width, height) =>
-      `${serviceUrl}export?bbox=${bBox}&bboxSR=3857&layers=&layerDefs=%7B${pointLayerId}%3A"MLSNO+%3D+%27${mls}%27"%7D&size=${width},${height}&format=jpg&transparent=true&dpi=96&f=image`;
+    const pointURLTemplate = (serviceUrl, bBox, pointLayerId, backupPointLayerId, mls, width, height) =>
+      `${serviceUrl}export?bbox=${bBox}&bboxSR=3857&layers=&layerDefs=%7B${pointLayerId}%3A"MLSNO+%3D+%27${mls}%27",${backupPointLayerId}%3A"MLSNO+%3D+%27${mls}%27"%7D&size=${width},${height}&format=jpg&transparent=true&dpi=96&f=image`;
+    const pointOverviewURLTemplate = (serviceUrl, bBox, pointLayerId, backupPointLayerId, mls, width, height) =>
+      `${serviceUrl}export?bbox=${bBox}&bboxSR=3857&layers=&layerDefs=%7B${pointLayerId}%3A"MLSNO+%3D+%27${mls}%27",${backupPointLayerId}%3A"MLSNO+%3D+%27${mls}%27"%7D&size=${width},${height}&format=jpg&transparent=true&dpi=96&f=image`;
     // BBOX TEMPLATE
     const bBoxTemplate = (minX, maxX, minY, maxY) => `${minX},${minY},${maxX},${maxY}`;
 
@@ -18,6 +18,7 @@ module.exports = {
 
     // LAYER ID OF POINT
     const pointLayerId = 0;
+    const backupPointLayerId = 1;
 
     let serviceUrl = serviceUrlPoint;
     let bBox = "";
@@ -26,26 +27,28 @@ module.exports = {
       bBox = bBoxTemplate(-8942711.7848, -8805736.6301, 5465832.4289, 5599902.9765);
 
       // CALLBACK URL
-      var callbackUrl = pointOverviewURLTemplate(serviceUrl, bBox, pointLayerId, mls, width, height);
+      var callbackUrl = pointOverviewURLTemplate(serviceUrl, bBox, pointLayerId, backupPointLayerId, mls, width, height);
       callback(callbackUrl);
     } else {
-      // GET ARN FROM SQL
-      let values = [{ name: "mlsno", type: "NVarChar", typeOpts: { length: 250 }, value: mls }];
-      const sql = `SELECT Shape.STBuffer(50).STEnvelope().ToString() as WKT from WEBLIVE.GIS.SC_MLS_POINTS_V2 WHERE MLSNO = @mlsno`;
-      ss.selectFirstWithValues(sql, values, (result) => {
+      // GET WKT FROM SQL
+      var values = [mls];
+      const sql = ` select wkt from public.usp_get_ec_dev_point_envelope($1)`;
+      pg.selectFirstWithValues(sql, values, (result) => {
         console.log(result);
         if (!result || result.error) {
           console.error("No result");
           callback("");
         } else {
-          if (!result.WKT) {
+          if (!result.wkt) {
             console.error("WKT not found");
             callback();
           } else {
-            var wkt = result.WKT;
+            var wkt = result.wkt;
+            wkt = wkt.replace("POLYGON((", "");
             wkt = wkt.replace("POLYGON ((", "");
             wkt = wkt.replace("))", "");
-            wkt = wkt.replaceAll(",", "");
+            wkt = wkt.replaceAll(", ", "");
+            wkt = wkt.replaceAll(",", " ");
             wktParts = wkt.split(" ");
             // BUILD EXTENT
             minX = wktParts[0];
@@ -55,7 +58,7 @@ module.exports = {
             bBox = bBoxTemplate(minX, maxX, minY, maxY);
 
             // CALLBACK URL
-            var callbackUrl = pointURLTemplate(serviceUrl, bBox, pointLayerId, mls, width, height);
+            var callbackUrl = pointURLTemplate(serviceUrl, bBox, pointLayerId, backupPointLayerId, mls, width, height);
             callback(callbackUrl);
           }
         }
