@@ -346,7 +346,6 @@
         ],
         "summary": "Retrieve Default Map config",
         "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -622,7 +621,6 @@
         ],
         "summary": "Get Waze Traffic Jam Layer",
         "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -641,7 +639,35 @@
         ],
         "summary": "Get Waze Irregular Layer",
         "description": "",
-        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/theme/realestate/{listingId}": {
+      "get": {
+        "tags": [
+          "Public/Map/Theme/realestate"
+        ],
+        "summary": "Get Images by Listing ID",
+        "description": "",
+        "parameters": [
+          {
+            "name": "listingId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "numeric listing id"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -756,7 +782,6 @@
         ],
         "summary": "Retrieve embed token",
         "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
@@ -1085,7 +1110,6 @@
         ],
         "summary": "Get list of search types",
         "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
