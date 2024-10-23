@@ -28,14 +28,13 @@
     "geojson": "^0.5.0",
     "got": "^11.8.6",
     "moment": "^2.29.4",
-    "mssql": "^9.1.1",
-    "mssql-ssrs": "^2.1.0",
-    "node-fetch": "^2.6.9",
+    "mssql": "^11.0.1",
+    "node-fetch": "^2.7.0",
     "nodemailer": "^6.9.1",
     "pg": "^8.10.0",
     "restify": "^11.1.0",
     "restify-cors-middleware2": "^2.2.1",
     "swagger-autogen": "^2.23.1",
-    "swagger-ui-dist": "^4.18.2"
+    "swagger-ui-dist": "^5.17.14"
   }
 }
