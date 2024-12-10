@@ -24,4 +24,24 @@ module.exports = {
       callback(result);
     });
   },
+
+  getEpsgWkt: function (epsgCode, callback) {
+    const sql = `SELECT srtext as wkt FROM spatial_ref_sys WHERE srid = $1`;
+    var values = [epsgCode];
+
+    const pg = new postgres({ dbName: "weblive" });
+    pg.selectFirstWithValues(sql, values, (result) => {
+      callback(result);
+    });
+  },
+
+  getEpsgProj4: function (epsgCode, callback) {
+    const sql = `SELECT proj4text as proj4 FROM spatial_ref_sys WHERE srid = $1`;
+    var values = [epsgCode];
+
+    const pg = new postgres({ dbName: "weblive" });
+    pg.selectFirstWithValues(sql, values, (result) => {
+      callback(result);
+    });
+  },
 };
