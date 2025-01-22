@@ -106,6 +106,7 @@ module.exports = {
                 CatholicBoardWebsiteURL: "http://smcdsb.on.ca",
                 PublicElementry: result.SCHOOL_PUBLIC_ELEMENTARY,
                 PublicSecondary: result.SCHOOL_PUBLIC_SECONDARY,
+                PublicLookup: "https://www4.scdsb.on.ca/app/HomeSchoolLocator/public/SchoolLookup",
                 PublicBoardWebsiteURL: "http://scdsb.on.ca",
               },
               Other: {
