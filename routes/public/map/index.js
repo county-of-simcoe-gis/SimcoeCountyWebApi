@@ -32,6 +32,43 @@ module.exports = (baseRoute, middleWare, router) => {
       return next();
     }
   });
+  router.get(baseRoute + "/:id/:version", middleWare, (req, res, next) => {
+    /* 
+      #swagger.tags = ['Public/Map']
+      #swagger.path = '/public/map/{id}/{version}'
+      #swagger.deprecated = false
+      #swagger.ignore = false
+      #swagger.summary = 'Retrieve Map config version'
+       #swagger.parameters['id'] = {
+          in: 'path',
+          description: 'Map ID',
+          required: true,
+          type: 'string'
+      } 
+          #swagger.parameters['version'] = {
+          in: 'path',
+          description: 'Version',
+          required: true,
+          type: 'string'
+      } 
+    */
+    try {
+      if (!common.isHostAllowed(req, res)) return;
+      mapSettings.getMapVersion(req.params.id, req.params.version, (result) => {
+        if (result === undefined) {
+          res.json({ error: "ID Not Found" });
+        } else {
+          res.json(result);
+        }
+        return next();
+      });
+    } catch (e) {
+      console.error(e.stack);
+      res.status(500);
+      res.send();
+      return next();
+    }
+  });
   router.get(baseRoute + "/default", middleWare, (req, res, next) => {
     /* 
       #swagger.tags = ['Public/Map']
