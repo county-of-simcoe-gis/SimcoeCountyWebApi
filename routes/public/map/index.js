@@ -7,13 +7,25 @@ module.exports = (baseRoute, middleWare, router) => {
       #swagger.path = '/public/map/{id}'
       #swagger.deprecated = false
       #swagger.ignore = false
-      #swagger.summary = 'Retrieve Map config'
-       #swagger.parameters['id'] = {
+      #swagger.summary = 'Retrieve the latest configuration for a specific map'
+      #swagger.description = 'Fetches the most recent configuration settings for a map identified by its unique ID. Returns the map configuration in JSON format.'
+      #swagger.parameters['id'] = {
           in: 'path',
-          description: 'Map ID',
+          description: 'Unique identifier of the map',
           required: true,
           type: 'string'
       } 
+      #swagger.responses[200] = {
+          description: 'Successful operation. Returns the map configuration.',
+          schema: { $ref: '#/definitions/MapConfig' }
+      }
+      #swagger.responses[404] = {
+          description: 'Map not found',
+          schema: { error: 'ID Not Found' }
+      }
+      #swagger.responses[500] = {
+          description: 'Internal server error'
+      }
     */
     try {
       if (!common.isHostAllowed(req, res)) return;
@@ -38,19 +50,31 @@ module.exports = (baseRoute, middleWare, router) => {
       #swagger.path = '/public/map/{id}/{version}'
       #swagger.deprecated = false
       #swagger.ignore = false
-      #swagger.summary = 'Retrieve Map config version'
-       #swagger.parameters['id'] = {
+      #swagger.summary = 'Retrieve a specific version of a map configuration'
+      #swagger.description = 'Fetches a particular version of configuration settings for a map identified by its unique ID and version number. Useful for accessing historical configurations.'
+      #swagger.parameters['id'] = {
           in: 'path',
-          description: 'Map ID',
+          description: 'Unique identifier of the map',
           required: true,
           type: 'string'
       } 
-          #swagger.parameters['version'] = {
+      #swagger.parameters['version'] = {
           in: 'path',
-          description: 'Version',
+          description: 'Version number of the map configuration',
           required: true,
           type: 'string'
       } 
+      #swagger.responses[200] = {
+          description: 'Successful operation. Returns the specified version of map configuration.',
+          schema: { $ref: '#/definitions/MapConfig' }
+      }
+      #swagger.responses[404] = {
+          description: 'Map or version not found',
+          schema: { error: 'ID Not Found' }
+      }
+      #swagger.responses[500] = {
+          description: 'Internal server error'
+      }
     */
     try {
       if (!common.isHostAllowed(req, res)) return;
@@ -75,8 +99,19 @@ module.exports = (baseRoute, middleWare, router) => {
       #swagger.path = '/public/map/default'
       #swagger.deprecated = false
       #swagger.ignore = false
-      #swagger.summary = 'Retrieve Default Map config'
-      
+      #swagger.summary = 'Retrieve the default map configuration'
+      #swagger.description = 'Fetches the system-wide default map configuration. This configuration serves as a template or fallback when specific map configurations are not available.'
+      #swagger.responses[200] = {
+          description: 'Successful operation. Returns the default map configuration.',
+          schema: { $ref: '#/definitions/MapConfig' }
+      }
+      #swagger.responses[404] = {
+          description: 'Default configuration not found',
+          schema: { error: 'ID Not Found' }
+      }
+      #swagger.responses[500] = {
+          description: 'Internal server error'
+      }
     */
     try {
       if (!common.isHostAllowed(req, res)) return;
