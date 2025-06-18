@@ -1,6 +1,66 @@
 const mapSettings = require("../../../helpers/mapSettings");
 const common = require("../../../helpers/common");
 module.exports = (baseRoute, middleWare, router) => {
+  router.get(baseRoute + "/all", middleWare, (req, res, next) => {
+    /* 
+      #swagger.tags = ['Public/Map']
+      #swagger.path = '/public/map/all'
+      #swagger.deprecated = false
+      #swagger.ignore = false
+      #swagger.summary = 'Retrieve all available map configurations'
+      #swagger.description = 'Fetches a list of all available map configurations with their basic information including name, description, security settings, and default status.'
+      #swagger.responses[200] = {
+          description: 'Successful operation. Returns an array of map configurations.',
+          schema: { 
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                map_name: { type: 'string', description: 'Name of the map' },
+                description: { type: 'string', description: 'Description of the map' },
+                allowed_roles: { type: 'string', description: 'Roles allowed to access this map' },
+                is_secured: { type: 'boolean', description: 'Whether the map requires authentication' },
+                is_default: { type: 'boolean', description: 'Whether this is the default map' }
+              }
+            }
+          }
+      }
+      #swagger.responses[500] = {
+          description: 'Internal server error',
+          schema: { error: 'Internal server error' }
+      }
+    */
+    try {
+      if (!common.isHostAllowed(req, res)) return;
+
+      mapSettings.getAllMaps((result) => {
+        // Handle database errors
+        if (result && result.error) {
+          console.error("Database error in getAllMaps endpoint:", result.error);
+          res.status(500);
+          res.json({ error: "Internal server error" });
+          return next();
+        }
+
+        // Handle empty results (return empty array instead of undefined)
+        if (!result) {
+          console.warn("getAllMaps returned no data");
+          res.json([]);
+          return next();
+        }
+
+        // Return successful result
+        res.json(result);
+        return next();
+      });
+    } catch (e) {
+      console.error("Exception in getAllMaps endpoint:", e.stack);
+      res.status(500);
+      res.json({ error: "Internal server error" });
+      return next();
+    }
+  });
+
   router.get(baseRoute + "/:id", middleWare, (req, res, next) => {
     /* 
       #swagger.tags = ['Public/Map']
