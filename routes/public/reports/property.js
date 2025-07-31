@@ -69,4 +69,28 @@ module.exports = (baseRoute, middleWare, router) => {
       return next();
     }
   });
+  router.get(baseRoute + "/CondoChildren/:arn", middleWare, (req, res, next) => {
+    /* 
+      #swagger.tags = ['Public/Reports']
+      #swagger.path = '/public/reports/property/CondoChildren/{arn}'
+      #swagger.deprecated = false
+      #swagger.ignore = false
+      #swagger.summary = 'Get Condo Children'
+      #swagger.parameters['arn'] = {
+          in: 'path',
+          description: 'ARN',
+          required: true
+        } 
+    */
+    try {
+      propertyReport.getCondoChildren(req.params.arn, "COUNTY OF SIMCOE", (result) => {
+        res.json(result);
+        return next();
+      });
+    } catch (e) {
+      console.error(e.stack);
+      res.send(500);
+      return next();
+    }
+  });
 };
