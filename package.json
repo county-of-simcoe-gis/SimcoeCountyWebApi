@@ -21,7 +21,7 @@
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.10",
     "@mapbox/polyline": "^1.2.0",
-    "canvas": "^2.11.0",
+    "canvas": "^3.1.2",
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
     "fast-xml-parser": "^4.4.1",
