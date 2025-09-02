@@ -39,9 +39,55 @@ module.exports = {
       arrayNotation: false,
       alternateTextNode: false,
     };
+    const baseUrl = `https://dd.weather.gc.ca/citypage_weather/ON/`;
+    this.getCurrentHour(baseUrl, (highestLink) => {
+      this.getWeatherLink(highestLink, city, (weatherLink) => {
+        if (weatherLink) {
+          this.getWeather(weatherLink, callback);
+        } else {
+          console.error("Weather link not found for city:", city);
+          callback(null);
+        }
+      });
+    });
+  },
+  getWeatherLink(highestLink, city, callback) {
+    fetch(highestLink)
+      .then((response) => {
+        return response.text();
+      })
+      .then((responseText) => {
+        // Extract XML files that contain the city code
+        const linkRegex = /<a href="([^"]*MSC_CitypageWeather_s\d+_en\.xml)">[^<]*<\/a>/g;
+        const matches = [...responseText.matchAll(linkRegex)];
 
-    const url = (city) => `https://dd.weather.gc.ca/citypage_weather/xml/ON/${city}_e.xml`;
-    return fetch(url(city))
+        if (matches.length === 0) {
+          callback(null);
+          return;
+        }
+
+        // Find the file that contains the specific city code
+        // Handle both formats: "s0000451" or just "0000451"
+        const cityCode = city.startsWith("s") ? city : `s${city.padStart(7, "0")}`;
+        const cityFile = matches.find((match) => match[1].includes(cityCode));
+
+        if (cityFile) {
+          // Construct the full URL by combining the base URL with the filename
+          const baseUrl = highestLink.endsWith("/") ? highestLink : highestLink + "/";
+          const fullUrl = baseUrl + cityFile[1];
+          callback(fullUrl);
+        } else {
+          callback(null);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        callback(null);
+      });
+  },
+
+  getWeather(url, callback) {
+    fetch(url)
       .then((response) => {
         return response.text();
       })
@@ -50,6 +96,40 @@ module.exports = {
       })
       .catch((error) => {
         console.error(error);
+        callback(null);
       });
+  },
+
+  getCurrentHour(url, callback) {
+    fetch(url)
+      .then((response) => {
+        return response.text();
+      })
+      .then((responseText) => {
+        const highestLink = this.getHighestNumberedLink(responseText);
+        // Construct full URL to the highest numbered directory
+        const fullDirectoryUrl = url.endsWith("/") ? url + highestLink : url + "/" + highestLink;
+        callback(fullDirectoryUrl);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  },
+
+  getHighestNumberedLink(html) {
+    // Extract all numbered directory links from the HTML
+    // Simple regex to match: <a href="15/">15/</a>
+    const linkRegex = /<a href="(\d+)\/">\d+\/</g;
+    const matches = [...html.matchAll(linkRegex)];
+
+    if (matches.length === 0) {
+      console.log("No numbered directory links found");
+      return null;
+    }
+
+    // Extract the numbers and find the highest one
+    const numbers = matches.map((match) => parseInt(match[1], 10));
+    const highestNumber = Math.max(...numbers);
+    return `${highestNumber.toString().padStart(2, "0")}/`;
   },
 };
