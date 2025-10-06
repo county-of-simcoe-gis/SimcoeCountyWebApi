@@ -310,13 +310,249 @@
         "deprecated": false
       }
     },
+    "/public/map/all": {
+      "get": {
+        "tags": [
+          "Public/Map"
+        ],
+        "summary": "Retrieve all available map configurations",
+        "description": "Fetches a list of all available map configurations with their basic information including name, description, security settings, and default status.",
+        "responses": {
+          "200": {
+            "description": "Successful operation. Returns an array of map configurations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "array"
+                    },
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "object"
+                        },
+                        "properties": {
+                          "type": "object",
+                          "properties": {
+                            "map_name": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "string"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Name of the map"
+                                }
+                              }
+                            },
+                            "description": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "string"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Description of the map"
+                                }
+                              }
+                            },
+                            "allowed_roles": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "string"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Roles allowed to access this map"
+                                }
+                              }
+                            },
+                            "is_secured": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "boolean"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Whether the map requires authentication"
+                                }
+                              }
+                            },
+                            "is_default": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "boolean"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Whether this is the default map"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "array"
+                    },
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "example": "object"
+                        },
+                        "properties": {
+                          "type": "object",
+                          "properties": {
+                            "map_name": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "string"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Name of the map"
+                                }
+                              }
+                            },
+                            "description": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "string"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Description of the map"
+                                }
+                              }
+                            },
+                            "allowed_roles": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "string"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Roles allowed to access this map"
+                                }
+                              }
+                            },
+                            "is_secured": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "boolean"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Whether the map requires authentication"
+                                }
+                              }
+                            },
+                            "is_default": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "example": "boolean"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "example": "Whether this is the default map"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/public/map/{id}": {
       "get": {
         "tags": [
           "Public/Map"
         ],
-        "summary": "Retrieve Map config",
-        "description": "",
+        "summary": "Retrieve the latest configuration for a specific map",
+        "description": "Fetches the most recent configuration settings for a map identified by its unique ID. Returns the map configuration in JSON format.",
         "parameters": [
           {
             "name": "id",
@@ -325,15 +561,143 @@
             "schema": {
               "type": "string"
             },
-            "description": "Map ID"
+            "description": "Unique identifier of the map"
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful operation. Returns the map configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapConfig"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapConfig"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Map not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "ID Not Found"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "ID Not Found"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/public/map/{id}/{version}": {
+      "get": {
+        "tags": [
+          "Public/Map"
+        ],
+        "summary": "Retrieve a specific version of a map configuration",
+        "description": "Fetches a particular version of configuration settings for a map identified by its unique ID and version number. Useful for accessing historical configurations.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Unique identifier of the map"
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Version number of the map configuration"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. Returns the specified version of map configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapConfig"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapConfig"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Map or version not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "ID Not Found"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "ID Not Found"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
           }
         },
         "deprecated": false
@@ -344,14 +708,59 @@
         "tags": [
           "Public/Map"
         ],
-        "summary": "Retrieve Default Map config",
-        "description": "",
+        "summary": "Retrieve the default map configuration",
+        "description": "Fetches the system-wide default map configuration. This configuration serves as a template or fallback when specific map configurations are not available.",
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Successful operation. Returns the default map configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapConfig"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MapConfig"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Default configuration not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "ID Not Found"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "ID Not Found"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
           },
           "500": {
-            "description": "Internal Server Error"
+            "description": "Internal server error"
           }
         },
         "deprecated": false
