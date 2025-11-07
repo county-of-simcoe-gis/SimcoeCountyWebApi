@@ -39,7 +39,8 @@ module.exports = {
       arrayNotation: false,
       alternateTextNode: false,
     };
-    const baseUrl = `https://dd.weather.gc.ca/citypage_weather/ON/`;
+    // Use the new /today/ path structure for current weather data
+    const baseUrl = `https://dd.weather.gc.ca/today/citypage_weather/ON/`;
     this.getCurrentHour(baseUrl, (highestLink) => {
       this.getWeatherLink(highestLink, city, (weatherLink) => {
         if (weatherLink) {
