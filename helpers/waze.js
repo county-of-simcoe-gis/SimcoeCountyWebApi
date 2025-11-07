@@ -1,7 +1,7 @@
 // IMPORTS
 // var polyline = require("@mapbox/polyline");
 var GeoJSON = require("geojson");
-const fetch = require("node-fetch");
+const fetch = require("./fetchWrapper");
 var moment = require("moment");
 const config = require("../config").waze;
 

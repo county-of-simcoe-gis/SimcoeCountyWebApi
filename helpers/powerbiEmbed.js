@@ -1,5 +1,5 @@
 const config = require("../config").powerbi;
-const fetch = require("node-fetch");
+const fetch = require("./fetchWrapper");
 const fs = require("fs");
 var path = require("path");
 const sqlServer = require("./sqlServer");

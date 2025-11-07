@@ -1,5 +1,5 @@
 const sqlServer = require("./sqlServer");
-const fetch = require("node-fetch");
+const fetch = require("./fetchWrapper");
 const { XMLParser } = require("fast-xml-parser");
 const options = {
   ignoreAttributes: false, // Ignore the XML attributes
