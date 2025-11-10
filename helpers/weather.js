@@ -1,5 +1,5 @@
 const sqlServer = require("./sqlServer");
-const fetch = require("node-fetch");
+const fetch = require("./fetchWrapper");
 const { XMLParser } = require("fast-xml-parser");
 const options = {
   ignoreAttributes: false, // Ignore the XML attributes
@@ -39,7 +39,8 @@ module.exports = {
       arrayNotation: false,
       alternateTextNode: false,
     };
-    const baseUrl = `https://dd.weather.gc.ca/citypage_weather/ON/`;
+    // Use the new /today/ path structure for current weather data
+    const baseUrl = `https://dd.weather.gc.ca/today/citypage_weather/ON/`;
     this.getCurrentHour(baseUrl, (highestLink) => {
       this.getWeatherLink(highestLink, city, (weatherLink) => {
         if (weatherLink) {
@@ -58,7 +59,8 @@ module.exports = {
       })
       .then((responseText) => {
         // Extract XML files that contain the city code
-        const linkRegex = /<a href="([^"]*MSC_CitypageWeather_s\d+_en\.xml)">[^<]*<\/a>/g;
+        // Match any href containing .xml (handles URL-encoded characters)
+        const linkRegex = /<a href="([^"]+\.xml)"[^>]*>/gi;
         const matches = [...responseText.matchAll(linkRegex)];
 
         if (matches.length === 0) {
@@ -68,8 +70,16 @@ module.exports = {
 
         // Find the file that contains the specific city code
         // Handle both formats: "s0000451" or just "0000451"
+        // Also handle URL-encoded underscores where s0000451 might appear as s0000451 or %73%30%30%30%30%34%35%31
         const cityCode = city.startsWith("s") ? city : `s${city.padStart(7, "0")}`;
-        const cityFile = matches.find((match) => match[1].includes(cityCode));
+
+        // Check for both regular and URL-encoded versions
+        const cityFile = matches.find((match) => {
+          const href = match[1];
+          // Decode the URL to check for the city code
+          const decodedHref = decodeURIComponent(href);
+          return decodedHref.includes(cityCode) && decodedHref.includes("en.xml");
+        });
 
         if (cityFile) {
           // Construct the full URL by combining the base URL with the filename
@@ -106,30 +116,34 @@ module.exports = {
         return response.text();
       })
       .then((responseText) => {
-        const highestLink = this.getHighestNumberedLink(responseText);
-        // Construct full URL to the highest numbered directory
-        const fullDirectoryUrl = url.endsWith("/") ? url + highestLink : url + "/" + highestLink;
+        // Get current UTC hour
+        const now = new Date();
+        const currentUtcHour = now.getUTCHours();
+        const currentHourString = currentUtcHour.toString().padStart(2, "0");
+
+        // Check if the current hour directory exists
+        const linkRegex = /<a href="(\d+)\/">\d+\/</g;
+        const matches = [...responseText.matchAll(linkRegex)];
+        const availableHours = matches.map((match) => parseInt(match[1], 10));
+
+        let selectedHour;
+        if (availableHours.includes(currentUtcHour)) {
+          // Use current UTC hour if available
+          selectedHour = currentHourString;
+        } else {
+          // Fallback to the highest numbered directory (most recent)
+          console.log(`Current UTC hour ${currentHourString} not found, using latest available`);
+          selectedHour = Math.max(...availableHours)
+            .toString()
+            .padStart(2, "0");
+        }
+
+        // Construct full URL to the selected hour directory
+        const fullDirectoryUrl = url.endsWith("/") ? url + selectedHour + "/" : url + "/" + selectedHour + "/";
         callback(fullDirectoryUrl);
       })
       .catch((error) => {
         console.error(error);
       });
-  },
-
-  getHighestNumberedLink(html) {
-    // Extract all numbered directory links from the HTML
-    // Simple regex to match: <a href="15/">15/</a>
-    const linkRegex = /<a href="(\d+)\/">\d+\/</g;
-    const matches = [...html.matchAll(linkRegex)];
-
-    if (matches.length === 0) {
-      console.log("No numbered directory links found");
-      return null;
-    }
-
-    // Extract the numbers and find the highest one
-    const numbers = matches.map((match) => parseInt(match[1], 10));
-    const highestNumber = Math.max(...numbers);
-    return `${highestNumber.toString().padStart(2, "0")}/`;
   },
 };
