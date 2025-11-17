@@ -4,10 +4,20 @@ const { createCanvas } = require("canvas");
 const postgres = require("./postgres");
 
 module.exports = {
+  getCondoChildren(condoArn, locations, callback) {
+    let values = [
+      { name: "condoArn", type: "NVarChar", typeOpts: { length: 250 }, value: condoArn },
+      { name: "locations", type: "NVarChar", typeOpts: { length: 500 }, value: locations },
+    ];
+    ss.executeQueryWithValues("exec [uspOpenGISCondoChildren] @condoArn, @locations", values, (childrenResult) => {
+      callback(childrenResult);
+    });
+  },
+
   async getPropertyReportInfo(arn, callback) {
     if (arn) {
       let values = [{ name: "arn", type: "NVarChar", typeOpts: { length: 250 }, value: arn }];
-      const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_New WHERE UniqueMaps = 1 AND ARN = @arn`;
+      const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_DEV WHERE ARN = @arn`;
       let broadbandSpeed = "";
       const broadbandSql = `select potential_coverage,
                                     case potential_coverage 
