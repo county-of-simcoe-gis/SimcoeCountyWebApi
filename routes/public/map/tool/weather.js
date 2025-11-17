@@ -29,7 +29,7 @@ module.exports = (baseRoute, middleWare, router) => {
       const toDate = req.query.toDate;
       if (moment(fromDate).isValid() && moment(toDate).isValid()) {
         weather.getRadarImages(fromDate, toDate, (result) => {
-          if (result === undefined || result.error) res.send([]);
+          if (!result || result.error) res.send([]);
           else res.send(result);
           return next();
         });
@@ -63,7 +63,7 @@ module.exports = (baseRoute, middleWare, router) => {
       if (!common.isHostAllowed(req, res)) return;
       const city = req.params.city;
       weather.getCityWeather(city, (result) => {
-        if (result === undefined || result.error) res.send([]);
+        if (!result || result.error) res.send([]);
         else res.send(result);
         return next();
       });

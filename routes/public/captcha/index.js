@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+const fetch = require("../../../helpers/fetchWrapper");
 const config = require("../../../config.js");
 const common = require("../../../helpers/common");
 

@@ -1,6 +1,6 @@
 const e = require("cors");
 const common = require("../../../../helpers/common");
-const fetch = require("node-fetch");
+const fetch = require("../../../../helpers/fetchWrapper");
 
 module.exports = (baseRoute, middleWare, router) => {
   router.get(baseRoute + "/images/:listingId", middleWare, (req, res, next) => {

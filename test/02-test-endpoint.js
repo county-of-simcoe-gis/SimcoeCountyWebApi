@@ -3,7 +3,7 @@ var config = require("../config");
 const packageJson = require("../package.json");
 const { assert } = require("mocha");
 
-var fetch = require("node-fetch");
+var fetch = require("../helpers/fetchWrapper");
 var serverPort = process.env.PORT || config.app.port;
 const serverUrl = `http://localhost:${serverPort}/${packageJson.defaultRoute}`;
 describe("check for a 200 responses", () => {

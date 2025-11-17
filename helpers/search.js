@@ -1,6 +1,6 @@
 const postgres = require("./postgres");
 const common = require("./common");
-const fetch = require("node-fetch");
+const fetch = require("./fetchWrapper");
 const searchConfig = require("./searchConfig.json");
 
 const viewBox = searchConfig.OSMViewBox;
