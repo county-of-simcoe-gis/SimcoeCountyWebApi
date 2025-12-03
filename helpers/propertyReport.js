@@ -17,7 +17,7 @@ module.exports = {
   async getPropertyReportInfo(arn, callback) {
     if (arn) {
       let values = [{ name: "arn", type: "NVarChar", typeOpts: { length: 250 }, value: arn }];
-      const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_DEV WHERE ARN = @arn`;
+      const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_NEW WHERE ARN = @arn`;
       let broadbandSpeed = "";
       const broadbandSql = `select potential_coverage,
                                     case potential_coverage 

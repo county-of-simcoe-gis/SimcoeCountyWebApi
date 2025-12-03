@@ -1,6 +1,6 @@
 const common = require("../../../helpers/common");
 const pointImageGenerator = require("../../../helpers/pointImageGenerator");
-const got = require("got");
+const got = require("got").default;
 
 module.exports = (baseRoute, middleWare, router) => {
   router.get(baseRoute + "/image/:mls/:overview/:width/:height", middleWare, (req, res, next) => {

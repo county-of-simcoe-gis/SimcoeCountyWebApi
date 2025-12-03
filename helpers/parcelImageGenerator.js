@@ -1,4 +1,4 @@
-const got = require("got");
+const got = require("got").default;
 const sqlServer = require("./sqlServer");
 const ss = new sqlServer({ dbName: "weblive" });
 

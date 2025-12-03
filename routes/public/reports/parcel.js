@@ -1,6 +1,6 @@
 const common = require("../../../helpers/common");
 const parcelImageGenerator = require("../../../helpers/parcelImageGenerator");
-const got = require("got");
+const got = require("got").default;
 
 module.exports = (baseRoute, middleWare, router) => {
   router.get(baseRoute + "/image/:arn/:overview/:width/:height", middleWare, (req, res, next) => {

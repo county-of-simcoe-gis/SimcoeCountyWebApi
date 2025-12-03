@@ -1,4 +1,4 @@
-const got = require("got");
+const got = require("got").default;
 const postgres = require("./postgres");
 const pg = new postgres({ dbName: "weblive" });
 
