@@ -1,4 +1,3 @@
-const e = require("cors");
 const common = require("../../../../helpers/common");
 const fetch = require("../../../../helpers/fetchWrapper");
 

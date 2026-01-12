@@ -6,12 +6,86 @@ module.exports = (server, defaultRoute = "") => {
     let route = `${file.path.replace(require("path").join(__dirname), "")}${file.name !== "index.js" ? "/" + file.name.replace(".js", "") : ""}`;
     route = route.split("\\").join("/");
     console.log("Building Routes", require("path").join(file.path, file.name.replace(".js", "")), defaultRoute + route);
+
+    // Create a Fastify-compatible router wrapper
+    const routerWrapper = {
+      get: (path, middleware, handler) => {
+        server.get(path, async (request, reply) => {
+          await executeRoute(request, reply, middleware, handler);
+        });
+      },
+      post: (path, middleware, handler) => {
+        server.post(path, async (request, reply) => {
+          await executeRoute(request, reply, middleware, handler);
+        });
+      },
+      put: (path, middleware, handler) => {
+        server.put(path, async (request, reply) => {
+          await executeRoute(request, reply, middleware, handler);
+        });
+      },
+      delete: (path, middleware, handler) => {
+        server.delete(path, async (request, reply) => {
+          await executeRoute(request, reply, middleware, handler);
+        });
+      },
+    };
+
     let middleWare = (req, res, next) => {
       return next();
     };
-    require(require("path").join(file.path, file.name.replace(".js", "")))(defaultRoute + route, middleWare, server);
+    require(require("path").join(file.path, file.name.replace(".js", "")))(defaultRoute + route, middleWare, routerWrapper);
   });
 };
+
+// Helper function to execute routes with Restify-style middleware compatibility
+async function executeRoute(request, reply, middleware, handler) {
+  // Store original Fastify methods
+  const originalSend = reply.send.bind(reply);
+  const originalCode = reply.code.bind(reply);
+
+  // Create Restify-compatible request/response objects
+  const req = Object.assign(request, {
+    params: request.params,
+    query: request.query,
+    body: request.body,
+    headers: request.headers,
+  });
+
+  const res = {
+    send: (data) => {
+      if (!reply.sent) {
+        originalSend(data);
+      }
+    },
+    status: (code) => {
+      originalCode(code);
+      return res;
+    },
+    json: (data) => {
+      if (!reply.sent) {
+        originalSend(data);
+      }
+    },
+  };
+
+  // Execute middleware and handler
+  try {
+    await new Promise((resolve) => {
+      middleware(req, res, () => {
+        handler(req, res, () => {
+          resolve();
+        });
+      });
+    });
+  } catch (error) {
+    console.error(error);
+    if (!reply.sent) {
+      originalCode(500);
+      originalSend();
+    }
+  }
+}
 
 const getAllFiles = function (dirPath, arrayOfFiles) {
   let files = require("fs").readdirSync(dirPath);
