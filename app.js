@@ -11,8 +11,8 @@ const _workaround = require("./_workaround");
 const serverPort = process.env.PORT || config.app.port;
 const server = fastify({
   logger: false,
-  ignoreTrailingSlash: true,
   routerOptions: {
+    ignoreTrailingSlash: true,
     maxParamLength: 1000,
   },
 });

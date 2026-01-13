@@ -44,7 +44,8 @@ async function executeRoute(request, reply, middleware, handler) {
   const originalSend = reply.send.bind(reply);
   const originalCode = reply.code.bind(reply);
   const originalHeader = reply.header.bind(reply);
-  const originalRaw = reply.raw;
+  const originalType = reply.type.bind(reply);
+  const rawResponse = reply.raw;
 
   // Create Restify-compatible request/response objects
   const req = Object.assign(request, {
@@ -54,52 +55,120 @@ async function executeRoute(request, reply, middleware, handler) {
     headers: request.headers,
   });
 
-  // Create res as an object that extends originalRaw for full stream compatibility
-  // This ensures pipe() works correctly with all event emitter methods
-  const res = Object.create(originalRaw, {
-    send: {
-      value: (data) => {
-        if (!reply.sent) {
-          originalSend(data);
-        }
-      },
-      writable: true,
-      configurable: true,
+  // Track if response has been sent
+  let responseSent = false;
+  let isHijacked = false;
+
+  // Function to hijack the response for streaming
+  const hijackForStreaming = () => {
+    if (!isHijacked) {
+      isHijacked = true;
+      reply.hijack();
+    }
+  };
+
+  const res = {
+    send: (data) => {
+      if (!responseSent && !reply.sent && !isHijacked) {
+        responseSent = true;
+        originalSend(data);
+      } else if (isHijacked && !rawResponse.writableEnded) {
+        rawResponse.end(data);
+      }
     },
-    status: {
-      value: (code) => {
+    status: (code) => {
+      if (!isHijacked) {
         originalCode(code);
-        return res;
-      },
-      writable: true,
-      configurable: true,
+      } else {
+        rawResponse.statusCode = code;
+      }
+      return res;
     },
-    json: {
-      value: (data) => {
-        if (!reply.sent) {
-          originalSend(data);
-        }
-      },
-      writable: true,
-      configurable: true,
+    json: (data) => {
+      if (!responseSent && !reply.sent && !isHijacked) {
+        responseSent = true;
+        originalSend(data);
+      }
     },
-    set: {
-      value: (header, value) => {
+    set: (header, value) => {
+      if (!isHijacked) {
         originalHeader(header, value);
-        return res;
-      },
-      writable: true,
-      configurable: true,
+      } else {
+        rawResponse.setHeader(header, value);
+      }
+      return res;
     },
-    header: {
-      value: (header, value) => {
+    header: (header, value) => {
+      if (!isHijacked) {
         originalHeader(header, value);
-        return res;
-      },
-      writable: true,
-      configurable: true,
+      } else {
+        rawResponse.setHeader(header, value);
+      }
+      return res;
     },
-  });
+    setHeader: (header, value) => {
+      if (!isHijacked) {
+        originalHeader(header, value);
+      } else {
+        rawResponse.setHeader(header, value);
+      }
+      return res;
+    },
+    type: (contentType) => {
+      originalType(contentType);
+      return res;
+    },
+    // For binary data like images
+    end: (data) => {
+      if (!responseSent && !reply.sent && !isHijacked) {
+        responseSent = true;
+        originalSend(data);
+      } else if (isHijacked) {
+        rawResponse.end(data);
+      }
+    },
+    // Check if headers have been sent
+    get headersSent() {
+      return reply.sent || responseSent || rawResponse.headersSent;
+    },
+    // Stream support - hijack response and delegate to raw response
+    on: (event, listener) => {
+      hijackForStreaming();
+      rawResponse.on(event, listener);
+      return res;
+    },
+    once: (event, listener) => {
+      hijackForStreaming();
+      rawResponse.once(event, listener);
+      return res;
+    },
+    emit: (event, ...args) => {
+      rawResponse.emit(event, ...args);
+      return res;
+    },
+    write: (chunk, encoding, callback) => {
+      hijackForStreaming();
+      return rawResponse.write(chunk, encoding, callback);
+    },
+    // Handle being piped to (writable stream interface)
+    pipe: (destination, options) => {
+      return rawResponse.pipe(destination, options);
+    },
+    removeListener: (event, listener) => {
+      rawResponse.removeListener(event, listener);
+      return res;
+    },
+    addListener: (event, listener) => {
+      hijackForStreaming();
+      rawResponse.addListener(event, listener);
+      return res;
+    },
+    // Mark as writable for stream detection
+    writable: true,
+    get writableEnded() {
+      return rawResponse.writableEnded;
+    },
+  };
 
   // Execute middleware and handler
   try {
