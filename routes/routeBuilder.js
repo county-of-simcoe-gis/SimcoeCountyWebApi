@@ -43,6 +43,8 @@ async function executeRoute(request, reply, middleware, handler) {
   // Store original Fastify methods
   const originalSend = reply.send.bind(reply);
   const originalCode = reply.code.bind(reply);
+  const originalHeader = reply.header.bind(reply);
+  const originalRaw = reply.raw;
 
   // Create Restify-compatible request/response objects
   const req = Object.assign(request, {
@@ -67,6 +69,22 @@ async function executeRoute(request, reply, middleware, handler) {
         originalSend(data);
       }
     },
+    set: (header, value) => {
+      originalHeader(header, value);
+      return res;
+    },
+    header: (header, value) => {
+      originalHeader(header, value);
+      return res;
+    },
+    // Support for piping streams (used by got.stream().pipe(res))
+    pipe: originalRaw.pipe.bind(originalRaw),
+    write: originalRaw.write.bind(originalRaw),
+    end: originalRaw.end.bind(originalRaw),
+    on: originalRaw.on.bind(originalRaw),
+    once: originalRaw.once.bind(originalRaw),
+    emit: originalRaw.emit.bind(originalRaw),
+    setHeader: originalRaw.setHeader.bind(originalRaw),
   };
 
   // Execute middleware and handler
