@@ -54,38 +54,52 @@ async function executeRoute(request, reply, middleware, handler) {
     headers: request.headers,
   });
 
-  const res = {
-    send: (data) => {
-      if (!reply.sent) {
-        originalSend(data);
-      }
+  // Create res as an object that extends originalRaw for full stream compatibility
+  // This ensures pipe() works correctly with all event emitter methods
+  const res = Object.create(originalRaw, {
+    send: {
+      value: (data) => {
+        if (!reply.sent) {
+          originalSend(data);
+        }
+      },
+      writable: true,
+      configurable: true,
     },
-    status: (code) => {
-      originalCode(code);
-      return res;
+    status: {
+      value: (code) => {
+        originalCode(code);
+        return res;
+      },
+      writable: true,
+      configurable: true,
     },
-    json: (data) => {
-      if (!reply.sent) {
-        originalSend(data);
-      }
+    json: {
+      value: (data) => {
+        if (!reply.sent) {
+          originalSend(data);
+        }
+      },
+      writable: true,
+      configurable: true,
     },
-    set: (header, value) => {
-      originalHeader(header, value);
-      return res;
+    set: {
+      value: (header, value) => {
+        originalHeader(header, value);
+        return res;
+      },
+      writable: true,
+      configurable: true,
     },
-    header: (header, value) => {
-      originalHeader(header, value);
-      return res;
+    header: {
+      value: (header, value) => {
+        originalHeader(header, value);
+        return res;
+      },
+      writable: true,
+      configurable: true,
     },
-    // Support for piping streams (used by got.stream().pipe(res))
-    pipe: originalRaw.pipe.bind(originalRaw),
-    write: originalRaw.write.bind(originalRaw),
-    end: originalRaw.end.bind(originalRaw),
-    on: originalRaw.on.bind(originalRaw),
-    once: originalRaw.once.bind(originalRaw),
-    emit: originalRaw.emit.bind(originalRaw),
-    setHeader: originalRaw.setHeader.bind(originalRaw),
-  };
+  });
 
   // Execute middleware and handler
   try {
