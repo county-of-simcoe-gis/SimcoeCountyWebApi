@@ -1398,6 +1398,32 @@
         "deprecated": false
       }
     },
+    "/public/reports/property/CondoChildren/{arn}": {
+      "get": {
+        "tags": [
+          "Public/Reports"
+        ],
+        "summary": "Get Condo Children",
+        "description": "",
+        "parameters": [
+          {
+            "name": "arn",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "ARN"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "deprecated": false
+      }
+    },
     "/public/search": {
       "get": {
         "tags": [

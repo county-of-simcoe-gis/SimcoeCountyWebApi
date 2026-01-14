@@ -17,7 +17,7 @@ module.exports = {
   async getPropertyReportInfo(arn, callback) {
     if (arn) {
       let values = [{ name: "arn", type: "NVarChar", typeOpts: { length: 250 }, value: arn }];
-      const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_NEW WHERE ARN = @arn`;
+      const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_MAP WHERE ARN = @arn`;
       let broadbandSpeed = "";
       const broadbandSql = `select potential_coverage,
                                     case potential_coverage 
@@ -64,7 +64,7 @@ module.exports = {
             resultFormatted = {
               ARN: result.ARN,
               PropertyType: result.ARN.substring(0, 4) === "4342" ? "N/A" : result.PropertyDescripter,
-              Address: result.StNum || result.FullName || result.Muni ? `${result.StNum}  ${result.FullName}, ${result.Muni}` : `(Not Available)`,
+              Address: result.StNum || result.FullName || result.Muni ? `${result.StNum}  ${result.FullName},${result.Unit ? ` UNIT ${result.Unit},` : ``} ${result.Muni}` : `(Not Available)`,
               AssessedValue: getAssessedValueImage(result.ARN.substring(0, 4) === "4342" ? "N/A" : result.AssessedValue),
               ReportURL: result.REPORT_PUBLIC,
               HasZoning: result.HasZoning,
