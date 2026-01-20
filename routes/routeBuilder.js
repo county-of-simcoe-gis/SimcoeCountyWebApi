@@ -58,12 +58,21 @@ async function executeRoute(request, reply, middleware, handler) {
   // Track if response has been sent
   let responseSent = false;
   let isHijacked = false;
+  
+  // Track headers set before hijacking so we can apply them to raw response
+  const pendingHeaders = {};
+  let pendingStatusCode = 200;
 
   // Function to hijack the response for streaming
   const hijackForStreaming = () => {
     if (!isHijacked) {
       isHijacked = true;
       reply.hijack();
+      // Apply any headers that were set before hijacking
+      rawResponse.statusCode = pendingStatusCode;
+      for (const [header, value] of Object.entries(pendingHeaders)) {
+        rawResponse.setHeader(header, value);
+      }
     }
   };
 
@@ -78,6 +87,7 @@ async function executeRoute(request, reply, middleware, handler) {
     },
     status: (code) => {
       if (!isHijacked) {
+        pendingStatusCode = code;
         originalCode(code);
       } else {
         rawResponse.statusCode = code;
@@ -87,11 +97,15 @@ async function executeRoute(request, reply, middleware, handler) {
     json: (data) => {
       if (!responseSent && !reply.sent && !isHijacked) {
         responseSent = true;
-        originalSend(data);
+        // Ensure proper JSON serialization like Restify did
+        // Restify's res.json() would JSON.stringify strings to include quotes
+        originalHeader("Content-Type", "application/json");
+        originalSend(JSON.stringify(data));
       }
     },
     set: (header, value) => {
       if (!isHijacked) {
+        pendingHeaders[header] = value;
         originalHeader(header, value);
       } else {
         rawResponse.setHeader(header, value);
@@ -100,6 +114,7 @@ async function executeRoute(request, reply, middleware, handler) {
     },
     header: (header, value) => {
       if (!isHijacked) {
+        pendingHeaders[header] = value;
         originalHeader(header, value);
       } else {
         rawResponse.setHeader(header, value);
@@ -108,6 +123,7 @@ async function executeRoute(request, reply, middleware, handler) {
     },
     setHeader: (header, value) => {
       if (!isHijacked) {
+        pendingHeaders[header] = value;
         originalHeader(header, value);
       } else {
         rawResponse.setHeader(header, value);
