@@ -58,7 +58,7 @@ async function executeRoute(request, reply, middleware, handler) {
   // Track if response has been sent
   let responseSent = false;
   let isHijacked = false;
-  
+
   // Track headers set before hijacking so we can apply them to raw response
   const pendingHeaders = {};
   let pendingStatusCode = 200;

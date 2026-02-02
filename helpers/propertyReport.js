@@ -13,11 +13,89 @@ module.exports = {
       callback(childrenResult);
     });
   },
-
+  formatPropertyReportResult(result, broadbandSpeed, getAssessedValueImage, barrieMsg, orilliaMsg) {
+    if (!result) return null;
+    const resultFormatted = {
+      ARN: result.ARN,
+      PropertyType: result.ARN.substring(0, 4) === "4342" ? "N/A" : result.PropertyDescripter,
+      Address: result.StNum || result.FullName || result.Muni ? `${result.StNum}  ${result.FullName},${result.Unit ? ` UNIT ${result.Unit},` : ``} ${result.Muni}` : `(Not Available)`,
+      AssessedValue: getAssessedValueImage(result.ARN.substring(0, 4) === "4342" ? "N/A" : result.AssessedValue),
+      ReportURL: result.REPORT_PUBLIC,
+      HasZoning: result.HasZoning,
+      EmergencyService: {
+        PoliceStation: result.POLICE_NAME,
+        PoliceStationArn: result.POLICE_ARN,
+        FireStation: `${result.FIREHALL_STATION_NAME} (${result.FIREHALL_KM} KM)`,
+        FireStationArn: result.FIREHALL_ARN,
+      },
+      WasteCollection:
+        result.ARN.substring(0, 4) == "4342"
+          ? {
+              GarbageDay: barrieMsg,
+              LandfillLocation_General: barrieMsg,
+              LandfillLocation_GeneralPin: barrieMsg,
+              LandfillLocation_Hazardous: barrieMsg,
+              LandfillLocation_HazardousPin: barrieMsg,
+              BagTagleLocation1: barrieMsg,
+              BagTagleLocation2: barrieMsg,
+              BagTagleLocation3: barrieMsg,
+              WasteURL: barrieMsg,
+            }
+          : result.ARN.substring(0, 4) == "4352"
+          ? {
+              GarbageDay: orilliaMsg,
+              LandfillLocation_General: orilliaMsg,
+              LandfillLocation_GeneralPin: orilliaMsg,
+              LandfillLocation_Hazardous: orilliaMsg,
+              LandfillLocation_HazardousPin: orilliaMsg,
+              BagTagleLocation1: orilliaMsg,
+              BagTagleLocation2: orilliaMsg,
+              BagTagleLocation3: orilliaMsg,
+              WasteURL: orilliaMsg,
+            }
+          : {
+              GarbageDay: result.REGULAR_COLLECTION_DAY,
+              LandfillLocation_General: `${result.LANDFILL_CLOSEST_NAME} (${result.LANDFILL_CLOSEST_KM}) KM)`,
+              LandfillLocation_GeneralPin: result.LANDFILL_CLOSEST_PIN,
+              LandfillLocation_Hazardous: `${result.LANDFILL_HAZARD_NAME} (${result.LANDFILL_HAZARD_KM} KM)`,
+              LandfillLocation_HazardousPin: result.LANDFILL_HAZARD_PIN,
+              BagTagleLocation1: `${result.BAG_TAG1_NAME} (${result.BAG_TAG1_KM} KM)`,
+              BagTagleLocation2: `${result.BAG_TAG2_NAME} (${result.BAG_TAG2_KM} KM)`,
+              BagTagleLocation3: `${result.BAG_TAG3_NAME} (${result.BAG_TAG3_KM} KM)`,
+              WasteURL: "http://www.simcoe.ca/SolidWasteManagement/Pages/schedules.aspx",
+            },
+      Schools: {
+        CatholicElementry: result.SCHOOL_CATHOLIC_ELEMENTARY,
+        CatholicSecondary: result.SCHOOL_CATHOLIC_SECONDARY,
+        CatholicBoardWebsiteURL: "http://smcdsb.on.ca",
+        PublicElementry: result.SCHOOL_PUBLIC_ELEMENTARY,
+        PublicSecondary: result.SCHOOL_PUBLIC_SECONDARY,
+        PublicLookup: "https://www4.scdsb.on.ca/app/HomeSchoolLocator/public/SchoolLookup",
+        PublicBoardWebsiteURL: "http://scdsb.on.ca",
+      },
+      Other: {
+        Library: `${result.LIBRARY_NAME} (${result.LIBRARY_KM} KM)`,
+        LibraryUrl: result.LIBRARY_URL,
+        LibraryArn: result.LIBRARY_ARN,
+        ClosestFireHydrant:
+          result.ARN.substring(0, 4) == "4342" ? barrieMsg : result.ARN.substring(0, 4) == "4352" ? orilliaMsg : result.FIRE_HYDRANT_KM ? `(${result.FIRE_HYDRANT_KM} KM)` : "Greater than 2",
+        MunicipalAdminCentre: `${result.ADMIN_NAME} (${result.ADMIN_KM} KM)`,
+        MunicipalAdminCentreUrl: result.ADMIN_URL,
+        MunicipalAdminCentreArn: result.ADMIN_ARN,
+        ClosestHospital: result.HOSPITAL_NAME,
+        ClosestHospitalAddress: result.HOSPITAL_URL,
+        ClosestHospitalUrl: result.HOSPITAL_URL,
+        BroadbandSpeed: broadbandSpeed,
+      },
+    };
+    return resultFormatted;
+  },
   async getPropertyReportInfo(arn, callback) {
     if (arn) {
       let values = [{ name: "arn", type: "NVarChar", typeOpts: { length: 250 }, value: arn }];
       const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_MAP WHERE ARN = @arn`;
+      const fallbackSQL = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo WHERE ARN = @arn`;
+
       let broadbandSpeed = "";
       const broadbandSql = `select potential_coverage,
                                     case potential_coverage 
@@ -57,83 +135,25 @@ module.exports = {
       };
       ss.selectFirstWithValues(sql, values, (result) => {
         if (!result) {
-          console.log("Property not found");
-          callback({});
+          console.log("Property not found", values);
+          ss.selectFirstWithValues(fallbackSQL, values, (fallbackResult) => {
+            if (!fallbackResult) {
+              console.log("Property not found in fallback", values);
+              callback({});
+            } else {
+              try {
+                const resultFormatted = this.formatPropertyReportResult(fallbackResult, broadbandSpeed, getAssessedValueImage, barrieMsg, orilliaMsg);
+                //console.log(resultFormatted);
+                callback(resultFormatted);
+              } catch (e) {
+                console.dir(e);
+                callback({});
+              }
+            }
+          });
         } else {
           try {
-            resultFormatted = {
-              ARN: result.ARN,
-              PropertyType: result.ARN.substring(0, 4) === "4342" ? "N/A" : result.PropertyDescripter,
-              Address: result.StNum || result.FullName || result.Muni ? `${result.StNum}  ${result.FullName},${result.Unit ? ` UNIT ${result.Unit},` : ``} ${result.Muni}` : `(Not Available)`,
-              AssessedValue: getAssessedValueImage(result.ARN.substring(0, 4) === "4342" ? "N/A" : result.AssessedValue),
-              ReportURL: result.REPORT_PUBLIC,
-              HasZoning: result.HasZoning,
-              EmergencyService: {
-                PoliceStation: result.POLICE_NAME,
-                PoliceStationArn: result.POLICE_ARN,
-                FireStation: `${result.FIREHALL_STATION_NAME} (${result.FIREHALL_KM} KM)`,
-                FireStationArn: result.FIREHALL_ARN,
-              },
-              WasteCollection:
-                result.ARN.substring(0, 4) == "4342"
-                  ? {
-                      GarbageDay: barrieMsg,
-                      LandfillLocation_General: barrieMsg,
-                      LandfillLocation_GeneralPin: barrieMsg,
-                      LandfillLocation_Hazardous: barrieMsg,
-                      LandfillLocation_HazardousPin: barrieMsg,
-                      BagTagleLocation1: barrieMsg,
-                      BagTagleLocation2: barrieMsg,
-                      BagTagleLocation3: barrieMsg,
-                      WasteURL: barrieMsg,
-                    }
-                  : result.ARN.substring(0, 4) == "4352"
-                  ? {
-                      GarbageDay: orilliaMsg,
-                      LandfillLocation_General: orilliaMsg,
-                      LandfillLocation_GeneralPin: orilliaMsg,
-                      LandfillLocation_Hazardous: orilliaMsg,
-                      LandfillLocation_HazardousPin: orilliaMsg,
-                      BagTagleLocation1: orilliaMsg,
-                      BagTagleLocation2: orilliaMsg,
-                      BagTagleLocation3: orilliaMsg,
-                      WasteURL: orilliaMsg,
-                    }
-                  : {
-                      GarbageDay: result.REGULAR_COLLECTION_DAY,
-                      LandfillLocation_General: `${result.LANDFILL_CLOSEST_NAME} (${result.LANDFILL_CLOSEST_KM}) KM)`,
-                      LandfillLocation_GeneralPin: result.LANDFILL_CLOSEST_PIN,
-                      LandfillLocation_Hazardous: `${result.LANDFILL_HAZARD_NAME} (${result.LANDFILL_HAZARD_KM} KM)`,
-                      LandfillLocation_HazardousPin: result.LANDFILL_HAZARD_PIN,
-                      BagTagleLocation1: `${result.BAG_TAG1_NAME} (${result.BAG_TAG1_KM} KM)`,
-                      BagTagleLocation2: `${result.BAG_TAG2_NAME} (${result.BAG_TAG2_KM} KM)`,
-                      BagTagleLocation3: `${result.BAG_TAG3_NAME} (${result.BAG_TAG3_KM} KM)`,
-                      WasteURL: "http://www.simcoe.ca/SolidWasteManagement/Pages/schedules.aspx",
-                    },
-              Schools: {
-                CatholicElementry: result.SCHOOL_CATHOLIC_ELEMENTARY,
-                CatholicSecondary: result.SCHOOL_CATHOLIC_SECONDARY,
-                CatholicBoardWebsiteURL: "http://smcdsb.on.ca",
-                PublicElementry: result.SCHOOL_PUBLIC_ELEMENTARY,
-                PublicSecondary: result.SCHOOL_PUBLIC_SECONDARY,
-                PublicLookup: "https://www4.scdsb.on.ca/app/HomeSchoolLocator/public/SchoolLookup",
-                PublicBoardWebsiteURL: "http://scdsb.on.ca",
-              },
-              Other: {
-                Library: `${result.LIBRARY_NAME} (${result.LIBRARY_KM} KM)`,
-                LibraryUrl: result.LIBRARY_URL,
-                LibraryArn: result.LIBRARY_ARN,
-                ClosestFireHydrant:
-                  result.ARN.substring(0, 4) == "4342" ? barrieMsg : result.ARN.substring(0, 4) == "4352" ? orilliaMsg : result.FIRE_HYDRANT_KM ? `(${result.FIRE_HYDRANT_KM} KM)` : "Greater than 2",
-                MunicipalAdminCentre: `${result.ADMIN_NAME} (${result.ADMIN_KM} KM)`,
-                MunicipalAdminCentreUrl: result.ADMIN_URL,
-                MunicipalAdminCentreArn: result.ADMIN_ARN,
-                ClosestHospital: result.HOSPITAL_NAME,
-                ClosestHospitalAddress: result.HOSPITAL_URL,
-                ClosestHospitalUrl: result.HOSPITAL_URL,
-                BroadbandSpeed: broadbandSpeed,
-              },
-            };
+            const resultFormatted = this.formatPropertyReportResult(result, broadbandSpeed, getAssessedValueImage, barrieMsg, orilliaMsg);
             //console.log(resultFormatted);
             callback(resultFormatted);
           } catch (e) {
