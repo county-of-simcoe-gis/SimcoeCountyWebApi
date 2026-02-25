@@ -11,15 +11,7 @@ module.exports = (baseRoute, middleWare, router) => {
     */
     try {
       const db = new SqlServer({ dbName: "tabular" });
-      const sql = `SELECT [id]
-                        ,[type]
-                        ,[subtype]
-                        ,[polyline]
-                        ,[street]
-                        ,[starttime]
-                        ,[endtime]
-                        ,[description]
-                        ,[direction]
+      const sql = `SELECT *
                    FROM [TABULAR].[dbo].[ssview_wazeroadclosures_wgs84]`;
 
       db.selectAll(sql, (result) => {
