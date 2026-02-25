@@ -3,7 +3,7 @@ const common = require("../../../../helpers/common");
 const waze = require("../../../../helpers/waze");
 
 module.exports = (baseRoute, middleWare, router) => {
-  router.get(baseRoute + "/MTOLayer/:layerName", middleWare, (req, res, next) => {
+  router.get(baseRoute + "/MTOLayer/:layerName", middleWare, async (req, res, next) => {
     /* 
       #swagger.tags = ['Public/Map/Theme/511']
       #swagger.path = '/public/map/theme/511/MTOLayer/{layerName}'
@@ -19,10 +19,9 @@ module.exports = (baseRoute, middleWare, router) => {
     */
     try {
       if (!common.isHostAllowed(req, res)) return;
-      mto.getMTOLayer(req.params.layerName, function (response) {
-        res.send(response);
-        return next();
-      });
+      const response = await mto.getMTOLayer(req.params.layerName);
+      res.send(response);
+      return next();
     } catch (e) {
       console.error(e.stack);
       res.status(500);
