@@ -93,7 +93,7 @@ module.exports = {
   async getPropertyReportInfo(arn, callback) {
     if (arn) {
       let values = [{ name: "arn", type: "NVarChar", typeOpts: { length: 250 }, value: arn }];
-      const sql = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo_MAP WHERE ARN = @arn`;
+      const sql = `SELECT * FROM  TABULAR.dbo.[view_PropertyReportInfo_MAP] WHERE ARN = @arn`;
       const fallbackSQL = `SELECT * FROM  TABULAR.dbo.view_PropertyReportInfo WHERE ARN = @arn`;
 
       let broadbandSpeed = "";
@@ -133,37 +133,35 @@ module.exports = {
         else assessedValueTextContext.fillText(value > 0 ? assessedValueFormatter.format(value) : "unknown", 0, 0);
         return assessedValueCanvas.toDataURL();
       };
-      ss.selectFirstWithValues(sql, values, (result) => {
-        if (!result) {
+      ss.selectAllWithValues(sql, values, (result) => {
+        if (!result || !result.length) {
           console.log("Property not found", values);
-          ss.selectFirstWithValues(fallbackSQL, values, (fallbackResult) => {
-            if (!fallbackResult) {
+          ss.selectAllWithValues(fallbackSQL, values, (fallbackResult) => {
+            if (!fallbackResult || !fallbackResult.length) {
               console.log("Property not found in fallback", values);
-              callback({});
+              callback([]);
             } else {
               try {
-                const resultFormatted = this.formatPropertyReportResult(fallbackResult, broadbandSpeed, getAssessedValueImage, barrieMsg, orilliaMsg);
-                //console.log(resultFormatted);
-                callback(resultFormatted);
+                const resultsFormatted = fallbackResult.map((record) => this.formatPropertyReportResult(record, broadbandSpeed, getAssessedValueImage, barrieMsg, orilliaMsg));
+                callback(resultsFormatted);
               } catch (e) {
                 console.dir(e);
-                callback({});
+                callback([]);
               }
             }
           });
         } else {
           try {
-            const resultFormatted = this.formatPropertyReportResult(result, broadbandSpeed, getAssessedValueImage, barrieMsg, orilliaMsg);
-            //console.log(resultFormatted);
-            callback(resultFormatted);
+            const resultsFormatted = result.map((record) => this.formatPropertyReportResult(record, broadbandSpeed, getAssessedValueImage, barrieMsg, orilliaMsg));
+            callback(resultsFormatted);
           } catch (e) {
             console.dir(e);
-            callback({});
+            callback([]);
           }
         }
       });
     } else {
-      callback({});
+      callback([]);
     }
   },
 };
