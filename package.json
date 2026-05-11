@@ -36,6 +36,7 @@
     "nodemailer": "^8.0.4",
     "pg": "^8.10.0",
     "swagger-autogen": "^2.23.1",
-    "swagger-ui-dist": "^5.29.3"
+    "swagger-ui-dist": "^5.29.3",
+    "uuid": "^14.0.0"
   }
 }

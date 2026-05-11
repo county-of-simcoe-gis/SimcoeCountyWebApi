@@ -4,7 +4,7 @@ const fs = require("fs");
 var path = require("path");
 const sqlServer = require("./sqlServer");
 const ss = new sqlServer({ dbName: "tabular" });
-var uuid = require("uuid");
+const { v4: uuid } = require("uuid");
 
 module.exports = class PowerBIEmbed {
   constructor(opt) {}
@@ -127,7 +127,7 @@ module.exports = class PowerBIEmbed {
       });
   }
   setReportParameters(report, objParams, callback) {
-    let batchId = uuid.v4();
+    let batchId = uuid();
 
     const params = objParams.params;
     let promises = [];
@@ -152,7 +152,7 @@ module.exports = class PowerBIEmbed {
               reject();
             }
           });
-        })
+        }),
       );
     });
 
